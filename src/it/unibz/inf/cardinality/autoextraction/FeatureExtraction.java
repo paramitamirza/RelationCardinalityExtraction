@@ -3,6 +3,7 @@ package it.unibz.inf.cardinality.autoextraction;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -152,7 +153,30 @@ public class FeatureExtraction {
 		String testFilepath = "./data/test-cardinality-filtered-num.json";
 	
 		FeatureExtraction feat = new FeatureExtraction();
-		System.out.println(feat.generateColumns(feat.readJSONArray(testFilepath), false, false));
+		String trainColumns = feat.generateColumns(feat.readJSONArray(trainFilepath), false, false);
+		FileWriter file = new FileWriter("./data/train-cardinality.txt");
+		file.write(trainColumns);
+		file.close();
+		
+		String testColumns = feat.generateColumns(feat.readJSONArray(testFilepath), false, false);
+		file = new FileWriter("./data/test-cardinality.txt");
+		file.write(testColumns);
+		file.close();
+		
+		trainColumns = feat.generateColumns(feat.readJSONArray(trainFilepath), true, false);
+		file = new FileWriter("./data/train-cardinality-nummod.txt");
+		file.write(trainColumns);
+		file.close();
+		
+		testColumns = feat.generateColumns(feat.readJSONArray(testFilepath), true, false);
+		file = new FileWriter("./data/test-cardinality-nummod.txt");
+		file.write(testColumns);
+		file.close();
+		
+		trainColumns = feat.generateColumns(feat.readJSONArray(trainFilepath), true, true);
+		file = new FileWriter("./data/train-cardinality-nummod-noone.txt");
+		file.write(trainColumns);
+		file.close();
 	}
 	
 }
