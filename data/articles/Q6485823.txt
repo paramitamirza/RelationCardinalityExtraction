@@ -1,0 +1,43 @@
+
+#Article: Langdon Winner
+#Type: regular article
+
+Langdon Winner is Thomas Phelan Chair of Humanities and Social Sciences in the Department of Science and Technology Studies at Rensselaer Polytechnic Institute, Troy, New York.
+
+Langdon Winner was born in San Luis Obispo, California on August 7, 1944. He received his B.A. in 1966, M.A. in 1967 and Ph.D. in 1973, all in political science at the University of California, Berkeley.
+
+He has been a professor at Leiden, MIT, University of California, Los Angeles and at the University of California, Santa Cruz. Since 1985 he has been at the Rensselaer Polytechnic Institute; he was a visiting professor at Harvey Mudd College.
+
+Winner lives in New York. He is married to Gail P. Stuart and has three children. His interests include science, technology, American popular culture, and theories of sustainability.
+
+Winner is known for his articles and books on science, technology, and society. He also spent several years as a reporter and contributing editor for Rolling Stone magazine.
+
+Technology and politics
+
+In 1980 Winner proposed that technologies embody social relations i.e. power. To the question he poses "Do Artifacts Have Politics?", Winner identifies two ways in which artifacts can have politics. The first, involving technical arrangements and social order, concerns how the invention, design, or arrangement of artifacts or the larger system becomes a mechanism for settling the affairs of a community. This way "transcends the simple categories of 'intended' and 'unintended' altogether, representing “instances in which the very process of technical development is so thoroughly biased in a particular direction that it regularly produces results heralded as wonderful breakthroughs by some social interests and crushing setbacks by others" (Winner, p. 25-6, 1999). It implies that the process of technological development is critical in determining the politics of an artifact; hence the importance of incorporating all stakeholders in it. (Determining who the stakeholders are and how to incorporate them are other questions entirely.)
+
+The second way in which artifacts can have politics refers to artifacts that correlate with particular kinds of political relationships, which Winner refers to as inherently political artifacts (Winner, p. 22, 1999). He distinguishes between two types of inherently political artifacts: those that require a particular sociological system and those that are strongly compatible with a particular sociological system (Winner, p. 29, 1999). A further distinction is made between conditions internal to the workings of a given technical system and those that are external to it (Winner, p. 33, 1999). This second way in which artifacts can have politics can be visualized as a 2-by-2 matrix, consisting of four 'types' of artifacts: those requiring a particular internal sociological system, those compatible with a particular internal sociological system, those requiring a particular external sociological system, and those compatible with a particular external sociological system.
+
+As are all typologies, this matrix is a simplification-by-boundary-work - in this case, the two boundaries are drawn between requiring and compatible, and between internal and external. It is this boundary-work that makes the typology useful for avoiding extreme technological determinism, social constructivism, and noetic flatness in conceptualizing an artifact's political qualities, and for thinking about how these qualities change through time.
+
+Winner's thesis has been criticized by other scholars, including Bernward Joerges.
+
+Selected articles
+
+	 "Do Artifacts Have Politics?" in Daedalus, Vol. 109, No. 1, Winter 1980. Reprinted in The Social Shaping of Technology, edited by Donald A. MacKenzie and Judy Wajcman (London: Open University Press, 1985; second edition 1999). Also adapted in Winner's book "The Whale and the Reactor: A Search for Limits in an Age of High Technology", University of Chicago Press, 1986.
+
+	 "Social Constructivism: Opening the Black Box and Finding It Empty," Science as Culture, Vol. 3, part 3, no. 16, pp. 427-452.
+
+	 "How Technology Reweaves the Fabric of Society," The Chronicle of Higher Education, 39, Issue 48, August 4, 1993, pp. B1-B3.
+
+Selected books
+
+	 Autonomous Technology: Technics-out-of-Control as a Theme in Political Thought, M.I.T. Press, 1977. (ISBN 978-0262730495)
+
+	 The Whale and the Reactor: A Search for Limits in an Age of High Technology, University of Chicago Press, 1986. (ISBN 978-0226902111)
+
+	 Technology and Democracy, (editor), Dordrecht and Boston: Reidel/Kluwer, 1992.
+
+	 Technology and Democracy: Technology in the Public Sphere, co-edited with Andrew Feenberg and Torben Hviid Nielsen, Oslo: Center for Technology and Culture, 1997.
+
+

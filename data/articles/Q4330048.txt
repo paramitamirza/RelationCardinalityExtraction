@@ -1,0 +1,13 @@
+
+#Article: Alexander Obukhov
+#Type: regular article
+
+Alexander Mikhailovich Obukhov (Алекса́ндр Миха́йлович Обу́хов) (5 May 1918 - 3 December 1989) was a Russian physicist and applied mathematician known for his contributions to statistical theory of turbulence and atmospheric physics. He was one of the founders of modern boundary layer meteorology. He served as the Head of the theoretical department at Sternberg Astronomical Institute, a division of Moscow State University.
+
+Obukhov’s 1946 fundamental paper on a universal length scale for exchange processes in the surface layer was the basis for the derivation of the Monin-Obukhov similarity theory in 1954. The Monin-Obukhov similarity theory and the Monin-Obukhov Length are named after him and Russian Academician Andrei Monin.
+
+Early life and education
+
+Obukhov was born on 5 May 1918 in Saratov, a city situated in the Volga's drainage basin. He finished high school in 1934 but could not write the entrance examination of Saratov University because he was too young. Therefore he spent a year at Saratov Meteorological Observatory. Obukhov wrote and published his first paper in 1939. It was based on the work he had done at Saratov Meteorological Observatory. In 1935 Obukhov joined Saratov University where he studied mathematics and science. Obhukhov did his Ph.D. at the Moscow State University, under the supervision of Andrey Kolmogorov.
+
+

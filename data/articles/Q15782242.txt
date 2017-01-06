@@ -1,0 +1,23 @@
+
+#Article: Alexander Hoffmann
+#Type: regular article
+
+Alexander Hoffmann is an American biologist. He is the director of the Institute for Quantitative and Computational Biosciences (OCBio) and the Thomas M Asher Professor of Microbiology in the Department of Microbiology, Immunology, and Molecular Genetics (MIMG) at the University of California, Los Angeles (UCLA). His research interest is the development of a predictive understanding of how cellular and molecular networks regulate immune responses.
+
+Education
+
+Hoffmann gained his BA in Physics and Zoology at Cambridge University in 1988, pursuing research projects under the tutelage of John Gurdon and John Lasky. He obtained his Ph.D. in Biochemistry and Molecular Biology from the Rockefeller University in 1994 under the supervision of Robert G. Roeder. Working with Roeder, Hoffmann identified genes encoding the central transcription factor TFIID, including its DNA binding subunit TATA-box binding subunit.  He also developed the now popular His-tag expression system, which facilitates the purification of recombinant proteins.
+
+Career
+
+Hoffmann pursued postdoctoral research with David Baltimore at MIT from 1998, focusing on the transcriptional control of HIV, and then relocating with Baltimore to Caltech in 1998. At Caltech he focused on the transcriptional  and signaling functions of the immune response transcription factor NF-kB, discovering its oscillatory control.  Collaborating with Andre Levchenko, Hoffmann developed a mathematical model that explained the molecular basis for the complex dynamic control of NF-kB. The paper describing this model is considered foundational for the field of cellular signaling.
+
+Hoffmann established the Signaling Systems Laboratory at UCSD in 2003. A hallmark of his research is the Systems Biology research approach of iterative mathematical modeling and experimental analysis, and how kinetic and dynamic control of molecular processes confer specificity to cellular responses,. In 2009, he co-founded the UCSD's Biocircuits Institute with Jeff Hasty and Lev Tsimring. In 2010, he established the San Diego Center for Systems Biology, being awarded a "Center of Excellence" grant from the National Institutes of Health. In 2013 he took a position at UCLA, and, in 2014, established the Institute for Quantitative and Computational Biosciences (QCBio).
+
+Other Roles
+
+Hoffmann served with Pavel Pevzner as co-director of UCSD's Graduate Program in Bioinformatics from 2009-2013, overseeing a dramatic expansion and inclusion of Systems Biology, Biomedical Informatics and Quantitative Biology
+
+Hoffmann has worked to improve equity in educational opportunities. He led educational outreach programs at Caltech (Young Engineering Science Scholars, Freshman Summer Institute), and served at UCSD on the committee for Equity, Diversity and Inclusion, and as chair of the Chancellor's Diversity Council, focusing on student and faculty recruitment and retention practices, and institutional change.
+
+

@@ -1,0 +1,73 @@
+
+#Article: Jim Weirich
+#Type: regular article
+
+James Nolan "Jim" Weirich (November 18, 1956 - February 19, 2014) was well known in the software industry as a developer, speaker, teacher, and contributor to the Ruby Programming Language community. Among his many contributions he created the popular Rake build tool for Ruby. He was active in the Ruby community worldwide, speaking at events in Asia, South America, Europe, and the United States.
+
+Work
+
+Weirich was the Chief Scientist at Neo Innovation, working at Neo's Cincinnati office. He also built and maintained many Open source tools, the most popular being Rake and Builder with 74 and 54 million downloads, respectively.
+
+Rake
+
+Rake build tool for automating tasks in Ruby. It is the most widely downloaded Ruby Gem, downloaded more than 74 million times and has been included with Apple OS X since at least version 10.7.
+
+Builder
+
+Builder is a tool for creating structured XML data through Ruby.
+
+RubyGems
+
+RubyGems is package management tool for Ruby programs and libraries. Ryan Leavengood is credited with creating the very first RubyGems project in 2001 but it did not gain enough momentum to take off. In November 2003 with the need for a proper package manager growing, Richard Kilmer, Chad Fowler, David Black, Paul Brannan, and Jim Weirich got together at RubyConf 2003 in Austin and built today's RubyGems, which shares a name but not the original codebase.
+
+Ruby Koans
+
+Ruby Koans is a learning tool to teach people the Ruby Programming Language through a series of small exercises.
+
+Rspec-Given
+
+rspec-given is an extension to the popular Ruby testing framework RSpec that enables given/when/then notation when writing specs.
+
+Git Immersion
+
+Git Immersion is a guided tour that walks through the fundamentals of Git, inspired by the premise that to know a thing is to do it.
+
+Argus
+
+Argus A Ruby API for controlling a Parrot AR Drone.
+
+Presentations
+
+Weirich was a popular conference speaker known for making very difficult topics understandable. An archive of 29 more recent talks is available on the Confreaks site; some notable talks are linked below: The Grand Unified Theory of Software - Rails Underground 2009
+
+SOLID Ruby - RubyNation 2010
+
+Power Rake - Steel City Ruby 2012
+
+Y Not? Adventures in Functional Programming - Ruby Conference 2012
+
+Kata and Analysis - BostonRB Monthly Meeting - February 2013
+
+Why Aren't You Using Ruby - RubyConf Uruguay 2013
+
+RubyMotion - CincyCocoaDev April 2013
+
+Decoupling from Rails - CincyRB October 2013
+
+Ruby, threads, events... and Flying Robots! - CincyRB May 2013
+
+Personal life
+
+Weirich grew up in Shipshewana, Indiana, graduating from Westview Junior - Senior High School in 1975. He went on to graduate from Indiana University in 1979 with a degree in Physics. He lived in Cincinnati, Ohio.
+
+Weirich was active in the Ruby community worldwide, and especially in Cincinnati, participating in the local agile development, Ruby, and functional programming user groups. At meetings, he often gave talks and was widely acclaimed for the clarity and quality of his presentations.
+
+News of Weirich's death was met with hundreds of tributes and thanks via comments on his final Github commit, which includes a special banner added by GitHub. The 1.9.3-p545 release of the Ruby programming language was dedicated to his memory.
+
+See also
+
+	 List of computer scientists
+
+	 List of programmers
+
+

@@ -1,0 +1,41 @@
+
+#Article: Uday Ali Pabrai
+#Type: regular article
+
+ 
+
+Uday Ali Pabrai, an Indian-American entrepreneur based in Irvine, California, is a subject matter expert on cyber security and compliance mandates (HIPAA, ISO 27000, PCI DSS, NIST and others). He is chairman and chief executive officer of ecfirst, an Inc. 500 business, headquartered in Waukee, Iowa. Mr. Pabrai's clients include Kaiser, Microsoft, Intuit, and Pella, as well as hundreds of hospitals, government agencies (state and federal).
+
+Mr. Pabrai is a published author whose works include Getting Started with HIPAA, UNIX Internetworking, Internet & TCP/IP Network Security, and other titles.
+
+Mr. Pabrai established the world's first certification program that comprehensively addresses global compliance standards and regulations in the area of information security, Certified Security Compliance Specialist (CSCS). He also successfully developed leading certification credentials in the world, including CIW (over 100,000 certificates issued), and the Security Certified Program (SCP). SCP is a program approved by the U.S. Department of Defense Directive 8570.1M, one of the industry's most comprehensive hands-on information security certification programs.
+
+Mr. Pabrai has been a featured presenter at conferences worldwide, including FBI InfraGard, HCFA, ISSA, ISACA, HIMSS, HIPAA Summit, Comdex, Microsoft Tech Forum, IndiaExpo, Naseba, ASIS Security, Imprivata Healthcare Conference, Healthcare Congress and many others.
+
+Previously, Mr. Pabrai founded Net Guru Technologies (NGT) in 1994. A NASDAQ-based firm acquired NGT in 1997. He launched his career in 1983 with Schlumberger, a leading oilfield services provider, in Dubai as an Associate Accountant. In 1987 he started his career in the United States at Fermi National Accelerator Laboratory (Fermilab), a U.S. Department of Energy facility.
+
+Mr. Pabrai received his B.S. in computer engineering from Clemson University in South Carolina. He received his MSEE degree from the Illinois Institute of Technology (IIT). His credentials include Security+ and CISSP (ISSAP, ISSMP).
+
+Awards and memberships
+
+Mr. Pabrai was awarded Entrepreneur of the Year by the Illinois Indian Chamber of Commerce in 1997 and nominated for Ernst & Young's Entrepreneur of the Year award, 1997. He is also a member of the U.S. FBI InfraGard.
+
+Books and articles
+
+Pabrai is the author of The Art of Information Security, a leading book covering cyber security strategy and best practices. He is also the author of several best selling industry books, including Internet & TCP/IP Network Security and Getting Started with HIPAA. He has published hundreds of articles on regulatory compliance and information security.
+
+Published books
+
+	 X Window System User's Guide ISBN 0-89006-740-6
+
+	 Internet TCP/IP Network Security: Securing Protocols and Applications ISBN 0-07-048215-2
+
+	 Unix Internetworking ISBN 0-89006-778-3
+
+	 Getting Started with HIPAA ISBN 1-59200-054-1
+
+	 WebMaster Administrator Certification Exam Guide ISBN 0-07-913287-1
+
+	 The HIPAA Program Reference Handbook ISBN 0-8493-2211-1
+
+

@@ -48,10 +48,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
 import edu.stanford.nlp.ie.util.RelationTriple;
 import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;

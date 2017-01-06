@@ -1,0 +1,73 @@
+
+#Article: Oliver Parker Fritchle
+#Type: regular article
+
+Oliver Parker Fritchle (September 15, 1874  -  August 1951) was an American chemist, storage battery innovator, and entrepreneur with electric vehicle and wind power generation businesses during the early twentieth century. His initial battery patent was awarded in 1903 and by 1904 he had established what was to become the Fritchle Automobile & Battery Company in Denver, Colorado. He was an early adaptor and developer of significant automotive technologies, such as regenerative braking and hybrid drivetrains, that did not reemerge on production vehicles of major car companies until late in the twentieth century.
+
+Fritchle achieved national celebrity for his 1908 Lincoln-to-New York endurance run in one of the first electric automobile models produced by his firm. He covered the 1800 mi in a stock Victoria Phaeton achieving as many as 108 mi between charges  through extremes in weather, terrain, and road conditions; a remarkable feat with an electric vehicle of that day. The trip journal and photographs subsequently published to promote The 100 Mile Fritchle Electric provided unique insight to the state of road and electric power infrastructure within the United States during the early twentieth century.
+
+Early years
+
+Fritchle was born in Mount Hope, Ohio to a family of Ohio natives. His father was a veteran of the Civil War and a merchant in Holmes County. Fritchle attended local public schools followed by five years at Ohio Wesleyan University and two at Ohio State University where he graduated in 1896 with a Bachelor of Science in Chemistry.
+
+He worked as a chemical engineer at the National Steel Company for two years after college. During this time he began experimenting with storage batteries with an interest in improving their suitability for vehicle applications. Around 1899 he relocated to Denver, Colorado and became chief chemist for the Henry E. Wood Company, an ore analysis concern. He worked there for two years prior to joining the Boston and Colorado Smelting Company of Argo as their chief chemist and assayer.
+
+Fritchle Automobile & Battery Company
+
+He established the O. P. Fritchle Garage Company in Denver, Colorado shortly after being granted his first battery patent in 1903.  The new firm specialized in sales, maintenance, and recharging of electric vehicles, but also represented gasoline powered lines such as Hammer.  He began developing and manufacturing better batteries in order to enhance the range, performance, and durability of his customers' vehicles, but found automobile technology the more limiting factor after several years of battery improvements. The Fritchle Automobile & Battery Company was established by 1908 to manufacture vehicles of his own design and by 1917 he was qualified as one of the few automotive engineers in Colorado.
+
+His first design halved the power consumption, nearly doubling the range, relative to competitors' vehicles. One contribution to this advantage was his successful implementation of what was known then as "electric brakes" and more recently as regenerative brakes. The concept of using the motor to recharge the batteries while slowing an electric vehicle was not new even as early as 1908. However, implementing it effectively in automobiles and trucks was still quite tricky with the technology of the period and required development of a proprietary controller.
+
+ Fritchle produced a number of practical innovations in addition to his battery and vehicle patents, such as one of the first automobile child seats. The Fritchle Milostat was a clever solution to the problem electric vehicle operators had accurately estimating the driving distance available from their batteries. It was simply a hydrometer calibrated to display the percentage of charge remaining rather than the normal, but difficult to interpret, specific gravity reading.
+
+The Fritchle Automobile products evolved over five years from the carriage-like Phaeton to a broad line of cars and a commercial truck. Models made at various times during more than a decade of production included the Victoria Phaeton, four-passenger coupe, roadster, Stanhope runabout, two-passenger torpedo runabout, four-passenger tourer, a luxury five-passenger brougham, and a one thousand pound commercial truck.
+
+Fritchle took steps to establish a company presence in Washington, D.C. at the end of his 1908 cross-country trip.  Additional efforts to expand into the lucrative East Coast market were made in 1912 with the opening of a sales office on Fifth Avenue in New York City and selection of a manufacturing site in Bridgeport, Connecticut as the International Fritchle Company. However, these did not pan out and Fritchle Automobiles remained primarily a small regional manufacturer through the end of production.
+
+1908 Lincoln-to-New York electric endurance run
+
+Fritchle's initial series of battery and automobile improvements culminated with production of the Victoria Phaeton in 1908, the twentieth anniversary of the electric car in America.  His choice of a competitive cross-country endurance run among electric vehicles as a means for promoting the capabilities of his new product was influenced by the positive effect the annual AAA National Reliability Tour, more commonly known as the Glidden Tour, was having on the durability and perceptions of fuel-powered vehicles. Though it had become one of the most prestigious American automobile events, electric vehicles were essentially excluded by the distances of the daily legs which frequently ran well over 100 mi.
+
+Challenge and timing
+
+By September 1908 he had issued a general invitation to all manufacturers of electric automobiles to participate in a trip from Denver to New York with the challenge "to an endurance run between the above named points at a time in the Fall that will be satisfactory and allow the greatest number of entries possible."
+
+The relatively short time for responses, lack of electric service on the western end of the proposed route, and poor timing for a trip across northern states cast some doubt as to whether he was actually expecting challengers. The failure of any competitors to accept became a fact leveraged in his advertising.
+
+Less than sixty days from the September invitation, Fritchle proceeded with the trip on his own. Arrangements for re-charging were made by an associate of his firm, W. P. Pfaff, who usually travelled ahead by rail, though occasionally rode in the car with Fritchle.  The starting point was moved to Lincoln, Nebraska due to the unworkable distances between charging facilities that still existed further west. The stock Victoria Phaeton was transported to Lincoln and ready to go by the end of October.
+
+Roads
+
+Fritchle departed from Lincoln at 7:30 a.m. on 31 October 1908. Many of the early inter-city roads in the Midwest had been established along existing railroad lines. His route generally followed the Burlington from Lincoln to Omaha and the Rock Island from Omaha to Des Moines. 
+
+The Nebraska roads and those in western Iowa were especially brutal. Government road programs had not been implemented yet, so both the roadways and any signage were privately maintained, if maintained at all. It would be another two years before local automobile enthusiasts would adopt the western Iowa segment as the White Pole Road.  At the time of Fritchle's trip, the route was poorly marked and the deep mud of the "blue clay" roadways difficult to pass. The county and railroad route maps brought for navigation were inadequate. He became lost on several occasions and at times had to resort to following a compass heading or listening for passing trains in order to reconnect with the proper route. The wrong turns, low speeds required for the road conditions, and the need to stop early due to driver exhaustion put him behind schedule. Differences between odometer readings entered in his log and mapped route distances indicated well over 100 mi of wrong turns between Lincoln and Cedar Rapids, Iowa; most of which likely occurred west of Des Moines.
+
+He drove north out of Des Moines to pick up the Northwestern in Nevada, Iowa and followed it into Chicago. Condition of the roads along the Northwestern were much better and there were several stretches where Fritchle was able to make up time by using high speed. In Chicago he purchased 1908 Glidden Tour (AAA) and White Route (Motor Age) books which were used for the eastern part of the trip.
+
+Substantial portions of the route east of Chicago were based upon long established pikes and trails that would later form the Lincoln Highway; the most significant exceptions were a more northern route through Toledo in Ohio, a side trip to his home town of Mount Hope, and more easterly roads out of Pittsburgh. He still managed a few wrong turns due to errors in the guides and in some of the places he chose to deviate from them, though the impact in terms of extra miles was much less significant than it had been in Nebraska and Iowa.
+
+He raised the possibility of differences in roadway design considerations between electric and fuel-powered vehicles on the turnpike east of York, Pennsylvania. He noted that the downhill stops required by placement of all sixteen tollgates in the middle of downgrades significantly reduced the effectiveness of his electric's regenerative braking system.
+
+The press report that he followed the 1908 Glidden Tour route between Pittsburgh and New York was somewhat misleading. Fritchle appeared to retrace the Glidden route in only a few segments of that stretch, mainly in the area of Bedford, Pennsylvania. Close enough for him to emphasize that his electric had been able to traverse roads through the Alleghenys in November that the fuel-powered "Gliddenites" had found difficult to pass in July. He arrived at the Hotel Knickerbocker in Times Square New York at 6:00 p.m. on 28 November 1908.
+
+Route and log
+
+Highlights
+
+Fritchle drove the eighteen hundred miles between Lincoln and New York in twenty-nine days averaging close to ninety miles per battery charge across extremes in weather, terrain, and road conditions. The time included about twenty-one days of driving and eight for rest, sightseeing, and visits. Fritchle recorded it as a 29-day trip beginning on 31 October in his journal, but did not seem to object when the newspapers reported it a day shorter beginning on 1 November.  Required repairs and maintenance were trivial. They included one flat tire on the road out of Chicago, a 150 A fuse that was blown throwing the car into gear from a dead stop on a steep mountain incline, and a new set of camel hair brake linings to replace the ones worn out in the Alleghenys. The brake repairs could have been avoided by installing asbestos linings prior to leaving Denver, but the decision was made to keep the vehicle completely stock.
+
+The Victoria Phaeton had to be towed once in Iowa by a gasoline-powered automobile when an inaccurate distance estimate led to the batteries being depleted two miles (3 km) short of the charging station. Fritchle was later able to even the record by towing a disabled Oldsmobile ten miles (16 km) to service near York, Pennsylvania.
+
+A wide variety of alternating and direct current power sources were used for recharging. These ranged from a dynamo borrowed from a physician's X-ray machine to a direct connection at a community power plant. Most of the garages he stopped at could safely recharge his vehicle, but in other situations he was often left to figure it out on his own. Fritchle acknowledged that touring in an electric car was only feasible for an "expert electrician" due to the complications of safely recharging from the variety of power sources and connections that existed at that time. He was not trying to portray electric vehicles as practical for cross-country travel, but rather demonstrate that his electric vehicles were as robust as the best of the fuel-powered automobiles.
+
+Fritchle drove the Victoria Phaeton from New York to Washington, D.C. with plans to continue to Chicago in order to attend an auto show. He and the automobile later returned to Denver by rail.
+
+After The 100 Mile Fritchle Electric
+
+As robust as the Fritchle electric vehicles were for their time, initial growth of the electric vehicle segment peaked in 1912 and became a declining niche unable to compete on price, range, or servicing with the substantially higher volume gasoline powered alternatives. A Fritchle hybrid gas-electric model utilizing a four-cylinder air-cooled engine was developed in 1916, but failed to sustain the automobile business. Production ceased sometime after 1917, though the last Fritchle Electric may have been sold as late as 1922.
+
+The automobile business was followed by the Fritchle Electric Company. This firm developed and sold wind power generation systems into the late 1920s that were based upon the windpumps common on farms and ranches throughout much of North America.  He later worked for the Buick Motor Company and remained active in the radio and electric power industries until his retirement in 1941.
+
+Patents and papers
+
+

@@ -1,0 +1,51 @@
+
+#Article: Tom Preston-Werner
+#Type: regular article
+
+Thomas "Tom" Preston-Werner (born October 28, 1979) is a software developer, inventor and entrepreneur. He is an active contributor amongst the open-source development community, most prominently in the San Francisco Bay Area where he lives.
+
+He is most prominently known for his role as founder and former CEO of GitHub, a Git repository web-based hosting service, which he co-founded in 2008 with Chris Wanstrath and PJ Hyett. Preston-Werner is also the creator of the avatar service Gravatar.
+
+Preston-Werner lives in San Francisco with his wife Theresa and their son.
+
+His wife is a former grad student in cultural anthropology known for her involvement in historical research and social subjects.
+
+Early life
+
+Preston-Werner grew up in Dubuque, Iowa. His father died when he was a child. His mother was a teacher and his stepfather was an engineer.
+
+He graduated grade school at Dubuque Senior High School and attended Harvey Mudd College in Claremont, California for 2 years before dropping out to pursue other endeavours.
+
+Influence
+
+As an active contributor to the open-source developer and hacker culture most prominently in areas involving Ruby, Tom has written passionate articles with regard to his philosophies and opinion on various issues. He has been featured as a guest on podcasts including Rubyology, SitePoint, and he often speaks out about his passion that developers should seek to collaborate more and the measures which would promote such collaboration, such as writing better documentation, and contributing to other people's projects.
+
+In 2008 Tom Preston-Werner spoke about conceptual algorithms, not applied to coding patterns but to higher-level thinking patterns.
+
+Preston was one of the initial members of the San Francisco group IcanhazRuby or ICHR after he had been a regular member of the San Francisco Ruby Meetups until the meetings became overwhelmed by venture capital investors searching for talent; which prompted him to seek more private gatherings. On April 8, 2011 he also started a conference called CodeConf through the influences of Github.
+
+Career
+
+In an article published by Hacker Monthly in 2010, Preston wrote about his passion for ensuring that developers document the code they write so others can easily understand how it works.
+
+In 2004, Preston-Werner founded Gravatar, a service for providing globally unique avatars that follow users from site to site. The company grew to about 32,000 users in 2007, when Preston-Werner sold the company to Automattic.  In 2005 he moved to San Francisco to work at Powerset, a natural language search engine. Eventually Powerset was acquired by Microsoft, Preston-Werner declining a $300,000 bonus and stock options from Microsoft so that he could focus on GitHub.
+
+GitHub
+
+While with Powerset, Preston-Werner met Chris Wanstrath and PJ Hyett at a Ruby developer meet-up in San Francisco. In 2008, the three of them along with Scott Chacon founded web-based GitHub as a place to share and collaborate on code.
+
+Architects, musicians, city governments, builders and others are currently using GitHub to share and collaborate on projects beyond software code.
+
+Resignation from GitHub
+
+In March 2014, GitHub programmer Julie Ann Horvath alleged that Preston-Werner and his wife Theresa engaged in a pattern of harassment against her that led to her leaving the company. After an internal investigation, GitHub CEO and cofounder Chris Wanstrath issued a statement on the company blog personally apologizing to Horvath. He wrote, “The investigation found Tom Preston-Werner in his capacity as GitHub’s CEO acted inappropriately, including confrontational conduct, disregard of workplace complaints, insensitivity to the impact of his spouse's presence in the workplace, and failure to enforce an agreement that his spouse should not work in the office… After being presented with the results we felt Tom could no longer be an effective leader at GitHub. He offered his resignation and we accepted."
+
+See also
+
+	 GitHub
+
+	 Jekyll (software)
+
+	 Gravatar
+
+

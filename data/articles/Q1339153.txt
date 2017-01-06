@@ -1,0 +1,27 @@
+
+#Article: Rolf Noskwith
+#Type: regular article
+
+Rolf Noskwith (born 19 June 1919) is a British businessman, and during the Second World War worked under Alan Turing as a cryptographer at the Bletchley Park British military base.
+
+Early life and education
+
+Noskwith's parents, Chaim (Charles) and Malka (née Ginsberg), were Eastern European-born Jews that set up a clothing manufacturing company in Germany. Seeing that the political and economic conditions were worsening in the German Weimar Republic, they sold their business and emigrated from Germany to England in 1932, along with their children. The family created another textile company, CHARNOS, in Ilkeston, Derbyshire, United Kingdom, that would become the basis of Noskwith's post-war life. Noskwith was educated at Nottingham High School and Trinity College, Cambridge.
+
+Service in World War II
+
+Initially, he was not accepted for military service, but after his third attempt, he was accepted to work as a translator and cryptographer at the Bletchley Park facility. His first attempt to work as a codebreaker was turned down because of his German birth and upbringing, but it seems that the security eligibility rules were revised in May 1941 thereby enabling him to enlist.
+
+Government Code and Cypher School, Bletchley Park
+
+After being interviewed by C P Snow and Hugh Alexander, Noskwith was recruited to Bletchley Park and arrived in June 1941. He worked in Hut 8, focusing on the German navy's Enigma machine, decrypting the Kriegsmarine's coded wireless traffic from 1941 to 1945, and subsequently on other ciphers. He joined the crib subsection, headed by Shaun Wylie. One of Noskwith's noted talents was lining up cribs with cipher text strips, to see if they matched.
+
+His biggest accomplishment was breaking the Naval Enigma Offizier settings. He created a crib based on the letters 'EEESSSPATRONE' and had placed into cue to be crunched by Bletchley's bombe analogue computers. The letter pairings referred to colour-coding used by German ships' flares as "friend or foe" detection. When the crib worked, it allowed the Allied forces to read German messages sent to and from Kriegsmarine officers.
+
+He recalled that most people were addressed by their first name there: the two exceptions were Alan Turing, known as "Prof"; and F.A. Kendrick, whom he was surprised to see listed in the index of Hinsley and Stripp's book Codebreakers as Kendrick, Tony.
+
+Business career
+
+Starting in 1946, he worked for Charnos, the textile company founded by his father, and became its chairman in 1952. Around the year 2000, he was made non-executive chairman of Charnos plc.
+
+

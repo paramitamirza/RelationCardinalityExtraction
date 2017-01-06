@@ -1,0 +1,7 @@
+
+#Article: Leopoldo Penna Franca
+#Type: regular article
+
+Leopoldo Penna Franca (born April 7, 1959 died September 19, 2012, in Rio de Janeiro, Brazil) was a Brazilian-American mathematician. He received his PhD in 1987 from Stanford University in Engineering under Thomas J. R. Hughes. After graduation he worked at the :pt:Laboratório Nacional de Computação Científica - LNCC in Brazil. From 1993 to 2011, he was a full Professor and Researcher of Mathematics at the University of Colorado Denver. From 2008 to 2010 he was a visiting Professor and Researcher of Mathematics at the Federal University of Rio de Janeiro - UFRJ / Coppe at the Civil Engineering Department in collaboration to Alvaro Coutinho. From 2011 until 2012, he worked for IBM Research Brazil. He was known for his work on stabilized finite element methods. He was a recipient of the United States Association for Computational Mechanics - USACM. Received in 1999 the Gallagher Young Investigator Award for "outstanding accomplishments in computational mechanics, particularly in the published literature, by a researcher 40 years old or younger". He was listed as an ISI Highly Cited Author in Engineering by the ISI Web of Knowledge, Thomson Scientific Company.
+
+

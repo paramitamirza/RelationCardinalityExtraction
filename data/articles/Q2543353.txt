@@ -1,0 +1,39 @@
+
+#Article: Jono Bacon
+#Type: regular article
+
+Jono Bacon (full name Jonathan Edward James Bacon) is a community manager, writer, musician and Software Engineer, originally from the United Kingdom, but now based in California. Bacon is a speaker on community management, works as the XPrize Community Manager, authored The Art of Community by O'Reilly and is the founder and organizer of the annual Community Leadership Summit.
+
+History
+
+Bacon started his work with the Linux community when he created the Linux UK website. When he left this project he moved on to join the KDE team, where he created the KDE::Enterprise website and KDE Usability Study. He has also been involved with helping charities using free software, was a participant in LugRadio and founded Wolverhampton Linux Users' Group. Additionally, he has created a heavy rock version of the Free Software Song.
+
+Bacon started his career as a Linux journalist before moving on in 2006 to work for OpenAdvantage to help move organizations to Open Source solutions. From 4 September 2006 until 28 May 2014, start worked for Canonical Ltd. as the Ubuntu Community Manager. From 29 May until 30 October 2015 he worked at XPrize as the Senior Director of Community. From the 17 November 2015 Bacon will take over as Directory of Community for GitHub.
+
+Community management
+
+In recent years Bacon has become a prominent speaker and consultant on building communities and community management. He has authored The Art of Community by O'Reilly, is the founder and organizer of the annual Community Leadership Summit, an annual meeting point for community leaders, and writes regularly about community leadership on his blog.
+
+Journalism
+
+As a professional journalist, Bacon has written for a variety of publications, including Linux User and Developer, Linux Format, Linux Magazine, MacTech, MacFormat and PC Plus. In addition to these magazines, he has also written a number of books, including "The Art of Community", "Linux Desktop Hacks", "PHP and MySQL Web Applications: Building Eight Dynamic Web Sites" and he also co-wrote "The Official Ubuntu Book" (ISBN 0-13-243594-2) with Benjamin Mako Hill, Corey Burger, and Jonathan Jesse.
+
+Bacon was the co-founder of the LugRadio podcast and live events and the only member to appear on every show. He had also been a regular co-host on FLOSS Weekly starting with episode 69, even filling in for Randal Schwartz when Randal was not available. When FLOSS Weekly moved to a new morning timeslot, Jono was unable to make the transition. Bacon also founded the Shot of Jaq podcast with Stuart Langridge and the show ran for a short period.
+
+In October 2013, Bacon became co-host of the Bad Voltage podcast, along with Jeremy Garcia, Stuart Langridge and Bryan Lunduke. The series deals with technology, open source, politics, music and includes reviews and interviews.
+
+Public speaking
+
+Bacon has presented at many events, including: Ohio Linux Fest, Southern California Linux Expo, MySQL Conference, OSBC, Linux User & Developer Conference, Blender Conference, IBM Linux Migration Seminar, European Friends of O'Reilly, d:CODE, Association For Free Software Conference, SkyCon, UKUUG Conference West Midlands IT Association, OSS Watch Conference, IBM Developer Workshop, Python UK 2007 (after dinner speech), various LUGs, as well as the LUGRadio Live events of which he was a principal organiser. He also presented the keynote at the "10 years KDE" anniversary conference in Ostfildern, Germany.
+
+Controversy
+
+Bacon caused controversy in a blog posting when he referred to Richard Stallman's position on Ubuntu's search functions as "childish". He apologised in a later post.
+
+Music
+
+Bacon has had a long interest in music. He has played in several musical groups starting with Conspiracy, followed by Neuraxon. He was also the vocalist and a rhythm guitarist in Seraphidian. As well, his website includes a number of songs that he has recorded separately from the band, including the aforementioned version of the Free Software Song. Bacon has also inspired an audio recording application called Jokosher, which is a pun on the fact that his name contains the phrase "no bacon" (see kosher).
+
+In June 2008 Bacon started a new musical project called Severed Fifth. The aim was to produce an album in his home studio and then to distribute the music in new ways. This was an experiment in how musicians can work in the internet era, outside the conventional music industry. The first demo Denied By Reign was released 21 October 2008 and features brutal death metal. His second album Nightmares by Design, more melodic death metal in style, was released on 11 October 2010.
+
+

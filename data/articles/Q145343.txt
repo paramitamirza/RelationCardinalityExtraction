@@ -1,0 +1,47 @@
+
+#Article: Darl McBride
+#Type: regular article
+
+Darl Charles McBride (born 1959) is an entrepreneur and CEO of Shout TV Inc. McBride is best known as the former CEO of The SCO Group. On March 7, 2003, during McBride's tenure as CEO of the company, The SCO Group initiated litigation (SCO v. IBM) against IBM, alleging breach of contract and copyright infringement claims connected to Unix. The case is considered one of the top 10 technology battles of all time, and remains open in the 10th District Federal Court.
+
+Education and personal life
+
+McBride graduated from Brigham Young University with a degree in Sociology and then earned a master's degree in Industrial Relations from the University of Illinois at Urbana-Champaign. While at the University of Illinois McBride was awarded a fellowship from the IBM Corporation.
+
+McBride is fluent in Japanese and spent two years in Japan as a missionary for The Church of Jesus Christ of Latter-day Saints.
+
+Career
+
+From 1988 to 1996, McBride was a manager at Novell, where he managed the business relationship with Novell KK (Japan) and later was promoted to vice president and general manager of Novell's Embedded Systems Division (NEST). He later left Novell to become senior vice president of IKON Office Solutions.
+
+IKON fired him in 1998 after his involvement in the execution of 33 business acquisitions. McBride then sued IKON for $10 million, claiming breach of contract, nonpayment of wages, and fraud. IKON counter-sued, and the case was eventually settled.
+
+McBride was subsequently involved in two startups: SBI and Company, a professional services company, which he founded and served as CEO, and later PointServe, a software company of which he was also CEO. He raised venture capital for both of these companies. McBride was the president of Franklin Covey's online planning business from August 2, 2000 until a few months prior to joining the SCO Group as CEO.
+
+On April 9, 2010 McBride purchased the SCO Mobility intellectual property from The SCO Group for $100,000.
+
+The company is now known as Me Inc. and as of June 10, 2011, McBride is President and CEO.
+
+McBride is currently developing mobile app SHOUT, a free trivia game that integrates with live sporting events and awards winners with cash and other prizes. The app has a deal with Deron Williams as its first celebrity endorser.
+
+Linux controversy
+
+McBride has been controversial in the information technology industry for his role as the CEO of SCO in asserting broad claims of intellectual property ownership of the various UNIX operating systems derivatives developed by IBM under a license originally granted by AT&T Corporation. Open source, free software and Linux developers and supporters, and the computer industry at large have been outspoken and highly critical and skeptical of McBride and SCO's claims in these areas.
+
+Ty Mattingly, a former Novell Executive Vice President and co-worker of McBride was quoted as saying, "Congratulations. In a few short months you've dethroned Bill Gates as the most hated man in the industry."  McBride claimed he received death threats as a result of the SCO-IBM lawsuits, and had a package of worms mailed to his home, prompting him to carry a firearm and to employ multiple bodyguards.
+
+Leadership of Caldera International/The SCO Group
+
+Under McBride's leadership, SCO saw a surge in stock prices from under $2 on March 18, 2003 to over $20 just 6 months later. Following several adverse rulings issued by the United States District Court in Utah, SCO's stock value dropped to under $1. On April 27, 2007, NASDAQ served notice that the company would be delisted if SCO's stock price did not increase above $1 for a minimum of 10 consecutive days over the course of 180 business days, ending October 22, 2007.
+
+On August 10, 2007, the United States District Court in Utah issued a ruling that Novell had retained copyright ownership of the System V UNIX copyrights and that SCO was in breach of its covenants to provide Novell with the previously agreed royalties to the Unix technology Novell had originally sold to SCO. Following this ruling, the value of SCO stock fell to just $0.44 per share, a one-day drop of more than 70%. On September 14, 2007, SCO filed for Chapter 11 bankruptcy protection, and by September 18 its share price had reached $0.18 per share.
+
+On December 21, 2007, SCO received NASDAQ delisting notice and trading was suspended on December 27, 2007. The stock price was $0.12 per share.
+
+Termination as SCO CEO position
+
+One of the reorganization plans put forward by SCO as part of its bankruptcy proceedings in Delaware required McBride to resign from SCO. The Memorandum of Understanding (MOU) between SCO and SNCP (Stephen Norris & Co. Capital Partners) included the note that "upon the effective date of the Proposed Plan of Reorganization, the existing CEO of the Company, Darl McBride, will resign immediately." The plan called for "a favorable resolution of the Novell/IBM Litigation". The plan was withdrawn by SCO following objections which highlighted the lack of detail given to the court and other interested parties about the plan.
+
+On October 14, 2009, McBride was terminated as Chief Executive Officer and President of The SCO Group.
+
+

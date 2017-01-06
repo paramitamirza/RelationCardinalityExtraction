@@ -1,0 +1,31 @@
+
+#Article: Bdale Garbee
+#Type: regular article
+
+Bdale Garbee  is an American computer specialist who works with Linux, particularly Debian. He is also an amateur radio hobbyist (KB0G), a member of AMSAT, Tucson Amateur Packet Radio (former vice-president) and the American Radio Relay League.
+
+Free Software
+
+Garbee has been a Debian developer since October 1994 in the earliest days of the project. He set up the original developer machine named master.debian.org in 1995. He served as a Debian Project Leader (DPL) for one year (2002-2003), and currently serves as chairman of the Debian Technical Committee.
+
+Garbee has served on the board of directors of Software in the Public Interest, the non-profit organization that collects donations for Debian and many other Free Software projects, since July 29, 2004, and was elected president on August 1, 2006.
+
+Garbee represents the interests of individual members and developers on the board of directors of the Linux Foundation.
+
+In September 2008, he received a "Lutèce d'Or" during the French event Paris Capitale du Libre as the FLOSS personality of the year.
+
+In March 2011, Bdale Garbee agreed to join the FreedomBox Foundation's board of directors and chair its technical advisory committee.
+
+He retired at the end of August 2012 from long service as the Open Source & Linux Chief Technologist at Hewlett-Packard. From September to December 2013 he was a part-time Senior Adviser to the Open Source Group at Samsung.
+
+He was hired back by HP in 2014, with the goal to help driving HP's Open Source strategy. 
+
+Personal
+
+The name "Bdale" is an abbreviation of "Barksdale", given in honor of his maternal grandfather, Alfred D. Barksdale.
+
+At linux.conf.au 2009, Garbee's 27-year-old beard was removed by Linus Torvalds to raise funds for Tasmanian Devil facial tumour disease research. They raised between AU$35,000 and AU$40,000.
+
+His house was destroyed by the Black Forest fire, on 11 June 2013.
+
+

@@ -1,0 +1,53 @@
+
+#Article: Yochai Benkler
+#Type: regular article
+
+Yochai Benkler (born 1964) is an Israeli-American author and the Berkman Professor of Entrepreneurial Legal Studies at Harvard Law School. He is also a faculty co-director of the Berkman Center for Internet & Society at Harvard University.
+
+Biography
+
+From 1984 to 1987, Benkler was a member and treasurer of the Kibbutz Shizafon. He received his LL.B. from Tel-Aviv University in 1991 and J.D. from Harvard Law School in 1994. He worked at the law firm Ropes & Gray from 1994-1995. He clerked for U.S. Supreme Court Justice Stephen G. Breyer from 1995 to 1996.
+
+He was a professor at New York University School of Law from 1996 to 2003, and visited at Yale Law School and Harvard Law School (during 2002-2003), before joining the Yale Law School faculty in 2003. In 2007, Benkler joined Harvard Law School, where he teaches and is a faculty co-director of the Berkman Center for Internet & Society. Benkler is on the advisory board of the Sunlight Foundation. In 2011, his research led him to receive the $100,000 Ford Foundation Social Change Visionaries Award.
+
+Works
+
+Benkler's research focuses on commons-based approaches to managing resources in networked environments. He coined the term 'commons-based peer production' to describe collaborative efforts based on sharing information, such as free and open source software and Wikipedia. He also uses the term 'networked information economy' to describe a "system of production, distribution, and consumption of information goods characterized by decentralized individual action carried out through widely distributed, nonmarket means that do not depend on market strategies."
+
+The Wealth of Networks
+
+Benkler's 2006 book The Wealth of Networks examines the ways in which information technology permits extensive forms of collaboration that have potentially transformative consequences for economy and society. Wikipedia, Creative Commons, Open Source Software and the blogosphere are among the examples that Benkler draws upon. (The Wealth of Networks is itself published under a Creative Commons license). For example, Benkler argues that blogs and other modes of participatory communication can lead to "a more critical and self-reflective culture", where citizens are empowered by the ability to publicize their own opinions on a range of issues, which enables them to move from passive recipients of "received wisdom" to active participants. Much of The Wealth of Networks is presented in economic terms, and Benkler raises the possibility that a culture in which information is shared freely could prove more economically efficient than one in which innovation is encumbered by patent or copyright law, since the marginal cost of re-producing most information is effectively nothing.
+
+Contributions to industrial information economy
+
+According to Benkler, the emergence of the networked information economy "has the potential to increase individual autonomy", which he means would provide individuals with a richer basis from which they can form critical judgement concerning how they should live their life.Benkler coined the term 'Jalt' as a contraction of jealousy and altruism, to describe the dynamic in commons-based peer production where some participants get paid while others do not, or "whether people get paid differentially for participating." The term was first introduced in his seminal paper "Coase's Penguin, or, Linux and the Nature of the Firm." It is described in more technical terms as "social-psychological component of the reward to support monetary appropriation by others or... where one agent is jealous of the rewards of another."
+
+Benkler appeared in the documentary film Steal This Film, which is available through Creative Commons. He discussed various issues, including: how the changing cost structures in film and music production are enabling new stratums of society to create.
+
+Benkler is a strong proponent of Wikileaks, characterizing it as a prime example of non-traditional media filling a public watchdog role left vacant by traditional news outlets. In a draft paper written for the Harvard Civil Rights-Civil Liberties Law Review in February 2011, he uses governmental vilification and prosecution of Wikileaks as a case study demonstrating the need for more robust legal protection for independent media.
+
+In August 2011, Benkler was a keynote speaker at the Wikimania conference in Haifa, Israel. That same August, Benkler's latest book on social cooperation online and off, titled The Penguin and the Leviathan: How Cooperation Triumphs over Self-Interest, was published. Benkler discussed this book at a lecture given at Harvard on October 18, 2011 http://cyber.law.harvard.edu/events/2011/10/benkler.
+
+Benkler contributed the essay "Complexity and Humanity" to the Freesouls book project, which discusses the human element in production and technology.
+
+Awards
+
+	 2006 - Donald McGannon Award for Social and Ethical Relevance in Communications Policy Research
+
+	 2006 - Public Knowledge IP3 Award
+
+	 March 2007 - EFF Pioneer Award
+
+	 2008 - The American Sociological Association Section on Communication and Information Technologies (CITASA) Book Award
+
+	 2009 - Don K. Price Award
+
+	 May 2011 - Ford Foundation Visionaries Award
+
+See also
+
+	 Industrial information economy
+
+	 Carr-Benkler wager
+
+
