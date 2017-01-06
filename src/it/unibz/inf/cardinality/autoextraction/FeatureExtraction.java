@@ -1,10 +1,12 @@
 package it.unibz.inf.cardinality.autoextraction;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -88,9 +90,9 @@ public class FeatureExtraction {
 		}
 	}
 	
-	public String generateColumns(JSONArray arr, 
-			boolean dependency, boolean excludeOne) throws JSONException {
-		StringBuilder sb = new StringBuilder();
+	public void generateColumnsFile(JSONArray arr, String filePath,
+			boolean dependency, boolean excludeOne) throws JSONException, IOException {
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filePath, true)));
 		
 		for (int i=0; i<arr.length(); i++) {
 			JSONObject obj = arr.getJSONObject(i);
@@ -138,13 +140,13 @@ public class FeatureExtraction {
 							}
 						}
 					}
-					sb.append(sent.word(k) + "\t" + sent.posTag(k) + "\t" + sent.nerTag(k) + "\t" + labels[k] + "\n");
+					out.println(sent.word(k) + "\t" + sent.posTag(k) + "\t" + sent.nerTag(k) + "\t" + labels[k]);
 				}
-				sb.append("\n");
+				out.println();
 				
 			}
 		}
-		return sb.toString();
+		out.close();
 	}
 	
 	public static void main(String[] args) throws JSONException, IOException {
@@ -153,30 +155,11 @@ public class FeatureExtraction {
 		String testFilepath = "./data/test-cardinality-filtered-num.json";
 	
 		FeatureExtraction feat = new FeatureExtraction();
-		String trainColumns = feat.generateColumns(feat.readJSONArray(trainFilepath), false, false);
-		FileWriter file = new FileWriter("./data/train-cardinality.txt");
-		file.write(trainColumns);
-		file.close();
-		
-		String testColumns = feat.generateColumns(feat.readJSONArray(testFilepath), false, false);
-		file = new FileWriter("./data/test-cardinality.txt");
-		file.write(testColumns);
-		file.close();
-		
-		trainColumns = feat.generateColumns(feat.readJSONArray(trainFilepath), true, false);
-		file = new FileWriter("./data/train-cardinality-nummod.txt");
-		file.write(trainColumns);
-		file.close();
-		
-		testColumns = feat.generateColumns(feat.readJSONArray(testFilepath), true, false);
-		file = new FileWriter("./data/test-cardinality-nummod.txt");
-		file.write(testColumns);
-		file.close();
-		
-		trainColumns = feat.generateColumns(feat.readJSONArray(trainFilepath), true, true);
-		file = new FileWriter("./data/train-cardinality-nummod-noone.txt");
-		file.write(trainColumns);
-		file.close();
+		feat.generateColumnsFile(feat.readJSONArray(trainFilepath), "./data/train-cardinality.txt", false, false);
+		feat.generateColumnsFile(feat.readJSONArray(testFilepath), "./data/test-cardinality.txt", false, false);
+		feat.generateColumnsFile(feat.readJSONArray(trainFilepath), "./data/train-cardinality-nummod.txt", true, false);
+		feat.generateColumnsFile(feat.readJSONArray(testFilepath), "./data/test-cardinality-nummod.txt", true, false);
+		feat.generateColumnsFile(feat.readJSONArray(trainFilepath), "./data/train-cardinality-nummod-noone.txt", true, true);
 	}
 	
 }
