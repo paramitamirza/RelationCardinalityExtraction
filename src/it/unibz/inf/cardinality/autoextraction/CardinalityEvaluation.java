@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.stanford.nlp.simple.Sentence;
+import edu.stanford.nlp.util.StringUtils;
 
 public class CardinalityEvaluation {
 	
@@ -79,6 +81,7 @@ public class CardinalityEvaluation {
 		BufferedReader br = new BufferedReader(new FileReader(filepath));
 		
 		String line, label, prob;
+		List<String> nums, probs;
 		for (int i=0; i<arr.length(); i++) {
 			JSONObject obj = arr.getJSONObject(i);
 			
@@ -91,22 +94,26 @@ public class CardinalityEvaluation {
 				Sentence sent = new Sentence(lines.getString(j));
 				line = br.readLine();
 				
-				String[] nums = new String[sent.words().size()];
-				Double[] probs = new Double[sent.words().size()];
+				nums = new ArrayList<String>();
+				probs = new ArrayList<String>();
 				for (int k=0; k<sent.words().size(); k++) {
 					line = br.readLine();
 					
-					System.out.println(sent.word(k) + "-" + line);
 					label = line.split("\t")[6].split("/")[0];
 					prob = line.split("\t")[6].split("/")[1];
 					if (label.equals("CHILD")) {
-						nums[k] = sent.word(k);
-						probs[k] = Double.parseDouble(prob);
+						nums.add(sent.lemma(k));
+						probs.add(prob);
+					} else {
+						nums.add("");
+						probs.add("");
 					}
 				}
 				
-				System.out.println(nums);
-				System.out.println(probs);
+				if(!StringUtils.join(nums, "").equals("")) {
+					System.out.println(StringUtils.join(nums, " "));
+					System.out.println(StringUtils.join(probs, " "));
+				}
 				
 				line = br.readLine();
 			}
