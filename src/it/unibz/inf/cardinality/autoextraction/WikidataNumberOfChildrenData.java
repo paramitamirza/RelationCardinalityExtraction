@@ -254,24 +254,24 @@ public class WikidataNumberOfChildrenData {
 							Process p = Runtime.getRuntime().exec("sed -n '" + start + "," + end + "p;" + end + "q' " + wikiArticlesPath + " > ./articles/" + eid + ".txt\n");
 							p.waitFor();
 							
-						} else {
-							List<String> articleText = filterText(articlePath + eid + ".txt");
-//							System.out.println(eid + "\t" + numChild + "\t" + StringUtils.join(articleText, "|"));
-							
-							JSONObject obj = new JSONObject();
-							obj.put("wikidata-id", eid);
-							obj.put("wikidata-label", name);
-							obj.put("num-child", numChild);
-
-							JSONArray list = new JSONArray();
-							for (String s : articleText) {
-								list.put(s);
-							}
-							obj.put("article-num-only", list);
-							result.put(obj);
-							
-							match ++;
 						}
+
+						List<String> articleText = filterText(articlePath + eid + ".txt");
+//							System.out.println(eid + "\t" + numChild + "\t" + StringUtils.join(articleText, "|"));
+						
+						JSONObject obj = new JSONObject();
+						obj.put("wikidata-id", eid);
+						obj.put("wikidata-label", name);
+						obj.put("num-child", numChild);
+
+						JSONArray list = new JSONArray();
+						for (String s : articleText) {
+							list.put(s);
+						}
+						obj.put("article-num-only", list);
+						result.put(obj);
+						
+						match ++;
 					}
 				}
 			}
