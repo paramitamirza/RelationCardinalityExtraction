@@ -53,10 +53,10 @@ public class CardinalityEvaluation {
 		}
 	}
 	
-	public String getInteger(String numStr) {
+	public long getInteger(String numStr) {
 		String[] digitsArr = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
 				"eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"};
-		String[] tensArr = {"", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
+		String[] tensArr = {"ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
 		List<String> digits = Arrays.asList(digitsArr);
 		List<String> tens = Arrays.asList(tensArr);
 		Map<String, Integer> hundreds = new HashMap<String, Integer>();
@@ -65,23 +65,60 @@ public class CardinalityEvaluation {
 		hundreds.put("million", 1000000);
 		
 		long number = -999; 
-		if (tens.contains(numStr)) number = tens.indexOf(numStr) * 10;
-		else if (digits.contains(numStr)) number = digits.indexOf(numStr);
-		else if (NumberUtils.isNumber(numStr)) number = new Float(Float.parseFloat(numStr)).longValue();
-		else if (hundreds.containsKey(numStr)) number = hundreds.get(numStr);
-		
-		if (number != -999) {
-			return number+"";
+		String[] words = numStr.split(" ");
+		if (words.length > 1) {
+			if (tens.contains(words[0]) && digits.contains(words[1])) {
+				number = (tens.indexOf(words[0]) * 10) + digits.indexOf(words[1]);
+			} else if (tens.contains(words[0]) && hundreds.containsKey(words[1])) {
+				number = (tens.indexOf(words[0]) * 10) * hundreds.get(words[1]);
+			} else if (digits.contains(words[0]) && hundreds.containsKey(words[1])) {
+				number = digits.indexOf(words[0]) * hundreds.get(words[1]);
+			} else if (NumberUtils.isNumber(words[0]) && hundreds.containsKey(words[1])) {
+				number = new Float(Float.parseFloat(words[0]) * hundreds.get(words[1])).longValue();
+			}
 		} else {
-			return numStr;
+			if (tens.contains(words[0])) number = tens.indexOf(words[0]) * 10;
+			else if (digits.contains(words[0])) number = digits.indexOf(words[0]);
+			else if (NumberUtils.isNumber(words[0])) number = new Float(Float.parseFloat(words[0])).longValue();
 		}
+		
+		return number;
+	}
+	
+	public Map<Long, Double> extractNumber(List<String> nums, List<Double> probs) {
+		Map<Long, Double> numChild = new HashMap<Long, Double>();
+		String number = "";
+		Double prob = 0.0;
+		for (int i=0; i<nums.size(); i++) {
+			if (!nums.get(i).equals("")) {
+				number = nums.get(i);
+				prob = probs.get(i);
+				if (!nums.get(i+1).equals("")) {
+					number += " " + nums.get(i+1);
+					prob = (prob + probs.get(i))/2;
+					i ++;
+				}
+				if (getInteger(number) > 0) {
+					numChild.put(getInteger(number), prob);
+				}
+			}
+		}
+		return numChild;
 	}
 	
 	public void evaluate(JSONArray arr, String filepath) throws JSONException, IOException {
 		BufferedReader br = new BufferedReader(new FileReader(filepath));
 		
-		String line, label, prob;
-		List<String> nums, probs;
+		String line, label;
+		Double prob;
+		List<String> nums;
+		List<Double> probs;
+		
+		int tp = 0;
+		int fp = 0;
+		
+		double threshold = 0.5;
+		
 		for (int i=0; i<arr.length(); i++) {
 			JSONObject obj = arr.getJSONObject(i);
 			
@@ -90,39 +127,66 @@ public class CardinalityEvaluation {
 			String wikiLabel = obj.getString("wikidata-label");
 			JSONArray lines = obj.getJSONArray("article-num-only");
 			
+			long predictedNumChild = 0;
+			double predictedProb = 0.0;
+			String childLine = "";
+			
 			for (int j=0; j<lines.length(); j++) {
 				Sentence sent = new Sentence(lines.getString(j));
 				line = br.readLine();
 				
 				nums = new ArrayList<String>();
-				probs = new ArrayList<String>();
+				probs = new ArrayList<Double>();
 				for (int k=0; k<sent.words().size(); k++) {
 					line = br.readLine();
 					
 					label = line.split("\t")[6].split("/")[0];
-					prob = line.split("\t")[6].split("/")[1];
+					prob = Double.parseDouble(line.split("\t")[6].split("/")[1]);
 					if (label.equals("CHILD")) {
 						nums.add(sent.lemma(k));
 						probs.add(prob);
 					} else {
 						nums.add("");
-						probs.add("");
+						probs.add(0.0);
 					}
 				}
 				
 				if(!StringUtils.join(nums, "").equals("")) {
-					System.out.println(StringUtils.join(nums, " "));
-					System.out.println(StringUtils.join(probs, " "));
+					int n = 0;
+					double p = 0.0;
+					Map<Long, Double> numbers = extractNumber(nums, probs);
+					for (Long key : numbers.keySet()) {
+						n += key;
+						p += numbers.get(key);
+					}
+					p = p/numbers.size();
+					if (p > predictedProb
+							&& p > threshold) {
+						predictedNumChild = n;
+						predictedProb = p;
+						childLine = lines.getString(j);
+					}
 				}
 				
 				line = br.readLine();
 			}
+			
+			System.out.println(wikiLabel + " (" + wikiId + ")\t" + numChild + "\t" + predictedNumChild + "\t" + predictedProb + "\t" + childLine);
+			if (numChild == predictedNumChild) tp ++;
+			else if (numChild != predictedNumChild && predictedNumChild > 0) fp ++;
 		}
+		
+		double precision = (double)tp / (tp + fp);
+		double recall = (double)tp / arr.length();
+		double fscore = (2 * precision * recall) / (precision + recall);
+		System.out.println("Precision: " + precision);
+		System.out.println("Recall: " + recall);
+		System.out.println("F1-score: " + fscore);
 	}
 
 	public static void main(String[] args) throws JSONException, IOException {
 		
-		String resultPath = "./data/out-cardinality.txt";
+		String resultPath = "./data/out-cardinality-nummod-lemma.txt";
 		String jsonPath = "./data/test-cardinality-filtered-num.json";
 		
 		CardinalityEvaluation eval = new CardinalityEvaluation();
