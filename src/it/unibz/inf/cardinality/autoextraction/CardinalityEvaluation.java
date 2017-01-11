@@ -98,7 +98,7 @@ public class CardinalityEvaluation {
 				probs = new ArrayList<String>();
 				for (int k=0; k<sent.words().size(); k++) {
 					line = br.readLine();
-					
+					System.out.println(sent.word(k) + "-" + line);
 					label = line.split("\t")[6].split("/")[0];
 					prob = line.split("\t")[6].split("/")[1];
 					if (label.equals("CHILD")) {

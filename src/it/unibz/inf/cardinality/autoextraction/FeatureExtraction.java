@@ -134,9 +134,9 @@ public class FeatureExtraction {
 	}
 	
 	public void generateColumnsFile(JSONArray arr, String filePath) throws JSONException, IOException {
-		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filePath, true)));
-		PrintWriter outnummod = new PrintWriter(new BufferedWriter(new FileWriter(filePath.replace(".txt", "-nummod.txt"), true)));
-		PrintWriter outnoone = new PrintWriter(new BufferedWriter(new FileWriter(filePath.replace(".txt", "-nummod-noone.txt"), true)));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filePath, false)));
+		PrintWriter outnummod = new PrintWriter(new BufferedWriter(new FileWriter(filePath.replace(".txt", "-nummod.txt"), false)));
+		PrintWriter outnoone = new PrintWriter(new BufferedWriter(new FileWriter(filePath.replace(".txt", "-nummod-noone.txt"), false)));
 		
 		String label, dep, word, lemma;
 		int numSent = 0;
