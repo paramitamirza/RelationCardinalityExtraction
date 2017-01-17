@@ -25,7 +25,7 @@ import org.json.*;
 import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;
 
-public class WikidataChildren {
+public class WikidataDBPediaChildren {
 	
 	public static final String PREFIXES = "PREFIX wd: <http://www.wikidata.org/entity/>\n"
 			+ "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n"
@@ -162,17 +162,26 @@ public class WikidataChildren {
 		}
 	}
 	
-	public void generateChildrenFile(JSONArray arr, String filePath) throws JSONException, IOException {
+	public void generateChildrenFile(JSONArray arr, String dbpediaTsv, String filePath) throws JSONException, IOException {
 		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filePath, false)));
 		
-		String children;
+		Map<String, String> dbpediaChildren = new HashMap<String, String>();
+		try (BufferedReader br = new BufferedReader(new FileReader(dbpediaTsv))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		    	dbpediaChildren.put(line.split("\t")[0], line.split("\t")[2]);
+		    }
+		}
+		
+		String wikiChildren, wikidataLabel, wikidataId, children;
 		int numSent = 0;
 		for (int i=0; i<arr.length(); i++) {
 			JSONObject obj = arr.getJSONObject(i);
 			
-			String wikidataId = obj.getString("wikidata-id");
+			wikidataId = obj.getString("wikidata-id");
+			wikidataLabel = obj.getString("wikidata-label");
 			System.out.println(wikidataId);
-			children = "";
+			wikiChildren = "";
 			
 			String sChildrenOf = PREFIXES + "SELECT ?child ?childLabel"
 					+ " WHERE"
@@ -187,9 +196,17 @@ public class WikidataChildren {
 			for (int j=0; j<results.length(); j++) {
 				resUri = results.getJSONObject(j).getJSONObject("childLabel").getString("value");
 				resId = resUri.substring(resUri.lastIndexOf("/")+1);
-				children += resId + " | ";
+				if (!NumberUtils.isDigits(resId.substring(1, resId.length())))
+					wikiChildren += " " + resId + " |";
 			}
-			out.println(wikidataId + "\t" + children);
+			
+			if (!wikiChildren.equals("")) {
+				out.println(wikidataId + "\t" + wikidataLabel + "\t" + wikiChildren);
+			} else if (dbpediaChildren.containsKey(wikidataId)) {
+				out.println(wikidataId + "\t" + wikidataLabel + "\t" + dbpediaChildren.get(wikidataId));
+//			} else {
+//				out.println(wikidataId + "\t" + wikidataLabel + "\t");
+			}
 		}
 		out.close();
 	}
@@ -198,11 +215,12 @@ public class WikidataChildren {
 		
 		String trainFilepath = "./data/train-cardinality-filtered-num.json";
 		String testFilepath = "./data/test-cardinality-filtered-num.json";
+		String dbpediaResult = "./data/dbpedia_children.tsv";
 		
-		WikidataChildren feat = new WikidataChildren();
+		WikidataDBPediaChildren feat = new WikidataDBPediaChildren();
 		
-		feat.generateChildrenFile(feat.readJSONArray(trainFilepath), "./data/train-children.tsv");
-		feat.generateChildrenFile(feat.readJSONArray(testFilepath), "./data/test-children.tsv");
+		feat.generateChildrenFile(feat.readJSONArray(trainFilepath), dbpediaResult, "./data/train-wikidata-dbpedia-children.tsv");
+		feat.generateChildrenFile(feat.readJSONArray(testFilepath), dbpediaResult, "./data/test-wikidata-dbpedia-children.tsv");
 	}
 	
 }

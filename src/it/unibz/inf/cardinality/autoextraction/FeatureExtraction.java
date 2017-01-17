@@ -149,6 +149,7 @@ public class FeatureExtraction {
 			int numChild = obj.getInt("num-child");
 			JSONArray lines = obj.getJSONArray("article-num-only");
 			for (int j=0; j<lines.length(); j++) {
+				System.out.println(lines.getString(j));
 				Sentence sent = new Sentence(lines.getString(j));
 				
 				for (int k=0; k<sent.words().size(); k++) {
@@ -195,12 +196,12 @@ public class FeatureExtraction {
 	
 	public static void main(String[] args) throws JSONException, IOException {
 		
-		String trainFilepath = "./data/train-cardinality-filtered-num.json";
-		String testFilepath = "./data/test-cardinality-filtered-num.json";
+		String trainFilepath = "./data/20170116-train-cardinality.json";
+		String testFilepath = "./data/20170116-test-cardinality.json";
 		
 		FeatureExtraction feat = new FeatureExtraction();
 		
-		feat.generateColumnsFile(feat.readJSONArray(trainFilepath), "./data/train-cardinality.txt");
+//		feat.generateColumnsFile(feat.readJSONArray(trainFilepath), "./data/train-cardinality.txt");
 		feat.generateColumnsFile(feat.readJSONArray(testFilepath), "./data/test-cardinality.txt");
 	}
 	

@@ -41,11 +41,11 @@ public class WikidataChildrenNamesData {
 	}
 
 	public static void main(String[] args) throws Exception {
-//		WikidataNumberOfChildrenData numOfChildren = new WikidataNumberOfChildrenData();
-		WikidataChildrenNamesData numOfChildren = new WikidataChildrenNamesData(args[0], args[1], args[2]);
+		WikidataNumberOfChildrenData numOfChildren = new WikidataNumberOfChildrenData();
+//		WikidataChildrenNamesData numOfChildren = new WikidataChildrenNamesData(args[0], args[1], args[2]);
 		
-		System.out.println("Load article titles and corresponding line numbers from file...");
-		numOfChildren.extractArticleTitlesFromFile();
+//		System.out.println("Load article titles and corresponding line numbers from file...");
+//		numOfChildren.extractArticleTitlesFromFile();
 		
 		numOfChildren.matchNumberOfChildrenTrain(numOfChildren.wikiArticlesDirPath);
 	}

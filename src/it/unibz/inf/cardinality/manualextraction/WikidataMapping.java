@@ -72,8 +72,8 @@ public class WikidataMapping {
 	public static void main(String[] args) throws IOException, JSONException {
 		
 		WikidataMapping map = new WikidataMapping();
-		System.out.println(map.getWikidataIDFromTitle("Nejat Eczacıbaşı"));
-		System.out.println(map.getArticleLengthFromTitle("Nejat Eczacıbaşı"));
+		System.out.println(map.getWikidataIDFromTitle("Luis Sandrini"));
+//		System.out.println(map.getArticleLengthFromTitle("Nejat Eczacıbaşı"));
 //		
 //		WikidataMapping map = new WikidataMapping(args[0]);
 //		
