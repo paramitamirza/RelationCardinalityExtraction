@@ -117,7 +117,7 @@ public class CardinalityEvaluation {
 		int tp = 0;
 		int fp = 0;
 		
-		double threshold = 0.5;
+		double threshold = 0.75;
 		
 		for (int i=0; i<arr.length(); i++) {
 			JSONObject obj = arr.getJSONObject(i);
@@ -129,26 +129,26 @@ public class CardinalityEvaluation {
 			
 			long predictedNumChild = 0;
 			double predictedProb = 0.0;
+			int numPredicted = 0;
 			String childLine = "";
 			
 			for (int j=0; j<lines.length(); j++) {
-				Sentence sent = new Sentence(lines.getString(j));
 				line = br.readLine();
-				
+				line = br.readLine();
 				nums = new ArrayList<String>();
 				probs = new ArrayList<Double>();
-				for (int k=0; k<sent.words().size(); k++) {
-					line = br.readLine();
-					System.out.println(sent.word(k) + "-" + line);
+				while (!line.equals("")) {
+//					System.out.println(line);
 					label = line.split("\t")[6].split("/")[0];
 					prob = Double.parseDouble(line.split("\t")[6].split("/")[1]);
-					if (label.equals("CHILD")) {
-						nums.add(sent.lemma(k));
+					if (label.equals("NCHILD")) {
+						nums.add(line.split("\t")[0]);
 						probs.add(prob);
 					} else {
 						nums.add("");
 						probs.add(0.0);
 					}
+					line = br.readLine();
 				}
 				
 				if(!StringUtils.join(nums, "").equals("")) {
@@ -160,12 +160,23 @@ public class CardinalityEvaluation {
 						p += numbers.get(key);
 					}
 					p = p/numbers.size();
+					
+					//When there are more than one sentences, choose the most probable
 					if (p > predictedProb
 							&& p > threshold) {
 						predictedNumChild = n;
 						predictedProb = p;
 						childLine = lines.getString(j);
 					}
+					
+					//When there are more than one sentences, add them up
+//					if (p > threshold) {
+//						predictedNumChild += n;
+//						predictedProb += p;
+//						childLine += lines.getString(j) + "|";
+//						numPredicted++;
+//					}
+//					predictedProb = predictedProb/numPredicted;
 				}
 				
 				line = br.readLine();
@@ -186,8 +197,8 @@ public class CardinalityEvaluation {
 
 	public static void main(String[] args) throws JSONException, IOException {
 		
-		String resultPath = "./data/out-cardinality-nummod-lemma.txt";
-		String jsonPath = "./data/test-cardinality-filtered-num.json";
+		String resultPath = "./data/crf_output/out_cardinality_nummod_lemma_ner.txt";
+		String jsonPath = "./data/20170116-test-cardinality.json";
 		
 		CardinalityEvaluation eval = new CardinalityEvaluation();
 		eval.evaluate(eval.readJSONArray(jsonPath), resultPath);
