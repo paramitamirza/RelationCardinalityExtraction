@@ -1,11 +1,7 @@
 package it.unibz.inf.cardinality.autoextraction;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -14,38 +10,31 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;
-import it.unibz.inf.cardinality.statistics.SPARQLQuery;
 
 public class WikidataNumberOfChildrenDataPopular {
 	
-	public String wikiArticlesDirPath = "./data/wiki-articles/";
-	public String personFilePath = "./data/acl-stats.csv";
+	public String personFilePath = "./data/wikidata_persons.csv";
 	
 	public WikidataNumberOfChildrenDataPopular() {
 		
 	}
 	
 	public WikidataNumberOfChildrenDataPopular(String personFilePath, String wikiArticlesDirPath) {
-		this.wikiArticlesDirPath = wikiArticlesDirPath;
 		this.personFilePath = personFilePath;
 	}
 
 	public static void main(String[] args) throws Exception {
 		WikidataNumberOfChildrenDataPopular numOfChildren = new WikidataNumberOfChildrenDataPopular();
 		
-		numOfChildren.matchNumberOfChildrenTrain(numOfChildren.personFilePath, 
-				numOfChildren.wikiArticlesDirPath);
+		numOfChildren.matchNumberOfChildrenTrain(numOfChildren.personFilePath);
 	}
 	
 	public String getWikipediaTextFromTitle(String title) throws IOException, JSONException {
@@ -114,75 +103,76 @@ public class WikidataNumberOfChildrenDataPopular {
 		return filtered;
 	}
 	
-	public void matchNumberOfChildrenTrain(String filepath, String articlePath) throws JSONException, IOException, InterruptedException {
-		String entity = "", eid = "", name = "", start = "", end = "";
-		int numChild, countChild, match = 0;
-		JSONArray result = new JSONArray();
+	public void matchNumberOfChildrenTrain(String filepath) throws JSONException, IOException, InterruptedException {
+		BufferedReader br;
+		String line;
+		
+		String eid = "", name = "", numChild = "", countChild = ""; 
+		int match = 0;		
 		
 		//Get people with number of chidren
-		BufferedReader br = new BufferedReader(new FileReader(filepath));
-		String line = br.readLine();
+		System.out.println("Read number of children...");
+		br = new BufferedReader(new FileReader(filepath));
+		line = br.readLine();
+		
+		PrintWriter json = new PrintWriter("./data/wikidata-count-cardinality.json");
 		
 		while (line != null) {
-	        System.out.println(line);
-	        entity = line.split(",")[0];
-	        eid = entity.replace("http://www.wikidata.org/entity/", "");
-	        
-	        String q = "SELECT ?name WHERE { "
-	        	 + "  wd:" + eid + " rdfs:label ?name filter (lang(?name) = \"en\") . "
-	       		 + "  } ";
-	       		
-       		JSONObject initialRes = SPARQLQuery.execute(q);
-       		JSONArray res = initialRes.getJSONObject ("results").getJSONArray("bindings");
-       		
-       		if (res.getJSONObject(0).has("name")) {
-       			name = res.getJSONObject(0).getJSONObject("name").getString("value");
-       			
-		        if (line.split(",")[1].equals("NULL")) numChild = 0;
-		        else numChild = Integer.parseInt(line.split(",")[1]);
+			
+//	        System.out.println(line);
+	        eid = line.split(",")[0];
+	        name = line.split(",")[1];
+	        if (line.split(",")[2].equals("NULL")) countChild = "null";
+	        else countChild = line.split(",")[2];
+	        if (line.split(",")[3].equals("NULL")) numChild = "null";
+	        else numChild = line.split(",")[3];
 		        
-		        if (
-						numChild > 0) {
+	        System.out.println(eid + "\t" + name + "\t" + countChild + "\t" + numChild);
+	        
+	        if (
+					numChild != "null"
+					|| countChild != "null") {
+				
+				String wikipediaText = getWikipediaTextFromTitle(name);
+				if (wikipediaText != "") {
+					List<String> articleText = filterText(wikipediaText);
 					
-					String wikipediaText = getWikipediaTextFromTitle(name);
-					if (wikipediaText != "") {
-						List<String> articleText = filterText(wikipediaText);
-						
-						if (articleText.size() > 0) {
-							System.out.println(eid + "\t" + name + "\t" + numChild + "\t" + StringUtils.join(articleText, "|"));
+					if (articleText.size() > 0) {
+//						System.out.println(eid + "\t" + name + "\t" + numChild + "\t" + StringUtils.join(articleText, "|"));
 							
-							JSONObject obj = new JSONObject();
-							obj.put("wikidata-id", eid);
-							obj.put("wikidata-label", name);
-							obj.put("num-child", numChild);
-		
-							JSONArray list = new JSONArray();
-							for (String s : articleText) {
-								list.put(s);
-							}
-							obj.put("article-num-only", list);
-							result.put(obj);
-							
-							match ++;
+						JSONObject obj = new JSONObject();
+						obj.put("wikidata-id", eid);
+						obj.put("wikidata-label", name);
+						obj.put("num-child", numChild);
+						obj.put("count-child", countChild);
+	
+						JSONArray list = new JSONArray();
+						for (String s : articleText) {
+							list.put(s);
 						}
+						obj.put("article-num-only", list);
+						json.write(obj.toString(4) + "\n");
+						
+						match ++;
 					}
 				}
-		        
-		        line = br.readLine();
-       		}
+			}
+       		line = br.readLine();
 	    }
-		
-		try {
-
-			FileWriter file = new FileWriter("./data/wikidata-count-cardinality.json");
-			file.write(result.toString(4));
-			file.flush();
-			file.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 		System.out.println(match);
+		
+		br.close();
+		json.close();
+		
+//		try {
+//
+//			FileWriter file = new FileWriter("./data/wikidata-count-cardinality.json");
+//			file.write(result.toString(4));
+//			file.flush();
+//			file.close();
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 }
