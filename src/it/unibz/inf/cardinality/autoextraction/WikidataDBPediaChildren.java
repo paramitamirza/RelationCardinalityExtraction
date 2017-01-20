@@ -213,8 +213,8 @@ public class WikidataDBPediaChildren {
 	
 	public static void main(String[] args) throws JSONException, IOException {
 		
-		String trainFilepath = "./data/train-cardinality-filtered-num.json";
-		String testFilepath = "./data/test-cardinality-filtered-num.json";
+		String trainFilepath = "./data/auto_extraction/20170116-train-cardinality.json";
+		String testFilepath = "./data/auto_extraction/20170116-test-cardinality.json";
 		String dbpediaResult = "./data/dbpedia_children.tsv";
 		
 		WikidataDBPediaChildren feat = new WikidataDBPediaChildren();

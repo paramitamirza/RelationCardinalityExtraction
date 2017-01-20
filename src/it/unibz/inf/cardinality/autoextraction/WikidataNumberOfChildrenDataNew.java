@@ -76,7 +76,42 @@ public class WikidataNumberOfChildrenDataNew {
 		
 	}
 	
-	private List<String> filterText(String articleText) throws IOException {
+	private List<String> filterTextNumberPerson(String articleText) throws IOException {
+		List<String> filtered = new ArrayList<String>();
+		
+		for (String line : articleText.split("\\r?\\n")) {
+			Document doc = new Document(line);
+			
+			for (Sentence sent : doc.sentences()) {
+				boolean personFound = false, numberFound = false;
+				for (int i=0; i<sent.words().size(); i++) {
+//							System.out.println(sent.word(i) + "\t" + sent.posTag(i) + "\t" + sent.nerTag(i));
+					if (sent.posTag(i).equals("NNP")
+							&& sent.nerTag(i).equals("PERSON")) {
+						personFound = true;
+						break;
+					}
+					if (sent.posTag(i).equals("CD")
+							&& !sent.nerTag(i).equals("MONEY")
+							&& !sent.nerTag(i).equals("PERCENT")
+							&& !sent.nerTag(i).equals("DATE")
+							&& !sent.nerTag(i).equals("TIME")
+							&& !sent.nerTag(i).equals("DURATION")
+							&& !sent.nerTag(i).equals("SET")) {
+						numberFound = true;
+						break;
+					}
+				}
+				if (personFound || numberFound) {
+//							System.out.println(sent.text());
+					filtered.add(sent.text());
+				}
+	        }
+	    }
+		return filtered;
+	}
+	
+	private List<String> filterTextNumber(String articleText) throws IOException {
 		List<String> filtered = new ArrayList<String>();
 		
 		for (String line : articleText.split("\\r?\\n")) {
@@ -150,6 +185,9 @@ public class WikidataNumberOfChildrenDataNew {
 		String entity = "", eid = "", name = "", start = "", end = "";
 		int numChild, countChild, match = 0;
 		JSONArray result = new JSONArray();
+		
+		PrintWriter json = new PrintWriter("./data/20170120-wikidata-children-num-name.json");
+		
 		for (int i=0; i<res.length(); i++) {
 			if (res.getJSONObject(i).has("name")) {
 				entity = res.getJSONObject(i).getJSONObject("parent").getString("value");
@@ -164,11 +202,14 @@ public class WikidataNumberOfChildrenDataNew {
 				
 				if (
 						numChild > 0
-						&& numChild > countChild) {
+						|| countChild > 0
+//						&& numChild > countChild
+					) {
 					
 					String wikipediaText = getWikipediaTextFromTitle(name);
 					if (wikipediaText != "") {
-						List<String> articleText = filterText(wikipediaText);
+//						List<String> articleText = filterTextNumber(wikipediaText);
+						List<String> articleText = filterTextNumberPerson(wikipediaText);
 						
 						if (articleText.size() > 0) {
 							System.out.println(eid + "\t" + name + "\t" + numChild + "\t" + countChild + "\t" + StringUtils.join(articleText, "|"));
@@ -177,13 +218,14 @@ public class WikidataNumberOfChildrenDataNew {
 							obj.put("wikidata-id", eid);
 							obj.put("wikidata-label", name);
 							obj.put("num-child", numChild);
+							obj.put("count-child", countChild);
 		
 							JSONArray list = new JSONArray();
 							for (String s : articleText) {
 								list.put(s);
 							}
 							obj.put("article-num-only", list);
-							result.put(obj);
+							json.write(obj.toString(4) + "\n");
 							
 							match ++;
 						}
@@ -191,16 +233,19 @@ public class WikidataNumberOfChildrenDataNew {
 				}
 			}
 		}
-		try {
-
-			FileWriter file = new FileWriter("train-cardinality.json");
-			file.write(result.toString(4));
-			file.flush();
-			file.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
+		json.close();
+		
+//		try {
+//
+//			FileWriter file = new FileWriter("train-cardinality.json");
+//			file.write(result.toString(4));
+//			file.flush();
+//			file.close();
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
 		System.out.println(match);
 	}

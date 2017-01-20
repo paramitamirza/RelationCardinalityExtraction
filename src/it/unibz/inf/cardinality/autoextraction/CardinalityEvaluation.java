@@ -162,21 +162,21 @@ public class CardinalityEvaluation {
 					p = p/numbers.size();
 					
 					//When there are more than one sentences, choose the most probable
-					if (p > predictedProb
-							&& p > threshold) {
-						predictedNumChild = n;
-						predictedProb = p;
-						childLine = lines.getString(j);
-					}
+//					if (p > predictedProb
+//							&& p > threshold) {
+//						predictedNumChild = n;
+//						predictedProb = p;
+//						childLine = lines.getString(j);
+//					}
 					
 					//When there are more than one sentences, add them up
-//					if (p > threshold) {
-//						predictedNumChild += n;
-//						predictedProb += p;
-//						childLine += lines.getString(j) + "|";
-//						numPredicted++;
-//					}
-//					predictedProb = predictedProb/numPredicted;
+					if (p > threshold) {
+						predictedNumChild += n;
+						predictedProb += p;
+						childLine += lines.getString(j) + "|";
+						numPredicted++;
+					}
+					predictedProb = predictedProb/numPredicted;
 				}
 				
 				line = br.readLine();
@@ -197,8 +197,8 @@ public class CardinalityEvaluation {
 
 	public static void main(String[] args) throws JSONException, IOException {
 		
-		String resultPath = "./data/crf_output/out_cardinality_nummod_lemma_ner.txt";
-		String jsonPath = "./data/20170116-test-cardinality.json";
+		String resultPath = "./data/crf_output/out_cardinality_lemma_ner.txt";
+		String jsonPath = "./data/auto_extraction/20170116-test-cardinality.json";
 		
 		CardinalityEvaluation eval = new CardinalityEvaluation();
 		eval.evaluate(eval.readJSONArray(jsonPath), resultPath);
