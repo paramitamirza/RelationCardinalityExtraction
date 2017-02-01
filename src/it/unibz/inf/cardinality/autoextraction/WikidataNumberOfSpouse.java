@@ -19,26 +19,27 @@ import org.json.JSONObject;
 import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;
 
-public class WikidataNumberOfChildrenDataPopular {
+public class WikidataNumberOfSpouse {
 	
-	public String personFilePath = "./data/wikidata_children.csv";
+	public String spouseFilePath = "./data/wikidata_spouses.csv";
 	
-	public WikidataNumberOfChildrenDataPopular() {
+	public WikidataNumberOfSpouse() {
 		
 	}
 	
-	public WikidataNumberOfChildrenDataPopular(String personFilePath, String wikiArticlesDirPath) {
-		this.personFilePath = personFilePath;
+	public WikidataNumberOfSpouse(String spouseFilePath) {
+		this.spouseFilePath = spouseFilePath;
 	}
 
 	public static void main(String[] args) throws Exception {
-		WikidataNumberOfChildrenDataPopular numOfChildren = new WikidataNumberOfChildrenDataPopular();
+		WikidataNumberOfSpouse numOfChildren = new WikidataNumberOfSpouse();
 		
-		numOfChildren.matchNumberOfChildrenTrain(numOfChildren.personFilePath);
+		numOfChildren.matchNumberOfChildrenTrain(numOfChildren.spouseFilePath, "./data/wikidata-spouses-cardinality.json");
 	}
 	
 	public String getWikipediaTextFromTitle(String title) throws IOException, JSONException {
-		URL wiki = new URL("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&explaintext&redirects=true&titles=" + URLEncoder.encode(title, "UTF-8"));
+//		URL wiki = new URL("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&explaintext&redirects=true&titles=" + URLEncoder.encode(title, "UTF-8"));
+		URL wiki = new URL("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&explaintext&redirects=true&titles=" + title);
 		BufferedReader in = new BufferedReader(
 		        new InputStreamReader(wiki.openStream()));
 		String output = in.readLine();
@@ -143,11 +144,11 @@ public class WikidataNumberOfChildrenDataPopular {
 		return filtered;
 	}
 	
-	public void matchNumberOfChildrenTrain(String filepath) throws JSONException, IOException, InterruptedException {
+	public void matchNumberOfChildrenTrain(String filepath, String jsonPath) throws JSONException, IOException, InterruptedException {
 		BufferedReader br;
 		String line;
 		
-		String eid = "", name = "", numChild = "", countChild = ""; 
+		String eid = "", name = "", countSeries = ""; 
 		int match = 0;		
 		
 		//Get people with number of chidren
@@ -155,48 +156,41 @@ public class WikidataNumberOfChildrenDataPopular {
 		br = new BufferedReader(new FileReader(filepath));
 		line = br.readLine();
 		
-		PrintWriter json = new PrintWriter("./data/wikidata-children-cardinality.json");
+		PrintWriter json = new PrintWriter(jsonPath);
 		
 		while (line != null) {
 			
 //	        System.out.println(line);
 	        eid = line.split(",")[0];
 	        name = line.split(",")[1];
-	        if (line.split(",")[2].equals("NULL")) countChild = "null";
-	        else countChild = line.split(",")[2];
-	        if (line.split(",")[3].equals("NULL")) numChild = "null";
-	        else numChild = line.split(",")[3];
+	        if (line.split(",")[2].equals("NULL")) countSeries = "null";
+	        else countSeries = line.split(",")[2];
 		        
-	        System.out.println(eid + "\t" + name + "\t" + countChild + "\t" + numChild);
-	        
-	        if (
-					numChild != "null"
-					|| countChild != "null") {
+	        System.out.println(eid + "\t" + name + "\t" + countSeries);
 				
-				String wikipediaText = getWikipediaTextFromTitle(name);
-				if (wikipediaText != "") {
-					List<String> articleText = filterTextNumberPerson(wikipediaText);
-					
-					if (articleText.size() > 0) {
-//						System.out.println(eid + "\t" + name + "\t" + numChild + "\t" + StringUtils.join(articleText, "|"));
-							
-						JSONObject obj = new JSONObject();
-						obj.put("wikidata-id", eid);
-						obj.put("wikidata-label", name);
-						obj.put("num-child", numChild);
-						obj.put("count-child", countChild);
-	
-						JSONArray list = new JSONArray();
-						for (String s : articleText) {
-							list.put(s);
-						}
-						obj.put("article-num-only", list);
-						json.write(obj.toString() + "\n");
+			String wikipediaText = getWikipediaTextFromTitle(name);
+			if (wikipediaText != "") {
+				List<String> articleText = filterTextNumberPerson(wikipediaText);
+				
+				if (articleText.size() > 0) {
+//					System.out.println(eid + "\t" + name + "\t" + numChild + "\t" + StringUtils.join(articleText, "|"));
 						
-						match ++;
+					JSONObject obj = new JSONObject();
+					obj.put("wikidata-id", eid);
+					obj.put("wikidata-label", name);
+					obj.put("count-spouses", countSeries);
+
+					JSONArray list = new JSONArray();
+					for (String s : articleText) {
+						list.put(s);
 					}
+					obj.put("article-num-only", list);
+					json.write(obj.toString() + "\n");
+					
+					match ++;
 				}
 			}
+				
        		line = br.readLine();
 	    }
 		System.out.println(match);

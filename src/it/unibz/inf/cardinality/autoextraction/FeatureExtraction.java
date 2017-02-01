@@ -23,7 +23,7 @@ public class FeatureExtraction {
 	
 	public String[] digitsArr = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
 			"eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"};
-	public String[] tensArr = {"ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
+	public String[] tensArr = {"", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
 	public List<String> digits = Arrays.asList(digitsArr);
 	public List<String> tens = Arrays.asList(tensArr);
 	public Map<String, Integer> hundreds = new HashMap<String, Integer>();

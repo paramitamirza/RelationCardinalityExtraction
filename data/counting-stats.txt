@@ -1,0 +1,82 @@
+NOVEL
+---
+- novel-a.csv
+
+SELECT ?mainObject (COUNT(DISTINCT(?part)) AS ?countPart)
+WHERE {
+    ?mainObject wdt:P31 wd:Q1667921 .
+    ?part wdt:P179 ?mainObject
+} GROUP BY ?mainObject
+
+- novel-b.csv
+
+SELECT ?mainObject (COUNT(DISTINCT(?part)) AS ?countPart)
+WHERE {
+    ?mainObject wdt:P31 wd:Q1667921 .
+    ?mainObject wdt:P527 ?part
+} GROUP BY ?mainObject
+
+BOOK
+---
+- book-a.csv
+
+SELECT ?mainObject (COUNT(DISTINCT(?part)) AS ?countPart)
+WHERE {
+    ?mainObject wdt:P31 wd:Q277759 .
+    ?part wdt:P179 ?mainObject
+} GROUP BY ?mainObject
+
+- book-b.csv
+
+SELECT ?mainObject (COUNT(DISTINCT(?part)) AS ?countPart)
+WHERE {
+    ?mainObject wdt:P31 wd:Q277759 .
+    ?mainObject wdt:P527 ?part
+} GROUP BY ?mainObject
+
+FILM
+---
+- film-a.csv
+
+SELECT ?mainObject (COUNT(DISTINCT(?part)) AS ?countPart)
+WHERE {
+    ?mainObject wdt:P31 wd:Q24856 .
+    ?part wdt:P179 ?mainObject
+} GROUP BY ?mainObject
+
+- film-b.csv
+
+SELECT ?mainObject (COUNT(DISTINCT(?part)) AS ?countPart)
+WHERE {
+    ?mainObject wdt:P31 wd:Q24856 .
+    ?mainObject wdt:P527 ?part
+} GROUP BY ?mainObject
+
+COUNTRY DIVISION
+---
+country-div.csv
+
+SELECT ?single (COUNT(DISTINCT(?division)) AS ?countDivision)
+WHERE {
+    ?single wdt:P31 wd:Q6256 .
+    ?single wdt:P150 ?division
+} GROUP BY ?single
+
+ALL DIVISION (not only COUNTRY)
+---
+div.csv
+
+SELECT ?single (COUNT(DISTINCT(?division)) AS ?countDivision)
+WHERE {
+    ?single wdt:P150 ?division
+} GROUP BY ?single
+
+SPOUSE
+---
+
+spouse.csv
+
+SELECT ?person (COUNT(DISTINCT(?o)) AS ?countSpouses) WHERE
+{
+	?person p:P26 ?o 
+} GROUP BY ?person
