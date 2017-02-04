@@ -20,7 +20,7 @@ import edu.stanford.nlp.util.StringUtils;
 
 import static java.lang.Math.toIntExact;
 
-public class CardinalityEvaluationPopular {
+public class CardinalityEvaluationChildren {
 	
 	public JSONArray readJSONArray(String filepath) throws IOException, JSONException {
 		BufferedReader br = new BufferedReader(new FileReader(filepath));
@@ -48,6 +48,7 @@ public class CardinalityEvaluationPopular {
 				&& !ner.equals("DATE")
 				&& !ner.equals("TIME")
 				&& !ner.equals("DURATION")
+				&& !ner.equals("SET")
 				) {
 			return true;
 		} else {
@@ -87,25 +88,45 @@ public class CardinalityEvaluationPopular {
 		return number;
 	}
 	
-	public Map<Long, Double> extractNumber(List<String> nums, List<Double> probs) {
-		Map<Long, Double> numChild = new HashMap<Long, Double>();
+	public Map<Long, String> extractNumber(List<String> nums, List<Double> probs) {
+		Map<Long, String> numChild = new HashMap<Long, String>();
 		String number = "";
 		Double prob = 0.0;
+		int idx = 0;
 		for (int i=0; i<nums.size(); i++) {
 			if (!nums.get(i).equals("")) {
 				number = nums.get(i);
 				prob = probs.get(i);
-				if (!nums.get(i+1).equals("")) {
+				if (i+1<nums.size() && !nums.get(i+1).equals("")) {
 					number += " " + nums.get(i+1);
 					prob = (prob + probs.get(i))/2;
+					idx = i;
 					i ++;
 				}
 				if (getInteger(number) > 0) {
-					numChild.put(getInteger(number), prob);
+					numChild.put(getInteger(number), i + "#" + prob);
 				}
 			}
 		}
 		return numChild;
+	}
+	
+	public String wordsToSentence(List<String> words, int idx) {
+		String sent = "";
+		for (int i=0; i<words.size(); i++) {
+			if (i == idx) sent += "[" + words.get(i) + "]" + " ";
+			else sent += words.get(i) + " ";
+		}
+		return sent.substring(0, sent.length()-1);
+	}
+	
+	public String wordsToSentence(List<String> words, List<Integer> idx) {
+		String sent = "";
+		for (int i=0; i<words.size(); i++) {
+			if (idx.contains(i)) sent += "[" + words.get(i) + "]" + " ";
+			else sent += words.get(i) + " ";
+		}
+		return sent.substring(0, sent.length()-1);
 	}
 	
 	public void evaluate(String arrpath, String filepath, String[] labels, boolean addSameSentence, boolean addDiffSentence) throws JSONException, IOException {
@@ -115,7 +136,7 @@ public class CardinalityEvaluationPopular {
 		br = new BufferedReader(new FileReader(arrpath));
 		line = br.readLine();
 		while (line != null) {
-			peopleNumChild.put(line.split(",")[0], Integer.parseInt(line.split(",")[5]));
+			peopleNumChild.put(line.split(",")[0], Integer.parseInt(line.split(",")[4]));
 			peopleLabel.put(line.split(",")[0], line.split(",")[1]);
 			line = br.readLine();
 		}
@@ -130,11 +151,13 @@ public class CardinalityEvaluationPopular {
 		
 		int tp = 0;
 		int fp = 0;
+		int total = 0;
 		
-		double threshold = 0.1;
+		double lower = 0.1;
+		double upper = 1.0;
 		
 		String[] cols;
-		String sentence = "";
+		List<String> sentence = new ArrayList<String>();
 		String personId = null;
 		line = br.readLine();
 		
@@ -146,45 +169,53 @@ public class CardinalityEvaluationPopular {
 		while (line != null) {
 			
 			if(!StringUtils.join(nums, "").equals("")) {
-				Map<Long, Double> numbers = extractNumber(nums, probs);
-				int n = 0;
-				double p = 0.0;
+				Map<Long, String> numbers = extractNumber(nums, probs);
+				long n = 0;
+				double p = 0.0, pp;
+				int m = 0, mm;
+				List<Integer> mlist = new ArrayList<Integer>();
 				
 				if (addSameSentence) {	
 					//When there are more than one in a sentence, add them up
 					for (Long key : numbers.keySet()) {
-						if (numbers.get(key) > p) {
-							n += toIntExact(key);
-							p += numbers.get(key);
+						pp = Double.parseDouble(numbers.get(key).split("|")[1]);
+						mm = Integer.parseInt(numbers.get(key).split("|")[0]);
+						if (pp > p) {
+							n += key;
+							p += pp;
+							mlist.add(mm);
 						}
 					}
 					p = p/numbers.size();
 				} else {	
 					//When there are more than one in a sentence, choose the most probable
 					for (Long key : numbers.keySet()) {
-						if (numbers.get(key) > p) {
-							n = toIntExact(key);
-							p = numbers.get(key);
+						pp = Double.parseDouble(numbers.get(key).split("#")[1]);
+						mm = Integer.parseInt(numbers.get(key).split("#")[0]);
+						if (pp > p) {
+							n = key;
+							p = pp;
+							m = mm;
 						}
 					}
 				}
 				
 				if (addDiffSentence) {	
 					//When there are more than one sentences, add them up
-					if (p > threshold) {
+					if (p > lower && p < upper) {
 						predictedNumChild += n;
 						predictedProb += p;
-						childLine += sentence + "|";
+						childLine += wordsToSentence(sentence, mlist) + "|";
 						numPredicted++;
 					}
 					predictedProb = predictedProb/numPredicted;
 				} else {
 					//When there are more than one sentences, choose the most probable
 					if (p > predictedProb
-							&& p > threshold) {
+							&& p > lower && p < upper) {
 						predictedNumChild = n;
 						predictedProb = p;
-						childLine = sentence;
+						childLine = wordsToSentence(sentence, m);
 					}
 				}
 			}
@@ -193,7 +224,7 @@ public class CardinalityEvaluationPopular {
 			
 			nums = new ArrayList<String>();
 			probs = new ArrayList<Double>();
-			sentence = "";
+			sentence = new ArrayList<String>();
 			
 			line = br.readLine();
 			line = br.readLine();
@@ -205,9 +236,12 @@ public class CardinalityEvaluationPopular {
 					int numChild = peopleNumChild.get(personId);
 					String wikiLabel = peopleLabel.get(personId);
 					
-					System.out.println(personId + "\t" + wikiLabel + "\t" + numChild + "\t" + predictedNumChild + "\t" + predictedProb + "\t" + childLine);
-					if (numChild == predictedNumChild) tp ++;
-					else if (numChild != predictedNumChild && predictedNumChild > 0) fp ++;
+					System.out.println(personId + ",https://en.wikipedia.org/wiki/" + wikiLabel + "," + numChild + "," + predictedNumChild + "," + predictedProb + ",\"" + childLine + "\"");
+					if (numChild > 0) {
+						if (numChild == predictedNumChild) tp ++;
+						else if (numChild != predictedNumChild && predictedNumChild > 0) fp ++;
+						total ++;
+					}
 					
 					predictedNumChild = 0;
 					predictedProb = 0.0;
@@ -216,13 +250,13 @@ public class CardinalityEvaluationPopular {
 				}
 				
 				personId = cols[0];
-				sentence += cols[3] + " ";
+				sentence.add(cols[3]);
 				for (int l=0; l<labels.length; l++) {
 					if (labels[l].equals("YES")) {
 						prob = Double.valueOf(cols[cols.length-labels.length+l].split("/")[1]);
 					}
 				}
-				if (prob > threshold) {
+				if (prob > lower && prob < upper) {
 					nums.add(cols[3]);
 					probs.add(prob);
 				} else {
@@ -237,7 +271,7 @@ public class CardinalityEvaluationPopular {
 		}
 		
 		double precision = (double)tp / (tp + fp);
-		double recall = (double)tp / peopleNumChild.size();
+		double recall = (double)tp / total;
 		double fscore = (2 * precision * recall) / (precision + recall);
 		System.out.println("Precision: " + precision);
 		System.out.println("Recall: " + recall);
@@ -246,20 +280,14 @@ public class CardinalityEvaluationPopular {
 
 	public static void main(String[] args) throws JSONException, IOException {
 		
-		String csvPath = "./data/auto_extraction/wikidata_persons_random200.csv";
+		String csvPath = "./acl_auto_extraction/wikidata_children_random200.csv";
 		
-		String resultPathYes = "./data/crf_output/out_cardinality_count_yes_lemma_all.txt";
-		String[] labelsYes = {"O", "YES"};
-		
-		String resultPathYesNo = "./data/crf_output/out_cardinality_count_yesno_lemma_all_nummod_noone.txt";
-		String[] labelsYesNo = {"NO", "O", "YES"};
-		
-		String resultPath = "./data/crf_output/out_cardinality_count_lemma_all_nummod_noone.txt";
-		String[] labels = {"MAYBE", "NO", "O", "YES"};
+		String resultPath = "./acl_auto_extraction/output/children_cardinality_lemma_yes_num_nummod.out";
+		String[] labels = {"O", "YES"};
 		
 		
-		CardinalityEvaluationPopular eval = new CardinalityEvaluationPopular();
-		eval.evaluate(csvPath, resultPathYes, labelsYes, false, false);
+		CardinalityEvaluationChildren eval = new CardinalityEvaluationChildren();
+		eval.evaluate(csvPath, resultPath, labels, false, false);
 	}
 
 }

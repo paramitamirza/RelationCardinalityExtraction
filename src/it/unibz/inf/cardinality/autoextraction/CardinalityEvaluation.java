@@ -106,7 +106,7 @@ public class CardinalityEvaluation {
 		return numChild;
 	}
 	
-	public void evaluate(JSONArray arr, String filepath) throws JSONException, IOException {
+	public void evaluate(JSONArray arr, String filepath, boolean mostProbable, double threshold) throws JSONException, IOException {
 		BufferedReader br = new BufferedReader(new FileReader(filepath));
 		
 		String line, label;
@@ -116,8 +116,6 @@ public class CardinalityEvaluation {
 		
 		int tp = 0;
 		int fp = 0;
-		
-		double threshold = 0.75;
 		
 		for (int i=0; i<arr.length(); i++) {
 			JSONObject obj = arr.getJSONObject(i);
@@ -161,22 +159,24 @@ public class CardinalityEvaluation {
 					}
 					p = p/numbers.size();
 					
+					if (mostProbable) {
 					//When there are more than one sentences, choose the most probable
-//					if (p > predictedProb
-//							&& p > threshold) {
-//						predictedNumChild = n;
-//						predictedProb = p;
-//						childLine = lines.getString(j);
-//					}
-					
-					//When there are more than one sentences, add them up
-					if (p > threshold) {
-						predictedNumChild += n;
-						predictedProb += p;
-						childLine += lines.getString(j) + "|";
-						numPredicted++;
+						if (p > predictedProb
+								&& p > threshold) {
+							predictedNumChild = n;
+							predictedProb = p;
+							childLine = lines.getString(j);
+						}
+					} else {
+						//When there are more than one sentences, add them up
+						if (p > threshold) {
+							predictedNumChild += n;
+							predictedProb += p;
+							childLine += lines.getString(j) + "|";
+							numPredicted++;
+						}
+						predictedProb = predictedProb/numPredicted;
 					}
-					predictedProb = predictedProb/numPredicted;
 				}
 				
 				line = br.readLine();
@@ -197,11 +197,11 @@ public class CardinalityEvaluation {
 
 	public static void main(String[] args) throws JSONException, IOException {
 		
-		String resultPath = "./data/crf_output/out_cardinality_lemma_ner.txt";
+		String resultPath = "./data/crf_output/out_cardinality_nummod_noone_lemma_pos_ner_dep_nobi.txt";
 		String jsonPath = "./data/auto_extraction/20170116-test-cardinality.json";
 		
 		CardinalityEvaluation eval = new CardinalityEvaluation();
-		eval.evaluate(eval.readJSONArray(jsonPath), resultPath);
+		eval.evaluate(eval.readJSONArray(jsonPath), resultPath, true, 0.9);
 	}
 
 }
