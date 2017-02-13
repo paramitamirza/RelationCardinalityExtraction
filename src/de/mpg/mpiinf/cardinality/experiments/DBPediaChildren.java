@@ -11,8 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import it.unibz.inf.cardinality.manualextraction.WikidataMapping;
-
 public class DBPediaChildren {
 	
 	/**
