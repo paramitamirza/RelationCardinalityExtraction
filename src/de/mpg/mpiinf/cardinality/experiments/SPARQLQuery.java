@@ -1,4 +1,4 @@
-package it.unibz.inf.cardinality.statistics;
+package de.mpg.mpiinf.cardinality.experiments;
 
 import java.io.ByteArrayOutputStream;
 

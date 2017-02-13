@@ -25,7 +25,6 @@ import org.json.JSONObject;
 
 import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;
-import it.unibz.inf.cardinality.statistics.SPARQLQuery;
 
 public class WikidataNumberOfChildrenDataNew {
 	
