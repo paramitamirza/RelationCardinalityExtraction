@@ -1,7 +1,0 @@
-
-#Article: Ben Forta
-#Type: regular article
-
-Ben Forta is an author and Senior Technical Evangelist for Adobe Systems, particularly ColdFusion and Flex, and the owner of EmTek Systems. He previously worked in a similar capacity for Macromedia and Allaire Corporation, the two previous owners of ColdFusion. In addition to writing numerous technical books on ColdFusion, SQL, and Regular Expressions, Forta co-authored Adobe's official ColdFusion training materials and certification tests and lectures on application development around the world. Many of his books have been translated into over a dozen languages worldwide. Before working for Allaire, he founded the website Car.com, which was later purchased by Auto-By-Tel. Born in London, England, Forta lives in Oak Park, Michigan with his wife and their children.
-
-
