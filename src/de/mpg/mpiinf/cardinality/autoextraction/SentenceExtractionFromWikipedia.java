@@ -1,14 +1,23 @@
 package de.mpg.mpiinf.cardinality.autoextraction;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,8 +28,8 @@ import edu.stanford.nlp.simple.Sentence;
 
 public class SentenceExtractionFromWikipedia {
 	
-	private String inputCsvFile = "input.csv";
-	private String outputJsonFile = "output.jsonl";
+	private String inputCsvFile = "./data/auto_extraction/wikidata_sample_links.csv";
+	private String outputJsonFile = "./data/auto_extraction/wikidata_sample.jsonl.gz";
 	
 	public SentenceExtractionFromWikipedia() {
 		
@@ -43,22 +52,29 @@ public class SentenceExtractionFromWikipedia {
 		sentExtraction.extractSentences();
 	}
 	
+	
 	public void extractSentences() throws JSONException, IOException, InterruptedException {
 		BufferedReader br;
+		BufferedWriter bw;
 		String line;		
 		String eid = "", label = "", count = "";
-
+		
 		br = new BufferedReader(new FileReader(this.getInputCsvFile()));
 		line = br.readLine();		
-		PrintWriter json = new PrintWriter(this.getOutputJsonFile());
+//		PrintWriter json = new PrintWriter(this.getOutputJsonFile());
+		bw = new BufferedWriter(
+                new OutputStreamWriter(
+                        new GZIPOutputStream(new FileOutputStream(this.getOutputJsonFile()))
+                    ));
 		
+		System.out.println("Extract Wikipedia sentences (containing numbers) per Wikidata instance...");
 		while (line != null) {
 			
 //	        System.out.println(line);
 	        eid = line.split(",")[0];
 	        label = line.split(",")[1];
-	        count = line.split(",")[2];		        
-	        System.err.println(eid + "\t" + label + "\t" + count);
+	        count = line.split(",")[2];
+	        System.out.println(eid + "\t" + label + "\t" + count);
 				
 			String wikipediaText = getWikipediaTextFromTitle(label);
 			if (wikipediaText != "") {
@@ -77,7 +93,9 @@ public class SentenceExtractionFromWikipedia {
 						list.put(s);
 					}
 					obj.put("article", list);
-					json.write(obj.toString() + "\n");
+//					json.write(obj.toString() + "\n");
+					bw.write(obj.toString());
+					bw.newLine();
 				}
 			}
 				
@@ -85,7 +103,8 @@ public class SentenceExtractionFromWikipedia {
 	    }
 		
 		br.close();
-		json.close();
+//		json.close();
+		bw.close();
 	}
 	
 	public String getWikipediaTextFromTitle(String title) throws IOException, JSONException {

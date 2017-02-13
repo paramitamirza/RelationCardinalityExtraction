@@ -3,9 +3,13 @@ package de.mpg.mpiinf.cardinality.autoextraction;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -13,6 +17,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.json.*;
 
@@ -34,10 +40,10 @@ public class FeatureExtractionForCRF {
 	
 	public Map<String, Integer> hundreds = new HashMap<String, Integer>();
 	
-	private String inputJsonFile = "output.jsonl";
-	private String inputRandomCsvFile = "random.csv";
-	private String relName = "relation";
-	private String dirFeature = "./data/featureFileCRF/";
+	private String inputJsonFile = "./data/auto_extraction/wikidata_sample.jsonl.gz";
+	private String inputRandomCsvFile = "./data/auto_extraction/wikidata_sample_random.csv";
+	private String relName = "sample";
+	private String dirFeature = "./data/auto_extraction/";
 	
 	public FeatureExtractionForCRF() {
 		hundreds.put("hundred", 100);
@@ -77,7 +83,10 @@ public class FeatureExtractionForCRF {
 		long numInt;
 		int numSent = 0;
 		
-		BufferedReader br = new BufferedReader(new FileReader(this.getInputJsonFile()));
+		BufferedReader br = new BufferedReader(
+                new InputStreamReader(
+                        new GZIPInputStream(new FileInputStream(this.getInputJsonFile()))
+                    ));
 		line = br.readLine();
 		JSONObject obj;
 		JSONArray lines;
@@ -97,7 +106,7 @@ public class FeatureExtractionForCRF {
 			count = obj.getString("count");
 			lines = obj.getJSONArray("article");
 			wikidataId = obj.getString("wikidata-id");
-			System.err.println(wikidataId + "\t" + count);
+			System.out.println(wikidataId + "\t" + count);
 			
 			if (testInstances.contains(wikidataId)) {
 				outfile = new PrintWriter(new BufferedWriter(new FileWriter(dirFeature + relName + "_test_cardinality.data", true)));
