@@ -1,4 +1,4 @@
-package it.unibz.inf.cardinality.autoextraction;
+package de.mpg.mpiinf.cardinality.experiments;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

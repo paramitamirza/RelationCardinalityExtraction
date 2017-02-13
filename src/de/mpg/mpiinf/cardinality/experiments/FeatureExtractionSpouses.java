@@ -24,7 +24,7 @@ import org.json.*;
 import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;
 
-public class FeatureExtractionOthers {
+public class FeatureExtractionSpouses {
 	
 	public String[] digitsArr = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
 			"eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"};
@@ -39,7 +39,7 @@ public class FeatureExtractionOthers {
 	public List<String> tenOrdinals = Arrays.asList(tenOrdinalsArr);
 	
 	public Map<String, Integer> hundreds = new HashMap<String, Integer>();
-	public FeatureExtractionOthers() {
+	public FeatureExtractionSpouses() {
 		hundreds.put("hundred", 100);
 		hundreds.put("thousand", 1000);
 		hundreds.put("million", 1000000);
@@ -304,8 +304,8 @@ public class FeatureExtractionOthers {
 		line = br.readLine();
 		JSONObject obj;
 		JSONArray lines;
-		String wikidataId, numChild, countSeries;
-		int numOfSeries = -99;
+		String wikidataId, numChild, countSpouses;
+		int numOfSpouses = -99;
 		PrintWriter outfile;
 		
 //		File test = new File("./data/random_test_cardinality.txt");
@@ -322,18 +322,22 @@ public class FeatureExtractionOthers {
 			randomSeries.add(line.split(",")[0]);
 			obj = new JSONObject(line);
 			
-			countSeries = obj.getString("count-"+topic);
+			countSpouses = obj.getString("count-"+topic);
 			lines = obj.getJSONArray("article-num-only");
 			wikidataId = obj.getString("wikidata-id");
-			System.out.println(wikidataId + "\t" + countSeries);
+			System.out.println(wikidataId + "\t" + countSpouses);
 			
 //			if (wikidataId.equals("Q3576629")) start = true;
 			
 			if (randomSeries.contains(wikidataId)) {
 				outfile = new PrintWriter(new BufferedWriter(new FileWriter("./data/"+topic+"_test_cardinality.txt", true)));
 			} else {
-				numOfSeries = Integer.parseInt(countSeries);
-				outfile = new PrintWriter(new BufferedWriter(new FileWriter("./data/"+topic+"_train_cardinality.txt", true)));
+				numOfSpouses = Integer.parseInt(countSpouses);
+				if (numOfSpouses > 1) {
+					outfile = new PrintWriter(new BufferedWriter(new FileWriter("./data/"+topic+"_more_train_cardinality.txt", true)));
+				} else {
+					outfile = new PrintWriter(new BufferedWriter(new FileWriter("./data/"+topic+"_one_train_cardinality.txt", true)));
+				}
 			}
 			
 			if (start) {
@@ -354,11 +358,11 @@ public class FeatureExtractionOthers {
 							if (composition) {
 								if (ordinal && properOrdinal(sent.posTag(k), sent.nerTag(k))) {
 									numInt = getInteger(sent.lemma(k));
-									if (numInt > 0 && numInt == numOfSeries) {
+									if (numInt > 0 && numInt == numOfSpouses) {
 										labels[k] = "YES-ORD";
-									} else if (numInt > 0 && numInt < numOfSeries) {
+									} else if (numInt > 0 && numInt < numOfSpouses) {
 										labels[k] = "NO-ORD";
-									} else if (numInt > 0 && numInt > numOfSeries) {
+									} else if (numInt > 0 && numInt > numOfSpouses) {
 										labels[k] = "MAYBE-ORD";
 									} 
 									
@@ -370,7 +374,7 @@ public class FeatureExtractionOthers {
 											numInt = getInteger(sent.lemma(k)+" "+sent.lemma(k+1));
 											
 											if (numToAdd > 0) {
-												if (numInt > 0 && (numToAdd+numInt) == numOfSeries) {
+												if (numInt > 0 && (numToAdd+numInt) == numOfSpouses) {
 													labels[k] = "YES";
 													labels[k+1] = "YES";
 													k++;
@@ -378,7 +382,7 @@ public class FeatureExtractionOthers {
 													numToAdd = 0;
 													idxToAdd.clear();
 													
-												} else if (numInt > 0 && (numToAdd+numInt) < numOfSeries) {
+												} else if (numInt > 0 && (numToAdd+numInt) < numOfSpouses) {
 													labels[k] = "NO";
 													labels[k+1] = "NO";
 													k++;
@@ -387,19 +391,19 @@ public class FeatureExtractionOthers {
 													
 												}
 											} else {
-												if (numInt > 0 && numInt == numOfSeries) {
+												if (numInt > 0 && numInt == numOfSpouses) {
 													labels[k] = "YES";
 													labels[k+1] = "YES";
 													k++;			
 													
-												} else if (numInt > 0 && numInt < numOfSeries) {
+												} else if (numInt > 0 && numInt < numOfSpouses) {
 													labels[k] = "NO";
 													labels[k+1] = "NO";
 													k++;
 													numToAdd += numInt;
 													idxToAdd.add(k); idxToAdd.add(k+1);
 													
-												} else if (numInt > 0 && numInt > numOfSeries) {
+												} else if (numInt > 0 && numInt > numOfSpouses) {
 													labels[k] = "MAYBE";
 													labels[k+1] = "MAYBE";
 													k++;
@@ -408,28 +412,28 @@ public class FeatureExtractionOthers {
 											
 										} else {								
 											if (numToAdd > 0) {
-												if (numInt > 0 && (numToAdd+numInt) == numOfSeries) {
+												if (numInt > 0 && (numToAdd+numInt) == numOfSpouses) {
 													labels[k] = "YES";
 													for (Integer nnn : idxToAdd) labels[nnn] = "YES";
 													numToAdd = 0;
 													idxToAdd.clear();
 													
-												} else if (numInt > 0 && (numToAdd+numInt) < numOfSeries) {
+												} else if (numInt > 0 && (numToAdd+numInt) < numOfSpouses) {
 													labels[k] = "NO";
 													numToAdd += numInt;
 													idxToAdd.add(k);
 													
 												} 
 											} else {
-												if (numInt > 0 && numInt == numOfSeries) {
+												if (numInt > 0 && numInt == numOfSpouses) {
 													labels[k] = "YES";
 													
-												} else if (numInt > 0 && numInt < numOfSeries) {
+												} else if (numInt > 0 && numInt < numOfSpouses) {
 													labels[k] = "NO";
 													numToAdd += numInt;
 													idxToAdd.add(k);
 													
-												} else if (numInt > 0 && numInt > numOfSeries) {
+												} else if (numInt > 0 && numInt > numOfSpouses) {
 													labels[k] = "MAYBE";
 												}
 											}
@@ -442,11 +446,11 @@ public class FeatureExtractionOthers {
 									
 									if (k+1 < sent.words().size()) {
 										if (!properNumber(sent.posTag(k+1), sent.nerTag(k+1))) {
-											if (numInt > 0 && numInt == numOfSeries) {
+											if (numInt > 0 && numInt == numOfSpouses) {
 												labels[k] = "YES-ORD";
-											} else if (numInt > 0 && numInt < numOfSeries) {
+											} else if (numInt > 0 && numInt < numOfSpouses) {
 												labels[k] = "NO-ORD";
-											} else if (numInt > 0 && numInt > numOfSeries) {
+											} else if (numInt > 0 && numInt > numOfSpouses) {
 												labels[k] = "MAYBE-ORD";
 											} 
 										}
@@ -459,26 +463,26 @@ public class FeatureExtractionOthers {
 										if (properNumber(sent.posTag(k+1), sent.nerTag(k+1))) {
 											numInt = getInteger(sent.lemma(k)+" "+sent.lemma(k+1));
 											
-											if (numInt > 0 && numInt == numOfSeries) {
+											if (numInt > 0 && numInt == numOfSpouses) {
 												labels[k] = "YES";
 												labels[k+1] = "YES";
 												k++;
-											} else if (numInt > 0 && numInt < numOfSeries) {
+											} else if (numInt > 0 && numInt < numOfSpouses) {
 												labels[k] = "NO";
 												labels[k+1] = "NO";
 												k++;
-											} else if (numInt > 0 && numInt > numOfSeries) {
+											} else if (numInt > 0 && numInt > numOfSpouses) {
 												labels[k] = "MAYBE";
 												labels[k+1] = "MAYBE";
 												k++;
 											} 
 											
 										} else {
-											if (numInt > 0 && numInt == numOfSeries) {
+											if (numInt > 0 && numInt == numOfSpouses) {
 												labels[k] = "YES";
-											} else if (numInt > 0 && numInt < numOfSeries) {
+											} else if (numInt > 0 && numInt < numOfSpouses) {
 												labels[k] = "NO";
-											} else if (numInt > 0 && numInt > numOfSeries) {
+											} else if (numInt > 0 && numInt > numOfSpouses) {
 												labels[k] = "MAYBE";
 											} 
 										}
@@ -605,7 +609,7 @@ public class FeatureExtractionOthers {
 		String randomFilepath = args[1];
 		String topic = args[2];
 				
-		FeatureExtractionOthers feat = new FeatureExtractionOthers();
+		FeatureExtractionSpouses feat = new FeatureExtractionSpouses();
 		
 		feat.generateColumnsFile(filepath, randomFilepath, topic, false, false);
 		
