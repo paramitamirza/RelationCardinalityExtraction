@@ -48,20 +48,21 @@ public class FeatureExtractionForCRF {
 		hundreds.put("million", 1000000);
 	}
 	
-	public FeatureExtractionForCRF(String inputJsonFilePath, String inputRandomCsvFilePath, String relationName) {
+	public FeatureExtractionForCRF(String inputJsonFilePath, String inputRandomCsvFilePath, String relationName, String dirOutput) {
 		this();
 		this.setInputJsonFile(inputJsonFilePath);
 		this.setInputRandomCsvFile(inputRandomCsvFilePath);
 		this.setRelName(relationName);
+		this.setDirFeature(dirOutput);
 	}
 	
 	public static void main(String[] args) throws JSONException, IOException {
 				
 		FeatureExtractionForCRF featExtraction;
-		if (args.length < 3) {
+		if (args.length < 4) {
 			featExtraction = new FeatureExtractionForCRF();
 		} else {
-			featExtraction = new FeatureExtractionForCRF(args[0], args[1], args[2]);
+			featExtraction = new FeatureExtractionForCRF(args[0], args[1], args[2], args[3]);
 		}
 		
 		featExtraction.generateColumnsFile();
@@ -97,6 +98,7 @@ public class FeatureExtractionForCRF {
 		Files.deleteIfExists(train.toPath());
 		Files.deleteIfExists(test.toPath());
 		
+		System.out.println("Generate feature file (in column format) for CRF++...");
 		while (line != null) {
 			obj = new JSONObject(line);
 			
@@ -396,6 +398,14 @@ public class FeatureExtractionForCRF {
 
 	public void setRelName(String relationName) {
 		this.relName = relationName;
+	}
+	
+	public String getDirFeature() {
+		return dirFeature;
+	}
+
+	public void setDirFeature(String dirFeature) {
+		this.dirFeature = dirFeature;
 	}
 	
 }

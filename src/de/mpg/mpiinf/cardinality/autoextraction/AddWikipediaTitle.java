@@ -37,11 +37,15 @@ public class AddWikipediaTitle {
 			addWikiTitle = new AddWikipediaTitle(args[0], args[1], args[2]);
 		}
 		
+		addWikiTitle.append();
+	}
+	
+	public void append() throws Exception{
 		System.out.println("Read Wikidata-to-WikipediaTitle mapping file...");
-		Map<String, String> wikiLinks = addWikiTitle.mapWikidataWikipediaTitle();
+		Map<String, String> wikiLinks = mapWikidataWikipediaTitle();
 		
-		BufferedReader br = new BufferedReader(new FileReader(addWikiTitle.getInputCsvFile()));
-		BufferedWriter bw = new BufferedWriter(new FileWriter(addWikiTitle.getOutputCsvFile()));
+		BufferedReader br = new BufferedReader(new FileReader(this.getInputCsvFile()));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(this.getOutputCsvFile()));
 		String eid = "", label = "", count = "";
 		String line = br.readLine();	
 		
