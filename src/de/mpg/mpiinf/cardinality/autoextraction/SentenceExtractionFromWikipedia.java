@@ -20,7 +20,7 @@ import edu.stanford.nlp.simple.Sentence;
 public class SentenceExtractionFromWikipedia {
 	
 	private String inputCsvFile = "input.csv";
-	private String outputJsonFile = "output.json";
+	private String outputJsonFile = "output.jsonl";
 	
 	public SentenceExtractionFromWikipedia() {
 		
