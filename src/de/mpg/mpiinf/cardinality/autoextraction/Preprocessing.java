@@ -35,13 +35,22 @@ public class Preprocessing {
 		//If input CSV file doesn't have Wikipedia labels for each Wikidata ID
 		boolean addLinks = cmd.hasOption("l");
 		if (addLinks) {
-			String wikipediaLinkFile = "./data/auto_extraction/english_links.txt.gz";
-			AddWikipediaTitle addWikiTitle = new AddWikipediaTitle(inputCsvFile, wikipediaLinkFile);
-			
-			int nRandom = 0;
-			boolean randomize = cmd.hasOption("n");
-			if (randomize) nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
-			addWikiTitle.append(nRandom);
+			boolean enLinks = cmd.hasOption("w");
+			if (enLinks) {
+				String wikipediaLinkFile = cmd.getOptionValue("wikiurl");
+				AddWikipediaTitle addWikiTitle = new AddWikipediaTitle(inputCsvFile, wikipediaLinkFile);
+				
+				int nRandom = 0;
+				boolean randomize = cmd.hasOption("n");
+				if (randomize) nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
+				addWikiTitle.append(nRandom);
+			} else {
+				System.err.println("Mapping file between Wikipedia English URL and Wikidata entity (.txt.gz) is missing!");
+				System.err.println("-- Specify -w [wiki-mapping file (.txt.gz) path]");
+
+	            System.exit(1);
+	            return;
+			}
 		}
 		
 		//Extract Wikipedia sentences (containing numbers) per Wikidata instance
@@ -112,6 +121,10 @@ public class Preprocessing {
 		Option addLinks = new Option("l", "links", false, "Add Wikipedia title page for WikiURL");
 		addLinks.setRequired(false);
 		options.addOption(addLinks);
+		
+		Option enLinks = new Option("w", "wikiurl", true, "Wikipedia English URL of Wikidata entity");
+		enLinks.setRequired(false);
+		options.addOption(enLinks);
 		
 		Option random = new Option("n", "randomize", true, "Generate n random instances for testing");
 		random.setRequired(false);
