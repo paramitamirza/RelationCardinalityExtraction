@@ -59,17 +59,17 @@ public class Evaluation {
 		
 		Option input = new Option("i", "input", true, "Input evaluation file (.csv) path");
 		input.setRequired(true);
-        options.addOption(input);
+		options.addOption(input);
         
-        Option relName = new Option("c", "crfout", true, "CRF++ output file (.out) path");
-        relName.setRequired(true);
-        options.addOption(relName);
+		Option relName = new Option("c", "crfout", true, "CRF++ output file (.out) path");
+		relName.setRequired(true);
+		options.addOption(relName);
         
-        Option output = new Option("o", "output", true, "Output file (.csv) path");
-        output.setRequired(false);
-        options.addOption(output);
+		Option output = new Option("o", "output", true, "Output file (.csv) path");
+		output.setRequired(false);
+		options.addOption(output);
         
-        return options;
+		return options;
 	}
 	
 	public void evaluate(String csvPath, String resultPath, String[] labels, String outPath,

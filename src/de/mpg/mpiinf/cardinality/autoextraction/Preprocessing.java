@@ -103,37 +103,37 @@ public class Preprocessing {
 		
 		Option input = new Option("i", "input", true, "Input file (.csv) path");
 		input.setRequired(true);
-        options.addOption(input);
-        
-        Option relName = new Option("p", "relname", true, "Property/relation name");
-        relName.setRequired(true);
-        options.addOption(relName);
-        
-        Option addLinks = new Option("l", "links", false, "Add Wikipedia title page for WikiURL");
-        addLinks.setRequired(false);
-        options.addOption(addLinks);
-        
-        Option random = new Option("n", "randomize", true, "Generate n random instances for testing");
-        random.setRequired(false);
-        options.addOption(random);
-        
-        Option randomFile = new Option("r", "random", true, "Input random file (.csv) path for testing");
-        randomFile.setRequired(false);
-        options.addOption(randomFile);
-        
-        Option extractSent = new Option("s", "sentences", false, "Extract Wikipedia sentences (containing numbers) per Wikidata instance");
-        extractSent.setRequired(false);
-        options.addOption(extractSent);
-        
-        Option extractFeature = new Option("f", "features", false, "Generate feature file (in column format) for CRF++");
-        extractFeature.setRequired(false);
-        options.addOption(extractFeature);
-        
-        Option output = new Option("o", "output", true, "Output directory of feature files (in column format) for CRF++");
-        output.setRequired(false);
-        options.addOption(output);
-        
-        return options;
+		options.addOption(input);
+		
+		Option relName = new Option("p", "relname", true, "Property/relation name");
+		relName.setRequired(true);
+		options.addOption(relName);
+		
+		Option addLinks = new Option("l", "links", false, "Add Wikipedia title page for WikiURL");
+		addLinks.setRequired(false);
+		options.addOption(addLinks);
+		
+		Option random = new Option("n", "randomize", true, "Generate n random instances for testing");
+		random.setRequired(false);
+		options.addOption(random);
+		
+		Option randomFile = new Option("r", "random", true, "Input random file (.csv) path for testing");
+		randomFile.setRequired(false);
+		options.addOption(randomFile);
+		
+		Option extractSent = new Option("s", "sentences", false, "Extract Wikipedia sentences (containing numbers) per Wikidata instance");
+		extractSent.setRequired(false);
+		options.addOption(extractSent);
+		
+		Option extractFeature = new Option("f", "features", false, "Generate feature file (in column format) for CRF++");
+		extractFeature.setRequired(false);
+		options.addOption(extractFeature);
+		
+		Option output = new Option("o", "output", true, "Output directory of feature files (in column format) for CRF++");
+		output.setRequired(false);
+		options.addOption(output);
+		
+		return options;
 	}
 
 }
