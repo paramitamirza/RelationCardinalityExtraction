@@ -70,9 +70,11 @@ usage: Evaluation
 
 ```
 The output will be precision, recall and F1-score measures. 
-If the output file is specified (-o [output file]), then the result is printed into file with the following format:
+If the output file is specified (-o [output file]), then the result is printed into a file with the following format:
+
 `WikidataID,WikipediaURL,tripleCount,predictedCardinality,probabilityCardinality,TextualEvidence` (per line)
-as exemplified in `data/example/predicted_sample_cardinality.csv`,
+
+as exemplified in `data/example/predicted_sample_cardinality.csv`.
 
 Example:
 
