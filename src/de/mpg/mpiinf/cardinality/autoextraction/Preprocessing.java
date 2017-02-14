@@ -15,19 +15,19 @@ public class Preprocessing {
 		Options options = getPreprocessingOptions();
 
 		CommandLineParser parser = new DefaultParser();
-        HelpFormatter formatter = new HelpFormatter();
-        CommandLine cmd;
-
-        try {
-            cmd = parser.parse(options, args);
+		HelpFormatter formatter = new HelpFormatter();
+		CommandLine cmd;
+		
+		try {
+			cmd = parser.parse(options, args);
             
-        } catch (ParseException e) {
-            System.err.println(e.getMessage());
-            formatter.printHelp("RelationCardinalityExtraction: Preprocessing", options);
+		} catch (ParseException e) {
+			System.err.println(e.getMessage());
+			formatter.printHelp("RelationCardinalityExtraction: Preprocessing", options);
 
-            System.exit(1);
-            return;
-        }
+			System.exit(1);
+			return;
+		}
 		
 //		String inputCsvFile = "./data/auto_extraction/wikidata_sample.csv";
 		String inputCsvFile = cmd.getOptionValue("input");

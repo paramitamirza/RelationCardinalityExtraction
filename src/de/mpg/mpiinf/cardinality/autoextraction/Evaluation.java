@@ -25,21 +25,21 @@ public class Evaluation {
 	public static void main(String[] args) throws IOException {
 		
 		Options options = getEvalOptions();
-
+		
 		CommandLineParser parser = new DefaultParser();
-        HelpFormatter formatter = new HelpFormatter();
-        CommandLine cmd;
-
-        try {
-            cmd = parser.parse(options, args);
+		HelpFormatter formatter = new HelpFormatter();
+		CommandLine cmd;
+		
+		try {
+			cmd = parser.parse(options, args);
             
-        } catch (ParseException e) {
-            System.err.println(e.getMessage());
-            formatter.printHelp("RelationCardinalityExtraction: Evaluation", options);
-
-            System.exit(1);
-            return;
-        }
+		} catch (ParseException e) {
+			System.err.println(e.getMessage());
+			formatter.printHelp("RelationCardinalityExtraction: Evaluation", options);
+			
+			System.exit(1);
+			return;
+		}
 		
 		String csvPath = cmd.getOptionValue("input");
 		String resultPath = cmd.getOptionValue("crfout");
