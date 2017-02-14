@@ -1,4 +1,6 @@
 /bin/
 /dist/
 /src/de/mpg/mpiinf/cardinality/experiments/
-
+/acl_auto_extraction/crf_data/
+/acl_auto_extraction/models/
+/acl_auto_extraction/tools/
