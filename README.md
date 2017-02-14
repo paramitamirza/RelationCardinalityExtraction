@@ -32,5 +32,11 @@ usage: Preprocessing
                         format) for CRF++  
 ```   
 The output will be two files as input for CRF++:
-* [relname]_train_cardinality.data
-* [relname]_test_cardinality.data
+* `[relname]_train_cardinality.data`
+* `[relname]_test_cardinality.data`
+
+Example:
+* `Preprocessing -i data/auto_extraction/wikidata_sample.csv -p sample -s` --> will generate `data/auto_extraction/wikidata_sample.jsonl.gz`
+*  
+
+How to train and predict (with) a CRF model? See example at `data/auto_extraction/CRF/sample_cardinality_lemma.sh`. Don't forget to download and install [CRF++](https://taku910.github.io/crfpp/), and set the `$CRFPATH`. The sample output of the CRF model can be seen in 
