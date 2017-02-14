@@ -43,7 +43,7 @@ Preprocessing -i data/example/wikidata_sample.csv (2 columns) -p sample -l -n 10
 ```
 will generate `data/example/wikidata_sample.csv` (3 columns) and `data/example/wikidata_sample_random10.csv`.
 
-_! The english_links.txt.gz contains mapping from Wikidata ID to Wikipedia URL (shortened, only title) taken from [RDF dump of all site link information ver. 20160801](http://tools.wmflabs.org/wikidata-exports/rdf/exports/20160801/wikidata-sitelinks.nt.gz) !_
+_! The `data/english_links.txt.gz` contains mapping from Wikidata ID to Wikipedia URL (shortened, only title) taken from [RDF dump of all site link information ver. 20160801](http://tools.wmflabs.org/wikidata-exports/rdf/exports/20160801/wikidata-sitelinks.nt.gz) !_
 
 ```
 Preprocessing -i data/example/wikidata_sample.csv -p sample -s
