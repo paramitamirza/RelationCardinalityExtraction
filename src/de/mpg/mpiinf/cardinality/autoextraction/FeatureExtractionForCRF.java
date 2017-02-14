@@ -23,19 +23,7 @@ import edu.stanford.nlp.simple.Sentence;
 
 public class FeatureExtractionForCRF {
 	
-	public String[] digitsArr = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
-			"eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"};
-	public String[] tensArr = {"", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
-	public String[] ordinalsArr = {"", "fir", "seco", "thi", "four", "fif", "six", "seven", "eigh", "nin", "ten", 
-			"eleven", "twelf", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twentie"};
-	public String[] tenOrdinalsArr = {"", "ten", "twentie", "thirtie", "fortie", "fiftie", "sixtie", "seventie", "eightie", "ninetie"};
 	
-	public List<String> digits = Arrays.asList(digitsArr);
-	public List<String> tens = Arrays.asList(tensArr);
-	public List<String> ordinals = Arrays.asList(ordinalsArr);
-	public List<String> tenOrdinals = Arrays.asList(tenOrdinalsArr);
-	
-	public Map<String, Integer> hundreds = new HashMap<String, Integer>();
 	
 	private String inputJsonFile = "./data/auto_extraction/wikidata_sample.jsonl.gz";
 	private String inputRandomCsvFile = "./data/auto_extraction/wikidata_sample_random.csv";
@@ -43,9 +31,7 @@ public class FeatureExtractionForCRF {
 	private String dirFeature = "./data/auto_extraction/";
 	
 	public FeatureExtractionForCRF() {
-		hundreds.put("hundred", 100);
-		hundreds.put("thousand", 1000);
-		hundreds.put("million", 1000000);
+		
 	}
 	
 	public FeatureExtractionForCRF(String inputJsonFilePath, String inputRandomCsvFilePath, String relationName, String dirOutput) {
@@ -107,10 +93,11 @@ public class FeatureExtractionForCRF {
 			wikidataId = obj.getString("wikidata-id");
 			System.out.println(wikidataId + "\t" + count);
 			
+			numOfTriples = Integer.parseInt(count);
+			
 			if (testInstances.contains(wikidataId)) {
 				outfile = new PrintWriter(new BufferedWriter(new FileWriter(dirFeature + relName + "_test_cardinality.data", true)));
 			} else {
-				numOfTriples = Integer.parseInt(count);
 				outfile = new PrintWriter(new BufferedWriter(new FileWriter(dirFeature + relName + "_train_cardinality.data", true)));
 			}
 			
@@ -132,11 +119,11 @@ public class FeatureExtractionForCRF {
 					}
 					label = "O";
 					
-					if (properNumber(pos, ner)) {						
+					if (Numbers.properNumber(pos, ner)) {						
 						word = ""; lemma = ""; deprel = "";
 						
 						while (k<sent.words().size()) {
-							if (properNumber(sent.posTag(k), sent.nerTag(k))) {
+							if (Numbers.properNumber(sent.posTag(k), sent.nerTag(k))) {
 								word += sent.word(k) + "_";
 								lemma += sent.lemma(k) + "_";
 								if (sent.incomingDependencyLabel(k).isPresent()) deprel = sent.incomingDependencyLabel(k).get();
@@ -153,10 +140,12 @@ public class FeatureExtractionForCRF {
 						word = word.substring(0, word.length()-1);
 						lemma = lemma.substring(0, lemma.length()-1);
 						
-						numInt = getInteger(word.toLowerCase());
+						numInt = Numbers.getInteger(word.toLowerCase());
 						if (numInt > 0) {
 							lemma = "_num_";
-							if (numInt == numOfTriples) {
+							if (numInt == numOfTriples
+									&& deprel.startsWith("nummod")
+									) {
 								label = "_YES_";
 //							} else if (numInt < numOfTriples) {
 //								label = "_NO_";
@@ -174,11 +163,11 @@ public class FeatureExtractionForCRF {
 						word = ""; lemma = ""; deprel = "";
 						k--;
 						
-					} else if (properName(pos, ner)) {
+					} else if (Numbers.properName(pos, ner)) {
 						word = ""; lemma = ""; deprel = "";
 						
 						while (k<sent.words().size()) {
-							if (properName(sent.posTag(k), sent.nerTag(k))) {
+							if (Numbers.properName(sent.posTag(k), sent.nerTag(k))) {
 								word += sent.word(k) + "_";
 								lemma = "_name_";
 								if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
@@ -186,8 +175,8 @@ public class FeatureExtractionForCRF {
 								k++;
 								
 							} else if ((sent.posTag(k).equals("-LRB-") || sent.posTag(k).equals("``")) 
-									&& ( (k+1<sent.words().size() && properName(sent.posTag(k+1), sent.nerTag(k+1))) 
-											|| ((k+2<sent.words().size() && properName(sent.posTag(k+2), sent.nerTag(k+2))))
+									&& ( (k+1<sent.words().size() && Numbers.properName(sent.posTag(k+1), sent.nerTag(k+1))) 
+											|| ((k+2<sent.words().size() && Numbers.properName(sent.posTag(k+2), sent.nerTag(k+2))))
 									   )) {
 								word += sent.word(k) + "_";
 								lemma = "_name_";
@@ -283,97 +272,6 @@ public class FeatureExtractionForCRF {
 		    br.close();
 		}
 		return arr;
-	}
-	
-	public Long getInteger(String numStr) {
-		long number = -999; 
-		if (numStr.contains(",")) numStr = numStr.replace(",", "");
-		if (numStr.contains("-")) numStr = numStr.replace("-", "_");
-		String[] words = numStr.split("_");
-		
-		if (words.length == 4) {
-			if (digits.contains(words[0]) && hundreds.containsKey(words[1])
-					&& tens.contains(words[2]) && digits.contains(words[3])) {
-				number = (digits.indexOf(words[0]) * hundreds.get(words[1])) + (tens.indexOf(words[2]) * 10) + digits.indexOf(words[3]);
-			}
-		} else if (words.length == 3) {
-			if (hundreds.containsKey(words[0])
-					&& tens.contains(words[1]) && digits.contains(words[2])) {
-				number = (1 * hundreds.get(words[0])) + (tens.indexOf(words[1]) * 10) + digits.indexOf(words[2]);
-			}
-		} else if (words.length == 2) {
-			if (tens.contains(words[0]) && digits.contains(words[1])) {
-				number = (tens.indexOf(words[0]) * 10) + digits.indexOf(words[1]);
-			} else if (tens.contains(words[0]) && hundreds.containsKey(words[1])) {
-				number = (tens.indexOf(words[0]) * 10) * hundreds.get(words[1]);
-			} else if (digits.contains(words[0]) && hundreds.containsKey(words[1])) {
-				number = digits.indexOf(words[0]) * hundreds.get(words[1]);
-			} else if (words[0].matches("^-?\\d+\\.?\\d*$") && hundreds.containsKey(words[1])) {
-				number = new Float(Float.parseFloat(words[0]) * hundreds.get(words[1])).longValue();
-			} else if (tens.contains(words[0]) && ordinals.contains(words[1])) {
-				number = (tens.indexOf(words[0]) * 10) + ordinals.indexOf(words[1]);
-			}
-		} else {
-			if (tens.contains(numStr)) number = tens.indexOf(numStr) * 10;
-			else if (digits.contains(numStr)) number = digits.indexOf(numStr);
-			else if (numStr.matches("^-?\\d+\\.?\\d*$")) number = new Float(Float.parseFloat(numStr)).longValue();
-			else if (numStr.length() > 2 && ordinals.contains(numStr.substring(0, numStr.length()-2))) number = ordinals.indexOf(numStr);
-			else if (numStr.length() > 2 && tenOrdinals.contains(numStr.substring(0, numStr.length()-2))) number = tenOrdinals.indexOf(numStr) * 10;
-		}
-		
-		return number;
-	}
-	
-	public boolean properNumber(String pos, String ner) {
-		if (pos.equals("CD")
-				&& !ner.equals("MONEY")
-				&& !ner.equals("PERCENT")
-				&& !ner.equals("DATE")
-				&& !ner.equals("TIME")
-				&& !ner.equals("DURATION")
-				&& !ner.equals("SET")
-				) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public boolean properOrdinal(String pos, String ner) {
-		if (pos.equals("JJ")
-				&& ner.equals("ORDINAL")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public boolean properNumberAndOrdinal(String pos, String ner) {
-		if (pos.equals("CD")
-				&& !ner.equals("MONEY")
-				&& !ner.equals("PERCENT")
-				&& !ner.equals("DATE")
-				&& !ner.equals("TIME")
-				&& !ner.equals("DURATION")
-				&& !ner.equals("SET")
-				) {
-			return true;
-		} else if (pos.equals("JJ")
-				&& ner.equals("ORDINAL")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public boolean properName(String pos, String ner) {
-		if (pos.equals("NNP")
-				&& ner.equals("PERSON")
-				) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	public String getInputJsonFile() {
