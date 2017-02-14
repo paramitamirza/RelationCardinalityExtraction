@@ -10,8 +10,8 @@
 * [JSON-java](https://mvnrepository.com/artifact/org.json/json) - JSON for Java
 * [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/) - an API for parsing command line options passed to programs.
 
-###Usage
-_! The input file (per property/relation) must be in the comma-separated values (CSV) format: WikidataID,tripleCount (per line) !_
+###Preprocessing
+_! The input file (per property/relation) must be in the comma-separated values (CSV) format: `WikidataID,tripleCount` (per line) !_
 ```
 usage: Preprocessing
  -i,--input <arg>       Input file (.csv) path
@@ -19,7 +19,7 @@ usage: Preprocessing
 
  -l,--links             Add Wikipedia title page for WikiURL, 
                         input file will be replaced with new file with: 
-                        WikidataID,WikipediaTitle,tripleCount (per line)
+                        `WikidataID,WikipediaTitle,tripleCount` (per line)
  -n,--randomize <arg>   Generate n random instances for testing,
                         saved in [input file]_random[n].csv 
                         
@@ -36,7 +36,31 @@ The output will be two files as input for CRF++:
 * `[relname]_test_cardinality.data`
 
 Example:
-* `Preprocessing -i data/auto_extraction/wikidata_sample.csv -p sample -s` --> will generate `data/auto_extraction/wikidata_sample.jsonl.gz`
-*  
+```
+Preprocessing -i data/auto_extraction/wikidata_sample.csv -p sample -s
+```
+will generate `data/auto_extraction/wikidata_sample.jsonl.gz`
+```
+Preprocessing -i data/auto_extraction/wikidata_sample.csv -p sample -f -r data/auto_extraction/wikidata_sample_random10.csv -o data/auto_extraction/
+```
+will generate `data/auto_extraction/sample_train_cardinality.data` and `data/auto_extraction/sample_test_cardinality.data` 
 
-How to train and predict (with) a CRF model? See example at `data/auto_extraction/CRF/sample_cardinality_lemma.sh`. Don't forget to download and install [CRF++](https://taku910.github.io/crfpp/), and set the `$CRFPATH`. The sample output of the CRF model can be seen in 
+###Train and Predict (with) CRF++
+How to train and predict (with) a CRF model? See example at `data/auto_extraction/CRF/sample_cardinality_lemma.sh`. 
+_! Don't forget to download and install [CRF++](https://taku910.github.io/crfpp/), and set the `$CRFPATH`. !_
+The sample output of predicting with a CRF model can be seen in `data/auto_extraction/sample_cardinality_lemma.out`.
+
+###Evaluate
+_! The input file (per property/relation) must be in the comma-separated values (CSV) format: WikidataID,WikipediaTitle,tripleCount (per line). The CRF++ output file is according to the explanation above. !_
+```
+usage: Evaluation
+ -i,--input <arg>    Input evaluation file (.csv) path
+ -c,--crfout <arg>   CRF++ output file (.out) path
+ -o,--output <arg>   Output file (.csv) path
+
+```
+The output will be precision, recall and F1-score measures. 
+If the output file is specified (-o [output file]), then the result is printed into file with the following format:
+`WikidataID,WikipediaURL,tripleCount,predictedCardinality,probabilityCardinality,TextualEvidence` (per line)
+as exemplified in `data/auto_extraction/predicted_sample_cardinality.csv`,
+
