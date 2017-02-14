@@ -79,11 +79,11 @@ Example:
 ```
 Evaluation -i data/example/wikidata_sample_random10.csv -c data/example/sample_cardinality_lemma.out -o data/example/predicted_sample_cardinality.csv
 ```
-will generate `data/example/predicted_sample_cardinality.csv`
-and
+will generate 
 ```
 Precision: 0.6
 Recall: 0.3
 F1-score: 0.4
 ```
+and `data/example/predicted_sample_cardinality.csv`.
 
