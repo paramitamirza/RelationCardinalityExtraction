@@ -22,10 +22,10 @@ public class FeatureExtractionForCRF {
 	
 	
 	
-	private String inputJsonFile = "./data/auto_extraction/wikidata_sample.jsonl.gz";
-	private String inputRandomCsvFile = "./data/auto_extraction/wikidata_sample_random.csv";
+	private String inputJsonFile = "./data/example/wikidata_sample.jsonl.gz";
+	private String inputRandomCsvFile = "./data/example/wikidata_sample_random10.csv";
 	private String relName = "sample";
-	private String dirFeature = "./data/auto_extraction/";
+	private String dirFeature = "./data/example/";
 	
 	public FeatureExtractionForCRF() {
 		
