@@ -126,8 +126,8 @@ public class Evaluation {
 				if (addSameSentence) {	
 					//When there are more than one in a sentence, add them up
 					for (Long key : numbers.keySet()) {
-						pp = Double.parseDouble(numbers.get(key).split("|")[1]);
-						mm = Integer.parseInt(numbers.get(key).split("|")[0]);
+						pp = Double.parseDouble(numbers.get(key).split("#")[1]);
+						mm = Integer.parseInt(numbers.get(key).split("#")[0]);
 						if (pp > p) {
 							n += key;
 							p += pp;
@@ -165,7 +165,11 @@ public class Evaluation {
 							&& p > threshold) {
 						predictedCardinal = n;
 						predictedProb = p;
-						evidence = wordsToSentence(sentence, m);
+						
+						if (addSameSentence)
+							evidence = wordsToSentence(sentence, m);
+						else
+							evidence = wordsToSentence(sentence, mlist);
 					}
 				}
 			}

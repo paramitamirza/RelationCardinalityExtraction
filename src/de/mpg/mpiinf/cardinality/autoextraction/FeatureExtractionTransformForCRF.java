@@ -54,12 +54,16 @@ public class FeatureExtractionTransformForCRF {
 		featExtraction.generateColumnsFile();
 		
 		////test!!!
-//		featExtraction.transformNegative("John doesn't have any children.");
-//		featExtraction.transformNegative("John didn't bring young friends yesterday.");
+//		featExtraction.transformNegative("John doesn't have any ugly children.");
+//		featExtraction.transformNegative("John didn't bring crazy young friends yesterday.");
+//		featExtraction.transformNegative("John hasn't had children.");
 //		featExtraction.transformNegative("John had no children surviving adulthood.");
 //		featExtraction.transformNegative("John has never been married.");
+//		featExtraction.transformNegative("John has never seen any children.");
+//		featExtraction.transformNegative("John has never been married his partner.");
 //		featExtraction.transformNegative("Their marriage is without children.");
-//		featExtraction.transformNegative("John has never had his name revealed, although we can see it.");
+//		featExtraction.transformNegative("John has never had young children revealed, although we know it.");
+//		featExtraction.transformNegative("John has never had any children revealed, although we know it.");
 	}
 	
 	public String generateLine(String wikidataId, String sentId, String wordId, String word, String lemma, String pos, String ner, String dep, String label) {
@@ -81,118 +85,220 @@ public class FeatureExtractionTransformForCRF {
 		else return t;
 	}
 	
+	private int getDetAny(Sentence sent, int objIdx) {
+		if (objIdx > 0) {
+			for (int i=objIdx-1; i>=0; i--) {
+				if (sent.governor(i).isPresent()
+						&& sent.governor(i).get() == objIdx
+						&& sent.incomingDependencyLabel(i).isPresent()
+						&& sent.incomingDependencyLabel(i).get().equals("det")) {
+					if (sent.word(i).toLowerCase().equals("any"))
+						return i;
+					else 
+						return -99;
+				}
+			}
+		}
+		return -999;
+	}
+	
+	private int getNounModifier(Sentence sent, int objIdx, int nounIdx) {
+		if (objIdx > 0) {
+			int verbAcl = getVerbAclRelcl(sent, objIdx);
+			if (verbAcl > 0) {	//...have never had the children born
+				return verbAcl;
+			} else {			//...have never seen young clever children
+				for (int i=objIdx-1; i>=0; i--) {
+					if (sent.governor(i).isPresent()
+							&& (sent.governor(i).get() == objIdx
+								|| sent.governor(i).get() == nounIdx)
+							&& sent.incomingDependencyLabel(i).isPresent()
+							&& sent.incomingDependencyLabel(i).get().equals("amod")) {
+						return getNounModifier(sent, i, nounIdx);
+					} else {
+						return objIdx;
+					}
+				}
+				return objIdx;
+			}
+		} else {
+			return -999;
+		}
+	}
+	
+	private int getVerbAclRelcl(Sentence sent, int objIdx) {
+		if (objIdx > 0) {
+			if (sent.governor(objIdx).isPresent()
+					&& sent.posTag(sent.governor(objIdx).get()).startsWith("VB")
+					&& sent.incomingDependencyLabel(objIdx).isPresent()
+					&& sent.incomingDependencyLabel(objIdx).get().equals("nsubj")) {
+				return sent.governor(objIdx).get();
+			} else {
+				for (int i=objIdx+1; i<sent.words().size(); i++) {
+					if (sent.governor(i).isPresent()
+							&& sent.governor(i).get() == objIdx
+							&& sent.incomingDependencyLabel(i).isPresent()
+							&& sent.incomingDependencyLabel(i).get().startsWith("acl")) {
+						return i;
+					} else {
+						return -999;
+					}
+				}
+				return -999;
+			}
+		} else {
+			return -999;
+		}
+	}
+	
+	private int getNounSubj(Sentence sent, int verbIdx) {
+		if (verbIdx > 0) {
+			for (int i=verbIdx-1; i>=0; i--) {
+				if (sent.governor(i).isPresent()
+						&& sent.governor(i).get() == verbIdx
+						&& sent.incomingDependencyLabel(i).isPresent()
+						&& sent.incomingDependencyLabel(i).get().startsWith("nsubj")) {
+					return i;
+				} else {
+					return -999;
+				}
+			}
+			return -999;
+		} else {
+			return -999;
+		}
+	}
+	
 	public String transformNegative(String sentence) {
-		String transformed = "";
+		String transformed = "", original = "";
 		
 		//// e.g., Their marriage is without children --> Their marriage is with 0 children
 		if (sentence.contains("without")) return sentence.replaceAll("without", "with 0");
 		
-		int negFound = -999;
-		Sentence sent = new Sentence(sentence);
-		for (int i=0; i<sent.words().size(); i++) {
-			if (sent.incomingDependencyLabel(i).isPresent()
-					&& sent.incomingDependencyLabel(i).get().equals("neg")) {
-				negFound = i;
+		List<Integer> negFoundList = new ArrayList<Integer>();
+		Sentence orig = new Sentence(sentence);
+		original = StringUtils.join(orig.words(), " ");
+		for (int i=0; i<orig.words().size(); i++) {
+			if (orig.incomingDependencyLabel(i).isPresent()
+					&& orig.incomingDependencyLabel(i).get().equals("neg")) {
+				negFoundList.add(i);
 				break;
 			}
 		}
 		
-		int nodeNum = -999, negNodeIdx = -999, negNextIdx = -999;
-		if (negFound >= 0) {
-			Tree root = sent.parse();
-			nodeNum = root.getLeaves().get(negFound).nodeNumber(root);
-		    
-		    if (nodeNum >= 0) {
-			    Tree negNode = root.getNodeNumber(nodeNum).parent(root);
-			    
-			    if (negNode.nodeString().startsWith("RB ")) { //not, n't or never
-			    	
-			    	Tree negParent = negNode.parent(root);
-			    	if (negParent.nodeString().startsWith("VP ")) {
-			    		//// e.g., John doesn't have any children --> John does have 0 children
-			    		
-				    	for (int k=0; k<negParent.children().length; k++) {
-				    		if (negParent.children()[k] == negNode) {
-				    			negNodeIdx = k;
-				    			if (k+1 < negParent.children().length 
-				    					&& negParent.children()[k+1].nodeString().startsWith("VP ")) 
-				    				negNextIdx = k+1;
-				    		}
-				    	}
-				    		
-			    		if (negNodeIdx >= 0 && negNextIdx >= 0) {
-			    			for (Tree t : negParent.children()[negNextIdx]) {
-			    				if (t.nodeString().startsWith("NP ")) {
-			    					if (t.children()[0].nodeString().startsWith("DT")) {
-			    						////John doesn't have any children
-			    						t.insertDtr(Tree.valueOf("(CD 0)"), 0);
-			    						t.removeChild(1);
-			    						
-			    					} else {
-			    						////John doesn't have stupid children
-			    						t.insertDtr(Tree.valueOf("(CD 0)"), 0);
-			    					}
-			    					negParent.removeChild(negNodeIdx);
-			    					break;
-			    				}
-			    			}
-		    			}
-				    	
-			    	} else if (negParent.nodeString().startsWith("ADVP ")) {
-			    		//// e.g., John has never been married --> John has been married 0 times
-			    		negNode = negParent;
-			    		negParent = negParent.parent(root);
-
-				    	for (int k=0; k<negParent.children().length; k++) {
-				    		if (negParent.children()[k] == negNode) {
-				    			negNodeIdx = k;
-				    			if (k+1 < negParent.children().length 
-				    					&& negParent.children()[k+1].nodeString().startsWith("VP ")) 
-				    				negNextIdx = k+1;
-				    		}
-				    	}
-				    		
-			    		if (negNodeIdx >= 0 && negNextIdx >= 0) {			    			
-			    			Tree vp = getLastVerbPhrase(negParent.children()[negNextIdx]);
-			    			negNextIdx = -999;
-			    			for (int s=0; s<vp.children().length; s++) {
-			    				if (vp.getChild(s).nodeString().startsWith("VB")) {
-			    					negNextIdx = s;
-			    					break;
-			    				}
-			    			}
-			    			if (negNextIdx >= 0 && negNextIdx <= vp.children().length) {
-			    				vp.insertDtr(Tree.valueOf("(NP-TMP (CD 0) (NNS times))"), negNextIdx+1);
-			    				negParent.removeChild(negNodeIdx);
-			    			}
-		    			}
-			    	}				    
-				    
-			    } else if (negNode.nodeString().startsWith("DT ")) {
-			    	//// e.g., John had no children --> John had 0 children
-			    	Tree negParent = negNode.parent(root);
-			    	nodeNum = negParent.nodeNumber(root);
-			    	if (negParent.nodeString().startsWith("NP ")) {
-			    		
-			    		for (int k=0; k<negParent.children().length; k++) {
-				    		if (negParent.children()[k] == negNode) {
-				    			negNodeIdx = k;
-				    		}
-			    		}
-			    		if (negNodeIdx >= 0) {
-				    		negParent.insertDtr(Tree.valueOf("(CD 0)"), negNodeIdx);
-				    		negParent.removeChild(negNodeIdx+1);
-			    		}
-			    	}
-			    }
-		    }
-		    
-		    transformed = StringUtils.join(root.getLeaves(), " ");
-		    System.err.println(sentence + " --> " + transformed);
+		transformed = original;
+		Sentence sent;
+		List<String> wordList = new ArrayList<String>();
 		
-		} else {
-			transformed = sentence;
-		}
+		int gov = -999, det = -999, noun = -999, verbAcl = -999;
+		boolean objExist = false, compExist = false;
+		
+		for (int negFound : negFoundList) {
+			
+			sent = new Sentence(transformed);
+			gov = sent.governor(negFound).get();
+			wordList.clear();
+			wordList.addAll(sent.words());
+			
+			if (sent.posTag(gov).startsWith("V")) {	//if gov is a verb, let's look for the object!
+				if (sent.word(negFound).equals("never")) {
+					for (int k=gov+1; k<sent.words().size(); k++) {
+						
+						if (sent.governor(k).isPresent()
+								&& sent.governor(k).get() == gov
+								&& sent.incomingDependencyLabel(k).isPresent()) {
+							
+							if (sent.incomingDependencyLabel(k).get().equals("dobj")
+									&& (sent.posTag(k).equals("NN") || sent.posTag(k).equals("NNS"))) {
+								objExist = true;
+								det = getDetAny(sent, k);
+								noun = getNounModifier(sent, k, k);
+								
+								if (det != -999) {			//...have never seen any children
+									if (det > 0) {
+										wordList.set(det, "0");
+										wordList.remove(negFound);
+									}
+									break;
+								} else if (noun > 0) {		//...never saw crazy children
+									wordList.add(noun+1, "0 times");
+									wordList.remove(negFound);
+									break;
+								} else if (verbAcl > 0) {	//...have never had any children born
+									wordList.add(verbAcl+1, "0 times");
+									wordList.remove(negFound);
+									break;
+								}				
+								
+							} else if (sent.incomingDependencyLabel(k).get().equals("ccomp")
+									&& sent.posTag(k).startsWith("VB")) {	
+								compExist = true;
+								noun = getNounSubj(sent, k);
+								det = getDetAny(sent, noun);
+								
+								if (det != -999) {	//...have never had any children revealed
+									if (det > 0) {
+										wordList.set(det, "0");
+										wordList.remove(negFound);
+									}
+									break;
+								} else {			//...have never had children revealed
+									wordList.add(k+1, "0 times");
+									wordList.remove(negFound);
+									break;
+								}
+								
+								
+							}
+							
+						}
+					}
+					
+					if (!objExist && !compExist) {	//...have never been married
+						wordList.add(gov+1, "0 times");
+						wordList.remove(negFound);
+					}
+					
+				} else {	//not!
+					for (int k=gov+1; k<sent.words().size(); k++) {
+						if (sent.governor(k).isPresent()
+								&& sent.governor(k).get() == gov
+								&& sent.incomingDependencyLabel(k).isPresent()
+								&& sent.incomingDependencyLabel(k).get().equals("dobj")
+								&& (sent.posTag(k).equals("NN") || sent.posTag(k).equals("NNS"))) {
+							objExist = true;
+							det = getDetAny(sent, k);
+							noun = getNounModifier(sent, k, k);
+							if (det != -999) {				//...not have any children
+								if (det > 0) {
+									wordList.set(det, "0");
+									wordList.remove(negFound);
+								}
+								break;
+							} else if (noun > 0) {			//...have young bright children
+								wordList.add(noun, "0");
+								wordList.remove(negFound);
+								break;
+							}
+						}
+					}
+				}
+			} else if (sent.posTag(gov).equals("NNS")
+					|| sent.posTag(gov).equals("NN")) {	//if gov is a noun, let's look for the governing verb! e.g., ...have no child
+				for (int k=gov; k<sent.words().size(); k++) {
+					if (sent.incomingDependencyLabel(k).isPresent()
+							&& sent.incomingDependencyLabel(k).get().equals("dobj")) {
+						wordList.add(negFound, "0");
+						wordList.remove(negFound+1);
+					}
+				}
+			}
+			
+			transformed = StringUtils.join(wordList, " ");	
+		} 
+		
+		if (!transformed.equals(original))
+			System.err.println("### " + original + " --> " + transformed);
 		
 		return transformed;
 	}
