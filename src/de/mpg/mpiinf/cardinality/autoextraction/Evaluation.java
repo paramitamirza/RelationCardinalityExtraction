@@ -53,7 +53,8 @@ public class Evaluation {
 		
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
-		eval.evaluate(csvPath, resultPath, labels, outputPath, true, false);
+		boolean compositional = cmd.hasOption("c");
+		eval.evaluate(csvPath, resultPath, labels, outputPath, compositional, false);
 	}
 	
 	public static Options getEvalOptions() {
@@ -63,13 +64,17 @@ public class Evaluation {
 		input.setRequired(true);
 		options.addOption(input);
         
-		Option relName = new Option("c", "crfout", true, "CRF++ output file (.out) path");
+		Option relName = new Option("f", "crfout", true, "CRF++ output file (.out) path");
 		relName.setRequired(true);
 		options.addOption(relName);
         
 		Option output = new Option("o", "output", true, "Output file (.csv) path");
 		output.setRequired(false);
 		options.addOption(output);
+		
+		Option compositional = new Option("c", "compositional", false, "Label compositional numbers as true examples");
+		compositional.setRequired(false);
+		options.addOption(compositional);
         
 		return options;
 	}
