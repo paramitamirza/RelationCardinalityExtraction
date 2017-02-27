@@ -7,8 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -114,6 +116,8 @@ public class Evaluation {
 		int numPredicted = 0;
 		String evidence = "";
 		
+		Set<String> entities = new HashSet<String>();
+		
 		while (line != null) {
 			
 			if(!StringUtils.join(nums, "").equals("")) {
@@ -186,7 +190,9 @@ public class Evaluation {
 			while (line != null && !line.equals("")) {
 				cols = line.split("\t");
 				
-				if (entityId != null && !cols[0].equals(entityId)) {	//Entity ends
+				if (entityId != null && !cols[0].equals(entityId)
+						&& !entities.contains(entityId)
+						) {	//Entity ends
 					int numChild = instanceNum.get(entityId);
 					String wikiLabel = instanceLabel.get(entityId);
 					
@@ -200,6 +206,8 @@ public class Evaluation {
 						if (numChild == predictedCardinal) tp ++;
 						else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
 					}
+					
+					entities.add(entityId);
 					
 					predictedCardinal = 0;
 					predictedProb = 0.0;
