@@ -51,7 +51,7 @@ public class Evaluation {
 		
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
-		eval.evaluate(csvPath, resultPath, labels, outputPath, false, false);
+		eval.evaluate(csvPath, resultPath, labels, outputPath, true, false);
 	}
 	
 	public static Options getEvalOptions() {
@@ -167,9 +167,9 @@ public class Evaluation {
 						predictedProb = p;
 						
 						if (addSameSentence)
-							evidence = wordsToSentence(sentence, m);
-						else
 							evidence = wordsToSentence(sentence, mlist);
+						else
+							evidence = wordsToSentence(sentence, m);
 					}
 				}
 			}
