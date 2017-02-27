@@ -1984,10 +1984,10 @@ Q3121563	11	7	agreed	agree	VBD	O	root	O
 Q3121563	11	8	to	to	TO	O	mark	O
 Q3121563	11	9	merge	merge	VB	O	xcomp	O
 Q3121563	11	10	every	every	DT	O	det	O
-Q3121563	11	12	two	_num_	CD	NUMBER	nummod_title	O
+Q3121563	11	12	two	_num_	CD	NUMBER	nummod_title	_YES_
 Q3121563	11	12	titles	title	NNS	O	dobj	O
 Q3121563	11	13	into	into	IN	O	case	O
-Q3121563	11	15	one	_num_	CD	NUMBER	nummod_book	O
+Q3121563	11	15	one	_num_	CD	NUMBER	nummod_book	_YES_
 Q3121563	11	15	book	book	NN	O	nmod:into	O
 Q3121563	11	16	,	,	,	O	punct	O
 Q3121563	11	17	and	and	CC	O	cc	O
