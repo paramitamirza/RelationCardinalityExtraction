@@ -48,21 +48,32 @@ public class FeatureExtractionForCRF {
 			featExtraction = new FeatureExtractionForCRF(args[0], args[1], args[2], args[3]);
 		}
 		
-		featExtraction.generateColumnsFile();
+		featExtraction.generateColumnsFile(false);
 		
+	}
+	
+	public String generateLine(String wikidataId, String sentId, String wordId, String word, String lemma, String pos, String ner, String dep) {
+		return wikidataId + "\t" + sentId + "\t" + wordId + "\t" + word + "\t" + lemma + "\t" + pos + "\t" + ner + "\t" + dep;
 	}
 	
 	public String generateLine(String wikidataId, String sentId, String wordId, String word, String lemma, String pos, String ner, String dep, String label) {
 		return wikidataId + "\t" + sentId + "\t" + wordId + "\t" + word + "\t" + lemma + "\t" + pos + "\t" + ner + "\t" + dep + "\t" + label;
 	}
 	
-	public void generateColumnsFile() throws JSONException, IOException {
+	public void generateColumnsFile(boolean compositional) throws JSONException, IOException {
 		
 		List<String> testInstances = readRandomInstances();
 				
 		String line, label;
 		long numInt;
 		int numSent = 0;
+		
+		List<Integer> idxToAdd;
+		long numToAdd;
+		
+		List<String> labels;
+		List<String> tokenFeatures;
+		int tokenIdx;
 		
 		BufferedReader br = new BufferedReader(
                 new InputStreamReader(
@@ -103,10 +114,17 @@ public class FeatureExtractionForCRF {
 				Sentence sent = new Sentence(lines.getString(j));
 				
 				String word = "", lemma = "", pos = "", ner = "", deprel = "";
-				String labelJoinStr = "";
 				StringBuilder sb = new StringBuilder();
 				int k;
 				boolean lrb = false;
+				
+				idxToAdd = new ArrayList<Integer>();
+				numToAdd = 0;
+				
+				labels = new ArrayList<String>();
+				tokenFeatures = new ArrayList<String>();
+				tokenIdx = 0;
+				
 				for (k=0; k<sent.words().size(); k++) {
 					pos = sent.posTag(k);
 					ner = sent.nerTag(k);
@@ -140,22 +158,73 @@ public class FeatureExtractionForCRF {
 						numInt = Numbers.getInteger(word.toLowerCase());
 						if (numInt > 0) {
 							lemma = "_num_";
-							if (numInt == numOfTriples
-									&& deprel.startsWith("nummod")
-									) {
-								label = "_YES_";
-//							} else if (numInt < numOfTriples) {
-//								label = "_NO_";
-//							} else if (numInt > numOfTriples) {
-//								label = "_MAYBE_";
+							
+							if (compositional) {
+								if (numToAdd > 0) {
+									if (numInt == numOfTriples
+											&& deprel.startsWith("nummod")
+											) {
+										label = "_YES_";
+										numToAdd = 0;
+										idxToAdd.clear();
+										
+									} else {
+										if ((numToAdd+numInt) == numOfTriples
+												&& deprel.startsWith("nummod")
+												) {
+											label = "_YES_";
+											for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
+											numToAdd = 0;
+											idxToAdd.clear();
+										} else if ((numToAdd+numInt) < numOfTriples
+												&& deprel.startsWith("nummod")
+												) {
+											label = "O";
+											numToAdd += numInt;
+											idxToAdd.add(tokenIdx);
+										} else {	//(numToAdd+numInt) > numOfTriples
+											label = "O";
+											numToAdd = 0;
+											idxToAdd.clear();
+										}
+									}
+									
+								} else {
+									if (numInt == numOfTriples
+											&& deprel.startsWith("nummod")
+											) {
+										label = "_YES_";
+									} else if (numInt < numOfTriples
+											&& deprel.startsWith("nummod")
+											) {
+										label = "O";
+										numToAdd += numInt;
+										idxToAdd.add(tokenIdx);
+									} else {	//numInt > numOfTriples
+										label = "O";
+									}
+								}
+								
 							} else {
-								label = "O";
+								if (numInt == numOfTriples
+										&& deprel.startsWith("nummod")
+										) {
+									label = "_YES_";
+//								} else if (numInt < numOfTriples) {
+//									label = "_NO_";
+//								} else if (numInt > numOfTriples) {
+//									label = "_MAYBE_";
+								} else {
+									label = "O";
+								}
 							}
 						}
 						
-						labelJoinStr += label;
-						sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
-						sb.append(System.getProperty("line.separator"));
+//						sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
+//						sb.append(System.getProperty("line.separator"));
+						tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
+						labels.add(label);
+						tokenIdx ++;
 						
 						word = ""; lemma = ""; deprel = "";
 						k--;
@@ -194,9 +263,12 @@ public class FeatureExtractionForCRF {
 								break;
 							}
 						}
-						labelJoinStr += label;
-						sb.append(generateLine(wikidataId, j+"", k+"", word.substring(0, word.length()-1), lemma, pos, ner, deprel.substring(0, deprel.length()-1), label));
-						sb.append(System.getProperty("line.separator"));
+						
+//						sb.append(generateLine(wikidataId, j+"", k+"", word.substring(0, word.length()-1), lemma, pos, ner, deprel.substring(0, deprel.length()-1), label));
+//						sb.append(System.getProperty("line.separator"));
+						tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word.substring(0, word.length()-1), lemma, pos, ner, deprel.substring(0, deprel.length()-1)));
+						labels.add(label);
+						tokenIdx ++;
 						
 						word = ""; lemma = ""; deprel = "";
 						k--;
@@ -204,25 +276,37 @@ public class FeatureExtractionForCRF {
 					} else {							
 						word = sent.word(k);
 						lemma = sent.lemma(k);
-						sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
-						sb.append(System.getProperty("line.separator"));							
+//						sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
+//						sb.append(System.getProperty("line.separator"));
+						tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
+						labels.add(label);
+						tokenIdx ++;
 					}
 				}
 				
-				if (testInstances.contains(wikidataId)) {
+				for (int t=0; t<tokenFeatures.size(); t++) {
+					sb.append(tokenFeatures.get(t) + "\t" + labels.get(t));
 					sb.append(System.getProperty("line.separator"));
-					outfile.print(sb.toString());
-					numSent ++;
-					
-				} else {
-//					if (labelJoinStr.contains("_YES_") || labelJoinStr.contains("_NO_")
-//							|| labelJoinStr.contains("_MAYBE_")
-//							) {
-						sb.append(System.getProperty("line.separator"));
-						outfile.print(sb.toString());
-						numSent ++;
-//					}
-				}		
+				}
+				
+				sb.append(System.getProperty("line.separator"));
+				outfile.print(sb.toString());
+				numSent ++;
+				
+//				if (testInstances.contains(wikidataId)) {
+//					sb.append(System.getProperty("line.separator"));
+//					outfile.print(sb.toString());
+//					numSent ++;
+//					
+//				} else {
+////					if (labelJoinStr.contains("_YES_") || labelJoinStr.contains("_NO_")
+////							|| labelJoinStr.contains("_MAYBE_")
+////							) {
+//						sb.append(System.getProperty("line.separator"));
+//						outfile.print(sb.toString());
+//						numSent ++;
+////					}
+//				}		
 			}
 			
 			outfile.close();

@@ -101,7 +101,8 @@ public class Preprocessing {
 	            
 			} else {
 				FeatureExtractionForCRF featExtraction = new FeatureExtractionForCRF(inputJsonFile, inputRandomCsvFile, relName, dirFeature);
-				featExtraction.generateColumnsFile();
+				boolean compositional = cmd.hasOption("c");
+				featExtraction.generateColumnsFile(compositional);
 			}
 		}
 		
@@ -145,6 +146,10 @@ public class Preprocessing {
 		Option output = new Option("o", "output", true, "Output directory of feature files (in column format) for CRF++");
 		output.setRequired(false);
 		options.addOption(output);
+		
+		Option compositional = new Option("c", "compositional", false, "Label compositional numbers as true examples");
+		compositional.setRequired(false);
+		options.addOption(compositional);
 		
 		return options;
 	}
