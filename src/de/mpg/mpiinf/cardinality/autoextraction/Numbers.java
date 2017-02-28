@@ -57,7 +57,7 @@ public class Numbers {
 			if (tens.contains(numStr)) number = tens.indexOf(numStr) * 10;
 			else if (digits.contains(numStr)) number = digits.indexOf(numStr);
 			else if (hundreds.containsKey(numStr)) number = hundreds.get(numStr);
-			else if (numStr.matches("^-?\\d+\\.?\\d*$")) number = new Float(Float.parseFloat(numStr)).longValue();
+			else if (numStr.matches("^-?\\d+$")) number = new Long(Long.parseLong(numStr));
 			else if (numStr.length() > 2 && ordinals.contains(numStr.substring(0, numStr.length()-2))) number = ordinals.indexOf(numStr);
 			else if (numStr.length() > 2 && tenOrdinals.contains(numStr.substring(0, numStr.length()-2))) number = tenOrdinals.indexOf(numStr) * 10;
 		}
