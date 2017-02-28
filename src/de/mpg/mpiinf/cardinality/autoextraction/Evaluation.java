@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,6 +80,30 @@ public class Evaluation {
 		return options;
 	}
 	
+	private int findTotalNumberOfComposition(Map<Integer, String> numbers) {
+		long pivot, number, total;
+		int pivotIdx;
+		Object[] numIdxs = numbers.keySet().toArray();
+		for (int i=0; i<numIdxs.length; i++) {
+			pivotIdx = (int)numIdxs[i];
+			pivot = Long.parseLong(numbers.get(pivotIdx).split("#")[0]);
+			total = 0;
+			for (int j=i+1; j<numIdxs.length; j++) {
+				number = Long.parseLong(numbers.get((int)numIdxs[j]).split("#")[0]);
+				if (number > pivot) break;
+				else if (number == pivot) break;
+				else {
+					total += number;
+					if (total == pivot) {
+						return pivotIdx;
+					}
+				}
+			}
+			
+		}
+		return -999;
+	}
+	
 	public void evaluate(String csvPath, String resultPath, String[] labels, String outPath,
 			boolean addSameSentence, boolean addDiffSentence) throws IOException {
 		
@@ -126,59 +151,71 @@ public class Evaluation {
 		while (line != null) {
 			
 			if(!StringUtils.join(nums, "").equals("")) {
-				Map<Long, String> numbers = extractNumber(nums, probs);
+				Map<Integer, String> numbers = extractNumber(nums, probs);
 				long n = 0;
 				double p = 0.0, pp;
 				int m = 0, mm;
 				List<Integer> mlist = new ArrayList<Integer>();
 				
 				if (addSameSentence) {	
-					//When there are more than one in a sentence, add them up
-					for (Long key : numbers.keySet()) {
-						pp = Double.parseDouble(numbers.get(key).split("#")[1]);
-						mm = Integer.parseInt(numbers.get(key).split("#")[0]);
-						if (pp > p) {
-							n += key;
-							p += pp;
-							mlist.add(mm);
+					//When there are more than one in a sentence:
+					
+					//if a number is a total of its following sequence of numbers, choose the total
+					Object[] keys = numbers.keySet().toArray();
+					int totalIdx = findTotalNumberOfComposition(numbers);
+					
+					if (totalIdx > 0) {
+						pp = Double.parseDouble(numbers.get(totalIdx).split("#")[1]);
+						if (pp > threshold) {
+							p = pp;
+							n = Integer.parseInt(numbers.get(totalIdx).split("#")[0]);
+							mlist.add(totalIdx);
 						}
+					
+					} else {
+						//else, add them up
+						for (Integer key : numbers.keySet()) {
+							pp = Double.parseDouble(numbers.get(key).split("#")[1]);
+							mm = key;
+							if (pp > threshold) {
+								p += pp;
+								n += Long.parseLong(numbers.get(key).split("#")[0]);
+								mlist.add(mm);
+							}
+						}
+						p = p/numbers.size();
 					}
-					p = p/numbers.size();
 					
 				} else {	
 					//When there are more than one in a sentence, choose the most probable
-					for (Long key : numbers.keySet()) {
+					for (Integer key : numbers.keySet()) {
 						pp = Double.parseDouble(numbers.get(key).split("#")[1]);
-						mm = Integer.parseInt(numbers.get(key).split("#")[0]);
-						if (pp > p) {
-							n = key;
+						mm = key;
+						if (pp > p
+								&& pp > threshold) {
+							n = Long.parseLong(numbers.get(key).split("#")[0]);
 							p = pp;
 							m = mm;
 						}
 					}
+					mlist.add(m);
 				}
 				
 				if (addDiffSentence) {	
 					//When there are more than one sentences, add them up
-					if (p > threshold) {
-						predictedCardinal += n;
-						predictedProb += p;
-						evidence += wordsToSentence(sentence, mlist) + "|";
-						numPredicted++;
-					}
+					predictedCardinal += n;
+					predictedProb += p;
+					evidence += wordsToSentence(sentence, mlist) + "|";
+					numPredicted++;
 					predictedProb = predictedProb/numPredicted;
 					
 				} else {
 					//When there are more than one sentences, choose the most probable
-					if (p > predictedProb
-							&& p > threshold) {
+					if (p > predictedProb) {
 						predictedCardinal = n;
 						predictedProb = p;
 						
-						if (addSameSentence)
-							evidence = wordsToSentence(sentence, mlist);
-						else
-							evidence = wordsToSentence(sentence, m);
+						evidence = wordsToSentence(sentence, mlist);
 					}
 				}
 			}
@@ -250,21 +287,18 @@ public class Evaluation {
 		System.out.println("F1-score: " + fscore);
 	}
 	
-	public Map<Long, String> extractNumber(List<String> nums, List<Double> probs) {
-		Map<Long, String> numChild = new HashMap<Long, String>();
+	//TODO Change the key, should be the index
+	public Map<Integer, String> extractNumber(List<String> nums, List<Double> probs) {
+		Map<Integer, String> numChild = new LinkedHashMap<Integer, String>();
 		String number = "";
 		Double prob = 0.0;
 		for (int i=0; i<nums.size(); i++) {
 			if (!nums.get(i).equals("")) {
 				number = nums.get(i);
 				prob = probs.get(i);
-				if (i+1<nums.size() && !nums.get(i+1).equals("")) {
-					number += " " + nums.get(i+1);
-					prob = (prob + probs.get(i))/2;
-					i ++;
-				}
+				
 				if (Numbers.getInteger(number) > 0) {
-					numChild.put(Numbers.getInteger(number), i + "#" + prob);
+					numChild.put(i, Numbers.getInteger(number) + "#" + prob);
 				}
 			}
 		}
