@@ -1,5 +1,6 @@
 /bin/
 /dist/
+/lib/stanford-corenlp-full-2016-10-31/
 /src/de/mpg/mpiinf/cardinality/experiments/
 /auto_extraction/data/
 /auto_extraction/models/
