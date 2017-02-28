@@ -3768,7 +3768,7 @@ Q458982	12	5	Bonehunters	bonehunter	NNS	O	appos	O
 Q458982	12	6	,	,	,	O	punct	O
 Q458982	12	7	sees	see	VBZ	O	root	O
 Q458982	12	8	all	all	DT	O	det	O
-Q458982	12	10	three	_num_	CD	NUMBER	nummod_strand	_YES_
+Q458982	12	10	three	_num_	CD	NUMBER	nummod_strand	O
 Q458982	12	10	plot	plot	NN	O	compound	O
 Q458982	12	11	strands	strand	NNS	O	dobj	O
 Q458982	12	12	combined	combine	VBN	O	acl	O
@@ -3782,7 +3782,7 @@ Q458982	12	19	from	from	IN	O	case	O
 Q458982	12	20	Genabackis	Genabackis	NNP	LOCATION	nmod:from	O
 Q458982	12	21	arriving	arrive	VBG	O	acl	O
 Q458982	12	22	in	in	IN	O	case	O
-Q458982	12	24	Seven	_num_	CD	NUMBER	nummod_city	_YES_
+Q458982	12	24	Seven	_num_	CD	NUMBER	nummod_city	O
 Q458982	12	24	Cities	city	NNS	MISC	nmod:in	O
 Q458982	12	25	to	to	TO	O	mark	O
 Q458982	12	26	aid	aid	VB	O	xcomp	O
@@ -5252,7 +5252,7 @@ Q464928	41	20	,	,	,	O	punct	O
 Q464928	41	21	in	in	IN	O	case	O
 Q464928	41	22	which	which	WDT	O	ref	O
 Q464928	41	23	Chapter	chapter	NN	O	nsubjpass	O
-Q464928	41	25	1	_num_	CD	NUMBER	nummod_chapter	_YES_
+Q464928	41	25	1	_num_	CD	NUMBER	nummod_chapter	O
 Q464928	41	25	is	be	VBZ	O	auxpass	O
 Q464928	41	26	entitled	entitle	VBN	O	acl:relcl	O
 Q464928	41	27	``	``	``	O	punct	O
@@ -5264,7 +5264,7 @@ Q464928	41	32	Beaver	Beaver	NNP	O	dobj	O
 Q464928	41	33	''	''	''	O	punct	O
 Q464928	41	34	and	and	CC	O	cc	O
 Q464928	41	35	Chapter	Chapter	NNP	O	compound	O
-Q464928	41	37	6	_num_	CD	NUMBER	nummod_Tod	_YES_
+Q464928	41	37	6	_num_	CD	NUMBER	nummod_Tod	O
 Q464928	41	37	``	``	``	O	punct	O
 Q464928	41	38	Du	Du	NNP	MISC	compound	O
 Q464928	41	39	Côté	Côté	NNP	MISC	compound	O
@@ -5658,7 +5658,7 @@ Q464928	52	42	Christopher_Prendergast	_name_	NNP	PERSON	compound_nmod:by	O
 Q464928	52	42	.	.	.	O	punct	O
 
 Q464928	53	0	The	the	DT	O	det	O
-Q464928	53	2	six	_num_	CD	NUMBER	nummod_volume	_YES_
+Q464928	53	2	six	_num_	CD	NUMBER	nummod_volume	O
 Q464928	53	2	volumes	volume	NNS	O	nsubjpass	O
 Q464928	53	3	were	be	VBD	O	auxpass	O
 Q464928	53	4	published	publish	VBN	O	root	O
@@ -5696,7 +5696,7 @@ Q464928	53	37	under	under	IN	O	case	O
 Q464928	53	38	English	English	NNP	MISC	compound	O
 Q464928	53	39	translators	translator	NNS	O	nmod:under	O
 Q464928	53	40	and	and	CC	O	cc	O
-Q464928	53	42	one	_num_	CD	NUMBER	nummod_australian	_YES_
+Q464928	53	42	one	_num_	CD	NUMBER	nummod_australian	O
 Q464928	53	42	Australian	australian	JJ	MISC	conj:and	O
 Q464928	53	43	,	,	,	O	punct	O
 Q464928	53	46	James_Grieve	_name_	NNP	PERSON	compound_appos	O
@@ -10767,7 +10767,7 @@ Q950075	16	4	energy	energy	NN	O	dobj	O
 Q950075	16	5	from	from	IN	O	case	O
 Q950075	16	6	Pryan	Pryan	NNP	LOCATION	nmod:poss	O
 Q950075	16	7	's	's	POS	O	case	O
-Q950075	16	9	four	_num_	CD	NUMBER	nummod_sun	_YES_
+Q950075	16	9	four	_num_	CD	NUMBER	nummod_sun	O
 Q950075	16	9	suns	sun	NNS	O	nmod:from	O
 Q950075	16	10	and	and	CC	O	cc	O
 Q950075	16	11	beamed	beam	VBD	O	conj:and	O
@@ -10777,7 +10777,7 @@ Q950075	16	14	conduits	conduit	NNS	O	nmod:through	O
 Q950075	16	15	to	to	TO	O	case	O
 Q950075	16	16	the	the	DT	O	det	O
 Q950075	16	17	other	other	JJ	O	amod	O
-Q950075	16	19	three	_num_	CD	NUMBER	nummod_world	_YES_
+Q950075	16	19	three	_num_	CD	NUMBER	nummod_world	O
 Q950075	16	19	worlds	world	NNS	O	nmod:to	O
 Q950075	16	20	-LRB-	-lrb-	-LRB-	O	punct	O
 Q950075	16	21	the	the	DT	O	det	O
@@ -11392,7 +11392,7 @@ Q1053330	4	0	The	the	DT	O	det	O
 Q1053330	4	1	first	first	JJ	ORDINAL	amod	O
 Q1053330	4	2	novel	novel	NN	O	nsubj	O
 Q1053330	4	3	,	,	,	O	punct	O
-Q1053330	4	5	Nine	_num_	CD	NUMBER	nummod_Princes	_YES_
+Q1053330	4	5	Nine	_num_	CD	NUMBER	nummod_Princes	O
 Q1053330	4	5	Princes	Princes	NNPS	O	appos	O
 Q1053330	4	6	in	in	IN	O	case	O
 Q1053330	4	7	Amber	Amber	NNP	O	nmod:in	O
@@ -11404,7 +11404,7 @@ Q1053330	4	12	excerpts	excerpt	NNS	O	nmod:in	O
 Q1053330	4	13	in	in	IN	O	case	O
 Q1053330	4	14	Kallikanzaros	Kallikanzaros	NNP	LOCATION	compound	O
 Q1053330	4	15	No.	No.	NNP	LOCATION	nmod:in	O
-Q1053330	4	17	1	_num_	CD	LOCATION	nummod_No.	_YES_
+Q1053330	4	17	1	_num_	CD	LOCATION	nummod_No.	O
 Q1053330	4	17	,	,	,	O	punct	O
 Q1053330	4	18	June	June	NNP	DATE	nmod:in	O
 Q1053330	4	19	1967	1967	CD	DATE	nummod	O
@@ -11452,7 +11452,7 @@ Q1053330	6	10	been	be	VBN	O	auxpass	O
 Q1053330	6	11	published	publish	VBN	O	root	O
 Q1053330	6	12	collecting	collect	VBG	O	xcomp	O
 Q1053330	6	13	the	the	DT	O	det	O
-Q1053330	6	15	5	_num_	CD	NUMBER	nummod_novel	_YES_
+Q1053330	6	15	5	_num_	CD	NUMBER	nummod_novel	O
 Q1053330	6	15	novels	novel	NNS	O	dobj	O
 Q1053330	6	16	from	from	IN	O	case	O
 Q1053330	6	17	the	the	DT	O	det	O
@@ -11463,7 +11463,7 @@ Q1053330	6	21	cycle	cycle	NN	O	nmod:from	O
 Q1053330	6	22	'	'	''	O	punct	O
 Q1053330	6	23	or	or	CC	O	cc	O
 Q1053330	6	24	all	all	DT	O	advmod	O
-Q1053330	6	26	5	_num_	CD	NUMBER	nummod_novel	_YES_
+Q1053330	6	26	5	_num_	CD	NUMBER	nummod_novel	O
 Q1053330	6	26	novels	novel	NNS	O	nmod:from	O
 Q1053330	6	27	of	of	IN	O	case	O
 Q1053330	6	28	the	the	DT	O	det	O
@@ -12871,7 +12871,7 @@ Q1053330	46	16	Alessandro_Juliani	_name_	NNP	PERSON	compound_nmod:with	O
 Q1053330	46	16	reading	read	VBG	O	acl	O
 Q1053330	46	17	the	the	DT	O	det	O
 Q1053330	46	18	first	first	JJ	ORDINAL	amod	O
-Q1053330	46	20	five	_num_	CD	NUMBER	nummod_book	_YES_
+Q1053330	46	20	five	_num_	CD	NUMBER	nummod_book	O
 Q1053330	46	20	books	book	NNS	O	dobj	O
 Q1053330	46	21	-LRB-	-lrb-	-LRB-	O	punct	O
 Q1053330	46	22	the	the	DT	O	det	O
@@ -12883,7 +12883,7 @@ Q1053330	46	29	Wil_Wheaton	_name_	NNP	PERSON	compound_dobj	O
 Q1053330	46	29	reading	read	VBG	O	acl	O
 Q1053330	46	30	the	the	DT	O	det	O
 Q1053330	46	31	last	last	JJ	O	amod	O
-Q1053330	46	33	five	_num_	CD	NUMBER	nummod_book	_YES_
+Q1053330	46	33	five	_num_	CD	NUMBER	nummod_book	O
 Q1053330	46	33	books	book	NNS	O	dobj	O
 Q1053330	46	34	-LRB-	-lrb-	-LRB-	O	punct	O
 Q1053330	46	35	the	the	DT	O	det	O
@@ -15309,7 +15309,7 @@ Q1213577	6	15	epic	epic	NN	O	nsubj	O
 Q1213577	6	16	actually	actually	RB	O	advmod	O
 Q1213577	6	17	consists	consist	VBZ	O	ccomp	O
 Q1213577	6	18	of	of	IN	O	case	O
-Q1213577	6	20	two	_num_	CD	NUMBER	nummod_tale	_YES_
+Q1213577	6	20	two	_num_	CD	NUMBER	nummod_tale	O
 Q1213577	6	20	long	long	JJ	O	amod	O
 Q1213577	6	21	and	and	CC	O	cc	O
 Q1213577	6	22	mutually	mutually	RB	O	advmod	O
@@ -15317,7 +15317,7 @@ Q1213577	6	23	dependent	dependent	JJ	O	conj:and	O
 Q1213577	6	24	tales	tale	NNS	O	nmod:of	O
 Q1213577	6	25	,	,	,	O	punct	O
 Q1213577	6	26	the	the	DT	O	det	O
-Q1213577	6	28	two	_num_	CD	NUMBER	nummod_story	_YES_
+Q1213577	6	28	two	_num_	CD	NUMBER	nummod_story	O
 Q1213577	6	28	Hyperion	hyperion	NN	O	compound	O
 Q1213577	6	29	stories	story	NNS	O	appos	O
 Q1213577	6	30	combined	combine	VBN	O	acl	O
@@ -19963,10 +19963,10 @@ Q18153036	4	2	series	series	NN	O	nsubj	O
 Q18153036	4	3	currently	currently	RB	DATE	advmod	O
 Q18153036	4	4	consists	consist	VBZ	O	root	O
 Q18153036	4	5	of	of	IN	O	case	O
-Q18153036	4	7	five	_num_	CD	NUMBER	nummod_novella	_YES_
+Q18153036	4	7	five	_num_	CD	NUMBER	nummod_novella	O
 Q18153036	4	7	novellas	novella	NNS	O	nmod:of	O
 Q18153036	4	8	and	and	CC	O	cc	O
-Q18153036	4	10	three	_num_	CD	NUMBER	nummod_novel	_YES_
+Q18153036	4	10	three	_num_	CD	NUMBER	nummod_novel	O
 Q18153036	4	10	novels	novel	NNS	O	nmod:of	O
 Q18153036	4	11	,	,	,	O	punct	O
 Q18153036	4	12	which	which	WDT	O	ref	O
@@ -22791,11 +22791,11 @@ Q4404357	31	16	Drow	Drow	NNP	O	dep	O
 Q4404357	31	17	,	,	,	O	punct	O
 Q4404357	31	18	and	and	CC	O	cc	O
 Q4404357	31	19	The	the	DT	O	det	O
-Q4404357	31	21	Two	_num_	CD	NUMBER	nummod_sword	_YES_
+Q4404357	31	21	Two	_num_	CD	NUMBER	nummod_sword	O
 Q4404357	31	21	Swords	sword	NNS	O	dep	O
 Q4404357	31	22	-RRB-	-rrb-	-RRB-	O	punct	O
 Q4404357	31	23	-LRB-	-lrb-	-LRB-	O	punct	O
-Q4404357	31	25	three	_num_	CD	NUMBER	nummod_paperback	_YES_
+Q4404357	31	25	three	_num_	CD	NUMBER	nummod_paperback	O
 Q4404357	31	25	paperbacks	paperback	NNS	O	dep	O
 Q4404357	31	26	in	in	IN	O	case	O
 Q4404357	31	27	boxed	boxed	JJ	O	amod	O
@@ -24800,7 +24800,7 @@ Q7004501	5	4	enworld.org	enworld.org	NN	O	nmod:from	O
 Q7004501	5	5	gave	give	VBD	O	root	O
 Q7004501	5	6	Neverwinter	Neverwinter	NNP	ORGANIZATION	iobj	O
 Q7004501	5	7	a	a	DT	O	dobj	O
-Q7004501	5	9	4.5	_num_	CD	NUMBER	dep_a	O
+Q7004501	5	9	4.5	4.5	CD	NUMBER	dep_a	O
 Q7004501	5	9	out	out	IN	O	case	O
 Q7004501	5	11	5	_num_	CD	NUMBER	nmod:out_4.5	O
 Q7004501	5	11	stating	state	VBG	O	acl	O
