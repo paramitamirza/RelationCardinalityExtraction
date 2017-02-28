@@ -48,7 +48,7 @@ public class FeatureExtractionForCRF {
 			featExtraction = new FeatureExtractionForCRF(args[0], args[1], args[2], args[3]);
 		}
 		
-		featExtraction.generateColumnsFile(false);
+		featExtraction.generateColumnsFile(true, false, 0);
 		
 	}
 	
@@ -60,7 +60,7 @@ public class FeatureExtractionForCRF {
 		return wikidataId + "\t" + sentId + "\t" + wordId + "\t" + word + "\t" + lemma + "\t" + pos + "\t" + ner + "\t" + dep + "\t" + label;
 	}
 	
-	public void generateColumnsFile(boolean compositional) throws JSONException, IOException {
+	public void generateColumnsFile(boolean nummod, boolean compositional, int threshold) throws JSONException, IOException {
 		
 		List<String> testInstances = readRandomInstances();
 				
@@ -162,7 +162,9 @@ public class FeatureExtractionForCRF {
 							if (compositional) {
 								if (numToAdd > 0) {
 									if (numInt == numOfTriples
-											&& deprel.startsWith("nummod")
+											&& ((nummod && deprel.startsWith("nummod"))
+													|| !nummod)
+											&& numOfTriples > threshold
 											) {
 										label = "_YES_";
 										numToAdd = 0;
@@ -170,14 +172,18 @@ public class FeatureExtractionForCRF {
 										
 									} else {
 										if ((numToAdd+numInt) == numOfTriples
-												&& deprel.startsWith("nummod")
+												&& ((nummod && deprel.startsWith("nummod"))
+														|| !nummod)
+												&& numOfTriples > threshold
 												) {
 											label = "_YES_";
 											for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
 											numToAdd = 0;
 											idxToAdd.clear();
 										} else if ((numToAdd+numInt) < numOfTriples
-												&& deprel.startsWith("nummod")
+												&& ((nummod && deprel.startsWith("nummod"))
+														|| !nummod)
+												&& numOfTriples > threshold
 												) {
 											label = "O";
 											numToAdd += numInt;
@@ -191,11 +197,15 @@ public class FeatureExtractionForCRF {
 									
 								} else {
 									if (numInt == numOfTriples
-											&& deprel.startsWith("nummod")
+											&& ((nummod && deprel.startsWith("nummod"))
+													|| !nummod)
+											&& numOfTriples > threshold
 											) {
 										label = "_YES_";
 									} else if (numInt < numOfTriples
-											&& deprel.startsWith("nummod")
+											&& ((nummod && deprel.startsWith("nummod"))
+													|| !nummod)
+											&& numOfTriples > threshold
 											) {
 										label = "O";
 										numToAdd += numInt;
@@ -207,7 +217,9 @@ public class FeatureExtractionForCRF {
 								
 							} else {
 								if (numInt == numOfTriples
-										&& deprel.startsWith("nummod")
+										&& ((nummod && deprel.startsWith("nummod"))
+												|| !nummod)
+										&& numOfTriples > threshold
 										) {
 									label = "_YES_";
 //								} else if (numInt < numOfTriples) {

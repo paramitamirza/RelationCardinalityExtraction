@@ -33,16 +33,13 @@ public class Preprocessing {
 		String inputCsvFile = cmd.getOptionValue("input");
 		
 		//If input CSV file doesn't have Wikipedia labels for each Wikidata ID
-		boolean addLinks = cmd.hasOption("l");
-		if (addLinks) {
-			boolean enLinks = cmd.hasOption("w");
-			if (enLinks) {
+		if (cmd.hasOption("l")) {
+			if (cmd.hasOption("w")) {
 				String wikipediaLinkFile = cmd.getOptionValue("wikiurl");
 				AddWikipediaTitle addWikiTitle = new AddWikipediaTitle(inputCsvFile, wikipediaLinkFile);
 				
 				int nRandom = 0;
-				boolean randomize = cmd.hasOption("n");
-				if (randomize) nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
+				if (cmd.hasOption("n")) nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
 				addWikiTitle.append(nRandom);
 			} else {
 				System.err.println("Mapping file between Wikipedia English URL and Wikidata entity (.txt.gz) is missing!");
@@ -54,34 +51,29 @@ public class Preprocessing {
 		}
 		
 		//Extract Wikipedia sentences (containing numbers) per Wikidata instance
-		boolean extractSent = cmd.hasOption("s");
-		if (extractSent) {
+		if (cmd.hasOption("s")) {
 			String outputJsonFile = inputCsvFile.replace(".csv", ".jsonl.gz");
 			SentenceExtractionFromWikipedia sentExtraction = new SentenceExtractionFromWikipedia(inputCsvFile, outputJsonFile);
 			sentExtraction.extractSentences();
 		}
 		
 		//Generate feature file (in column format) for CRF++
-		boolean extractFeature = cmd.hasOption("f");
-		if (extractFeature) {
+		if (cmd.hasOption("f")) {
 			String inputJsonFile = inputCsvFile.replace(".csv", ".jsonl.gz");
 			String inputRandomCsvFile = null;
 			
-			boolean randomize = cmd.hasOption("n");
-			if (randomize) {
+			if (cmd.hasOption("n")) {
 				int nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
 				inputRandomCsvFile = inputCsvFile.replace(".csv", "_random"+nRandom+".csv");
 			} else {
-				boolean randomFile = cmd.hasOption("r");
-				if (randomFile) {
+				if (cmd.hasOption("r")) {
 					inputRandomCsvFile = cmd.getOptionValue("random");
 				}
 			}
 			String relName = cmd.getOptionValue("relname");
 			
-			boolean outputDir = cmd.hasOption("o");
 			String dirFeature = null;
-			if (outputDir) {
+			if (cmd.hasOption("o")) {
 				dirFeature = cmd.getOptionValue("output");
 			} 
 			
@@ -101,8 +93,11 @@ public class Preprocessing {
 	            
 			} else {
 				FeatureExtractionForCRF featExtraction = new FeatureExtractionForCRF(inputJsonFile, inputRandomCsvFile, relName, dirFeature);
+				boolean nummod = cmd.hasOption("d");
 				boolean compositional = cmd.hasOption("c");
-				featExtraction.generateColumnsFile(compositional);
+				int threshold = 0;
+				if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
+				featExtraction.generateColumnsFile(nummod, compositional, threshold);
 			}
 		}
 		
@@ -147,9 +142,17 @@ public class Preprocessing {
 		output.setRequired(false);
 		options.addOption(output);
 		
+		Option nummod = new Option("d", "nummod", false, "Only if dependency label is 'nummod' to be labelled as positive examples");
+		nummod.setRequired(false);
+		options.addOption(nummod);
+		
 		Option compositional = new Option("c", "compositional", false, "Label compositional numbers as true examples");
 		compositional.setRequired(false);
 		options.addOption(compositional);
+		
+		Option threshold = new Option("t", "threshold", true, "Threshold for number of triples to be labelled as positive examples");
+		threshold.setRequired(false);
+		options.addOption(threshold);
 		
 		return options;
 	}
