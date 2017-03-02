@@ -117,7 +117,7 @@ public class SentenceExtractionFromWikipedia {
 		return "";
 	}
 	
-	private List<String> filterText(String articleText, boolean ordinal, boolean namedEntity) throws IOException {
+	public List<String> filterText(String articleText, boolean ordinal, boolean namedEntity) throws IOException {
 		List<String> filtered = new ArrayList<String>();
 		String transformed;
 		Sentence sent;

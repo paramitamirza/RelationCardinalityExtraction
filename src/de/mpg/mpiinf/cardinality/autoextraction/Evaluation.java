@@ -289,7 +289,7 @@ public class Evaluation {
 	
 	//TODO Change the key, should be the index
 	public Map<Integer, String> extractNumber(List<String> nums, List<Double> probs) {
-		Map<Integer, String> numChild = new LinkedHashMap<Integer, String>();
+		Map<Integer, String> numTriple = new LinkedHashMap<Integer, String>();
 		String number = "";
 		Double prob = 0.0;
 		for (int i=0; i<nums.size(); i++) {
@@ -297,28 +297,35 @@ public class Evaluation {
 				number = nums.get(i);
 				prob = probs.get(i);
 				
-				if (Numbers.getInteger(number) > 0) {
-					numChild.put(i, Numbers.getInteger(number) + "#" + prob);
+				if (number.startsWith("LatinGreek_")) {
+					numTriple.put(i, number.split("_")[2] + "#" + prob);
+					
+				} else if (Numbers.getInteger(number) > 0) {
+					numTriple.put(i, Numbers.getInteger(number) + "#" + prob);
 				}
 			}
 		}
-		return numChild;
+		return numTriple;
 	}
 	
 	public String wordsToSentence(List<String> words, int idx) {
-		String sent = "";
+		String sent = "", word = "";
 		for (int i=0; i<words.size(); i++) {
-			if (i == idx) sent += "[" + words.get(i) + "]" + " ";
-			else sent += words.get(i) + " ";
+			word = words.get(i);
+			if (word.startsWith("LatinGreek_")) word = word.split("_")[1];
+			if (i == idx) sent += "[" + word + "]" + " ";
+			else sent += word + " ";
 		}
 		return sent.substring(0, sent.length()-1);
 	}
 	
 	public String wordsToSentence(List<String> words, List<Integer> idx) {
-		String sent = "";
+		String sent = "", word = "";
 		for (int i=0; i<words.size(); i++) {
-			if (idx.contains(i)) sent += "[" + words.get(i) + "]" + " ";
-			else sent += words.get(i) + " ";
+			word = words.get(i);
+			if (word.startsWith("LatinGreek_")) word = word.split("_")[1];
+			if (idx.contains(i)) sent += "[" + word + "]" + " ";
+			else sent += word + " ";
 		}
 		return sent.substring(0, sent.length()-1);
 	}

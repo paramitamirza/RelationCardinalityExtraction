@@ -92,7 +92,8 @@ public class Preprocessing {
 	            return;
 	            
 			} else {
-				FeatureExtractionForCRF featExtraction = new FeatureExtractionForCRF(inputJsonFile, inputRandomCsvFile, relName, dirFeature);
+//				FeatureExtractionForCRF featExtraction = new FeatureExtractionForCRF(inputJsonFile, inputRandomCsvFile, relName, dirFeature);
+				FeatureExtractionForCRFTransform featExtraction = new FeatureExtractionForCRFTransform(inputCsvFile, inputRandomCsvFile, relName, dirFeature);
 				boolean nummod = cmd.hasOption("d");
 				boolean compositional = cmd.hasOption("c");
 				int threshold = 0;

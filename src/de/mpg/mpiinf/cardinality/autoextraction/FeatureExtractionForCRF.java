@@ -48,7 +48,7 @@ public class FeatureExtractionForCRF {
 			featExtraction = new FeatureExtractionForCRF(args[0], args[1], args[2], args[3]);
 		}
 		
-		featExtraction.generateColumnsFile(true, false, 0);
+		featExtraction.generateColumnsFile(false, false, 0);
 		
 	}
 	
@@ -103,10 +103,8 @@ public class FeatureExtractionForCRF {
 			
 			numOfTriples = Integer.parseInt(count);
 			
-			boolean training = true;
 			if (testInstances.contains(wikidataId)) {
 				outfile = new PrintWriter(new BufferedWriter(new FileWriter(dirFeature + relName + "_test_cardinality.data", true)));
-				training = false;
 			} else {
 				outfile = new PrintWriter(new BufferedWriter(new FileWriter(dirFeature + relName + "_train_cardinality.data", true)));
 			}

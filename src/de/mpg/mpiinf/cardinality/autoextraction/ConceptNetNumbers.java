@@ -205,21 +205,19 @@ public class ConceptNetNumbers {
 			}
 		}
 		
-		for (String key : otherConceptsCount.keySet()) {
-			if (otherConceptsCount.get(key) > 1) 
-				otherConcepts.remove(key);
-			else {
-				String noun = wiktionaryContainNumber(key, otherConcepts.get(key));
-				if (noun == null) otherConcepts.remove(key);
-				else otherConceptNouns.put(key, noun);
-			}	
-		}
-		
-		for (String key : otherConcepts.keySet()) {
-			System.out.println(key + " = " + otherConcepts.get(key) + " -- " + otherConceptNouns.get(key));
-		}
-		
-		System.out.println(postNumber);
+//		for (String key : otherConceptsCount.keySet()) {
+//			if (otherConceptsCount.get(key) > 1) 
+//				otherConcepts.remove(key);
+//			else {
+//				String noun = wiktionaryContainNumber(key, otherConcepts.get(key));
+//				if (noun == null) otherConcepts.remove(key);
+//				else otherConceptNouns.put(key, noun);
+//			}	
+//		}
+//		
+//		for (String key : otherConcepts.keySet()) {
+//			System.out.println(key + " = " + otherConcepts.get(key) + " -- " + otherConceptNouns.get(key));
+//		}
 		
 		List<String> postPrefixLatinGreekList = new ArrayList<String>();
 		postPrefixLatinGreekList.addAll(postPrefixLatinGreek);
@@ -235,7 +233,7 @@ public class ConceptNetNumbers {
 		Collections.sort(prefixLatinGreekList, x);
 		bw = new BufferedWriter(new FileWriter("./data/prefix_latin_greek.tsv"));
 		for(String p : prefixLatinGreekList) {
-			bw.write(p + "\t" + prefixLatinGreek.get(p) + "\n");
+			bw.write(p + "\t" + Numbers.getInteger(numbers.get(prefixLatinGreek.get(p))) + "\n");
 		}
 		bw.close();
 	}
@@ -326,10 +324,12 @@ public class ConceptNetNumbers {
 		prefixLatinGreek.put("un", 1); prefixLatinGreek.put("mona", 1);
 		
 		//two
-		prefixLatinGreek.put("bi", 2); prefixLatinGreek.put("du", 2);
-		prefixLatinGreek.put("di", 2); prefixLatinGreek.put("dya", 2);
+		prefixLatinGreek.put("bi", 2); 
+//		prefixLatinGreek.put("du", 2);
+//		prefixLatinGreek.put("di", 2); 
+		prefixLatinGreek.put("dya", 2);
 		prefixLatinGreek.put("bin", 2); prefixLatinGreek.put("bien", 2);
-		prefixLatinGreek.put("dia", 2);
+//		prefixLatinGreek.put("dia", 2);
 		
 		//three
 		prefixLatinGreek.put("tri", 3);	prefixLatinGreek.put("ter", 3);
@@ -443,8 +443,8 @@ public class ConceptNetNumbers {
 		//thousand
 		prefixLatinGreek.put("mille", 29); prefixLatinGreek.put("chilia", 29);
 		
-		prefixLatinGreek.put("kilo", 29);
-		prefixLatinGreek.put("mega", 30);
+//		prefixLatinGreek.put("kilo", 29);
+//		prefixLatinGreek.put("mega", 30);
 	}
 
 }

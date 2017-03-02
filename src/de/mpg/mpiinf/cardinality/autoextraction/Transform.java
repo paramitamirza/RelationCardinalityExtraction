@@ -221,7 +221,7 @@ public class Transform {
 			if (lemma.startsWith(key)) {
 				post = lemma.replace(key, "");
 				if (postPrefixLetinGreek.contains(post)) {
-					return "LatinGreek_" + prefixLatinGreek.get(key) + "_" + post + "_" + word;
+					return "LatinGreek_" + word + "_" + prefixLatinGreek.get(key) + "_" + post;
 				}
 			}
 		}
@@ -260,7 +260,10 @@ public class Transform {
 				term = latinGreek(sent.word(i), sent.lemma(i));
 				if (!term.equals("")) wordList.add(term);
 				else wordList.add(sent.word(i));
-			}			
+			
+			} else {
+				wordList.add(sent.word(i));
+			}
 		}
 		
 		return StringUtils.join(wordList, " ");
