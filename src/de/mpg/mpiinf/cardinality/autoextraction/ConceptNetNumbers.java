@@ -112,7 +112,9 @@ public class ConceptNetNumbers {
 								}
 							}
 						}
-						if (!prefixFound.equals("") && !c2.equals(prefixFound)) {
+						if (!prefixFound.equals("") && !c2.equals(prefixFound)
+								&& !postPrefix.contains("_")
+								) {
 							if (!conceptNetPostPrefix.containsKey(postPrefix))
 								conceptNetPostPrefix.put(postPrefix, 0);
 							conceptNetPostPrefix.put(postPrefix, conceptNetPostPrefix.get(postPrefix)+1);
@@ -133,7 +135,9 @@ public class ConceptNetNumbers {
 								}
 							}
 						}
-						if (!prefixFound.equals("") && !c1.equals(prefixFound)) {
+						if (!prefixFound.equals("") && !c1.equals(prefixFound)
+								&& !postPrefix.contains("_")
+								) {
 							if (!conceptNetPostPrefix.containsKey(postPrefix))
 								conceptNetPostPrefix.put(postPrefix, 0);
 							conceptNetPostPrefix.put(postPrefix, conceptNetPostPrefix.get(postPrefix)+1);
@@ -321,7 +325,7 @@ public class ConceptNetNumbers {
 		
 		//one
 		prefixLatinGreek.put("uni", 1); prefixLatinGreek.put("mono", 1);
-		prefixLatinGreek.put("un", 1); prefixLatinGreek.put("mona", 1);
+		prefixLatinGreek.put("mona", 1);
 		
 		//two
 		prefixLatinGreek.put("bi", 2); 
