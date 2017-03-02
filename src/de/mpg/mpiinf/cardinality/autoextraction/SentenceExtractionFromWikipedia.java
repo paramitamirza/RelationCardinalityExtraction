@@ -119,42 +119,57 @@ public class SentenceExtractionFromWikipedia {
 	
 	private List<String> filterText(String articleText, boolean ordinal, boolean namedEntity) throws IOException {
 		List<String> filtered = new ArrayList<String>();
+		String transformed;
+		Sentence sent;
+		
+		Transform trans = new Transform();
 		
 		for (String line : articleText.split("\\r?\\n")) {
 			Document doc = new Document(line);
 			
-			for (Sentence sent : doc.sentences()) {
-				boolean entityFound = false, numberFound = false, ordinalFound = false;
-				for (int i=0; i<sent.words().size(); i++) {
-//					System.err.println(sent.word(i) + "\t" + sent.posTag(i) + "\t" + sent.nerTag(i));
-					if (sent.posTag(i).equals("CD")
-							&& !sent.word(i).contains("=")
-							&& !sent.nerTag(i).equals("MONEY")
-							&& !sent.nerTag(i).equals("PERCENT")
-							&& !sent.nerTag(i).equals("DATE")
-							&& !sent.nerTag(i).equals("TIME")
-							&& !sent.nerTag(i).equals("DURATION")
-							&& !sent.nerTag(i).equals("SET")) {
-						numberFound = true;
-						break;
-					} else if (ordinal && sent.posTag(i).equals("JJ")
-							&& sent.nerTag(i).equals("ORDINAL")) {
-						ordinalFound = true;
-						break;
-					} else if (namedEntity && sent.posTag(i).equals("NNP")
-							&& (sent.nerTag(i).equals("PERSON")
-									|| sent.nerTag(i).equals("LOCATION")
-									|| sent.nerTag(i).equals("ORGANIZATION"))) {
-						entityFound = true;
-						break;
+			for (Sentence s : doc.sentences()) {
+				
+				transformed = trans.transform(s.text(), false, false, true, true);
+				
+				if (transformed.contains("LatinGreek_")) {
+					filtered.add(transformed);
+					
+				} else {
+					
+					sent = new Sentence(transformed);
+				
+					boolean entityFound = false, numberFound = false, ordinalFound = false;
+					for (int i=0; i<sent.words().size(); i++) {
+//						System.err.println(sent.word(i) + "\t" + sent.posTag(i) + "\t" + sent.nerTag(i));
+						if (sent.posTag(i).equals("CD")
+								&& !sent.word(i).contains("=")
+								&& !sent.nerTag(i).equals("MONEY")
+								&& !sent.nerTag(i).equals("PERCENT")
+								&& !sent.nerTag(i).equals("DATE")
+								&& !sent.nerTag(i).equals("TIME")
+								&& !sent.nerTag(i).equals("DURATION")
+								&& !sent.nerTag(i).equals("SET")) {
+							numberFound = true;
+							break;
+						} else if (ordinal && sent.posTag(i).equals("JJ")
+								&& sent.nerTag(i).equals("ORDINAL")) {
+							ordinalFound = true;
+							break;
+						} else if (namedEntity && sent.posTag(i).equals("NNP")
+								&& (sent.nerTag(i).equals("PERSON")
+										|| sent.nerTag(i).equals("LOCATION")
+										|| sent.nerTag(i).equals("ORGANIZATION"))) {
+							entityFound = true;
+							break;
+						}
 					}
-				}
-				if (ordinal && (numberFound || ordinalFound)) {
-					filtered.add(sent.text());
-				} else if (namedEntity && (numberFound || entityFound)) {
-					filtered.add(sent.text());
-				} else if (numberFound) {
-					filtered.add(sent.text());
+					if (ordinal && (numberFound || ordinalFound)) {
+						filtered.add(sent.text());
+					} else if (namedEntity && (numberFound || entityFound)) {
+						filtered.add(sent.text());
+					} else if (numberFound) {
+						filtered.add(sent.text());
+					}
 				}
 	        }
 	    }

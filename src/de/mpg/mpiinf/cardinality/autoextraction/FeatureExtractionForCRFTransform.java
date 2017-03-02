@@ -18,7 +18,7 @@ import org.json.*;
 
 import edu.stanford.nlp.simple.Sentence;
 
-public class FeatureExtractionForCRF {
+public class FeatureExtractionForCRFTransform {
 	
 	
 	
@@ -27,11 +27,11 @@ public class FeatureExtractionForCRF {
 	private String relName = "sample";
 	private String dirFeature = "./data/example/";
 	
-	public FeatureExtractionForCRF() {
+	public FeatureExtractionForCRFTransform() {
 		
 	}
 	
-	public FeatureExtractionForCRF(String inputJsonFilePath, String inputRandomCsvFilePath, String relationName, String dirOutput) {
+	public FeatureExtractionForCRFTransform(String inputJsonFilePath, String inputRandomCsvFilePath, String relationName, String dirOutput) {
 		this();
 		this.setInputJsonFile(inputJsonFilePath);
 		this.setInputRandomCsvFile(inputRandomCsvFilePath);
@@ -41,11 +41,11 @@ public class FeatureExtractionForCRF {
 	
 	public static void main(String[] args) throws JSONException, IOException {
 				
-		FeatureExtractionForCRF featExtraction;
+		FeatureExtractionForCRFTransform featExtraction;
 		if (args.length < 4) {
-			featExtraction = new FeatureExtractionForCRF();
+			featExtraction = new FeatureExtractionForCRFTransform();
 		} else {
-			featExtraction = new FeatureExtractionForCRF(args[0], args[1], args[2], args[3]);
+			featExtraction = new FeatureExtractionForCRFTransform(args[0], args[1], args[2], args[3]);
 		}
 		
 		featExtraction.generateColumnsFile(true, false, 0);
@@ -103,10 +103,8 @@ public class FeatureExtractionForCRF {
 			
 			numOfTriples = Integer.parseInt(count);
 			
-			boolean training = true;
 			if (testInstances.contains(wikidataId)) {
 				outfile = new PrintWriter(new BufferedWriter(new FileWriter(dirFeature + relName + "_test_cardinality.data", true)));
-				training = false;
 			} else {
 				outfile = new PrintWriter(new BufferedWriter(new FileWriter(dirFeature + relName + "_train_cardinality.data", true)));
 			}

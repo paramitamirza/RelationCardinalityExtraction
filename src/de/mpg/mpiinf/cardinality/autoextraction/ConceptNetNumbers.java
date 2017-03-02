@@ -86,7 +86,6 @@ public class ConceptNetNumbers {
 		for (int i=1; i<numbers.size(); i++) {
 			String inputFile = "./data/conceptnet_number_related/" + numbers.get(i) + ".txt";
 			BufferedReader br = new BufferedReader(new FileReader(inputFile));
-			BufferedWriter bw = new BufferedWriter(new FileWriter(inputFile.replace(".txt", ".tmp")));
 			
 			line = br.readLine();
 			while (line != null) {
@@ -165,7 +164,6 @@ public class ConceptNetNumbers {
 			}
 			
 			br.close();
-			bw.close();
 		}
 		
 		postPrefixLatinGreek.addAll(conceptNetPostPrefix.keySet());
@@ -222,8 +220,24 @@ public class ConceptNetNumbers {
 		}
 		
 		System.out.println(postNumber);
-		System.out.println(postPrefixLatinGreek);
 		
+		List<String> postPrefixLatinGreekList = new ArrayList<String>();
+		postPrefixLatinGreekList.addAll(postPrefixLatinGreek);
+		Collections.sort(postPrefixLatinGreekList, x);
+		BufferedWriter bw = new BufferedWriter(new FileWriter("./data/post_prefix_latin_greek.tsv"));
+		for(String p : postPrefixLatinGreekList) {
+			bw.write(p + "\n");
+		}
+		bw.close();
+		
+		List<String> prefixLatinGreekList = new ArrayList<String>();
+		prefixLatinGreekList.addAll(prefixLatinGreek.keySet());
+		Collections.sort(prefixLatinGreekList, x);
+		bw = new BufferedWriter(new FileWriter("./data/prefix_latin_greek.tsv"));
+		for(String p : prefixLatinGreekList) {
+			bw.write(p + "\t" + prefixLatinGreek.get(p) + "\n");
+		}
+		bw.close();
 	}
 	
 	public String wiktionaryContainNumber(String concept, String number) throws IOException {

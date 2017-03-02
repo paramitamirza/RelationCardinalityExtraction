@@ -1,5 +1,6 @@
 package de.mpg.mpiinf.cardinality.autoextraction;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -63,6 +64,11 @@ public class Numbers {
 		}
 		
 		return number;
+	}
+	
+	public static int getLGInteger(String latinGreekPrefix) throws IOException {
+		Transform transform = new Transform();
+		return transform.prefixLatinGreek.get(latinGreekPrefix);
 	}
 	
 	public static boolean properNumber(String pos, String ner) {
