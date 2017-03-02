@@ -159,30 +159,18 @@ public class FeatureExtractionForCRFTransform {
 								
 								if (compositional) {
 									if (numToAdd > 0) {
-										if (numInt == numOfTriples
-												&& ((nummod && deprel.startsWith("nummod"))
-														|| !nummod)
-												&& numOfTriples > threshold
-												) {
+										if (numInt == numOfTriples) {
 											label = "_YES_";
 											numToAdd = 0;
 											idxToAdd.clear();
 											
 										} else {
-											if ((numToAdd+numInt) == numOfTriples
-													&& ((nummod && deprel.startsWith("nummod"))
-															|| !nummod)
-													&& numOfTriples > threshold
-													) {
+											if ((numToAdd+numInt) == numOfTriples) {
 												label = "_YES_";
 												for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
 												numToAdd = 0;
 												idxToAdd.clear();
-											} else if ((numToAdd+numInt) < numOfTriples
-													&& ((nummod && deprel.startsWith("nummod"))
-															|| !nummod)
-													&& numOfTriples > threshold
-													) {
+											} else if ((numToAdd+numInt) < numOfTriples) {
 												label = "O";
 												numToAdd += numInt;
 												idxToAdd.add(tokenIdx);
@@ -194,23 +182,26 @@ public class FeatureExtractionForCRFTransform {
 										}
 										
 									} else {
-										if (numInt == numOfTriples
-												&& ((nummod && deprel.startsWith("nummod"))
-														|| !nummod)
-												&& numOfTriples > threshold
-												) {
+										if (numInt == numOfTriples) {
 											label = "_YES_";
-										} else if (numInt < numOfTriples
-												&& ((nummod && deprel.startsWith("nummod"))
-														|| !nummod)
-												&& numOfTriples > threshold
-												) {
+										} else if (numInt < numOfTriples) {
 											label = "O";
 											numToAdd += numInt;
 											idxToAdd.add(tokenIdx);
 										} else {	//numInt > numOfTriples
 											label = "O";
 										}
+									}
+									
+								} else {
+									if (numInt == numOfTriples) {
+										label = "_YES_";
+//										} else if (numInt < numOfTriples) {
+//											label = "_NO_";
+//										} else if (numInt > numOfTriples) {
+//											label = "_MAYBE_";
+									} else {
+										label = "O";
 									}
 								}
 								
