@@ -107,6 +107,8 @@ public class FeatureExtractionForCRFTransform {
 	        count = line.split(",")[2];
 	        System.out.println(wikidataId + "\t" + label + "\t" + count);
 	        
+	        numOfTriples = Integer.parseInt(count);
+	        
 	        SentenceExtractionFromWikipedia sentExtraction = new SentenceExtractionFromWikipedia(inputCsvFile, inputCsvFile.replace(".csv", ".jsonl.gz"));
 	        String wikipediaText = sentExtraction.getWikipediaTextFromTitle(label);
 	        
