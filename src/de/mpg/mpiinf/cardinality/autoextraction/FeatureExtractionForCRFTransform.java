@@ -121,6 +121,8 @@ public class FeatureExtractionForCRFTransform {
 	        	
 	        	List<String> articleText = sentExtraction.filterText(wikipediaText, false, false);	//ordinal=false, namedEntity=false --> only cardinal numbers!!
 				
+	        	System.out.println("size: " + articleText.size());
+	        	
 				if (articleText.size() > 0) {
 					
 					JSONObject obj = new JSONObject();
@@ -143,7 +145,7 @@ public class FeatureExtractionForCRFTransform {
 						
 						list.put(articleText.get(j));
 								
-//						System.out.println(articleText.get(j));
+						System.out.println(j + "-" + articleText.get(j));
 						Sentence sent;
 						if (training) {
 							sent = new Sentence(articleText.get(j));

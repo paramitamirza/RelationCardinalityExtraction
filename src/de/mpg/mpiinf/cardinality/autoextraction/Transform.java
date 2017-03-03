@@ -129,6 +129,10 @@ public class Transform {
 		sentence = "The quintuplets play with a hexagon.";
 		transformed = transform.transform(sentence, true, true, true, true);
 		System.out.println(sentence + " --> " + transformed);
+		
+		sentence = "One novel and one tale can not be placed in sequence .";
+		transformed = transform.transform(sentence, true, true, true, true);
+		System.out.println(sentence + " --> " + transformed);
 	}
 	
 	private int getDetAny(Sentence sent, int objIdx) {
@@ -231,6 +235,8 @@ public class Transform {
 	public String transform(String sentence, boolean articles, boolean negative, boolean otherConcepts, boolean latinGreek) throws IOException {
 		String line, transformed = sentence, term;
 		
+		System.out.println("---" + sentence);
+		
 		if (otherConcepts) {
 			BufferedReader br = new BufferedReader(new FileReader(numberRelatedTermsPath));
 			line = br.readLine();
@@ -328,20 +334,20 @@ public class Transform {
 		String transformed = "", original = "";
 		
 		//// e.g., Their marriage is without children --> Their marriage is with 0 children
-		if (sentence.contains("without")) return sentence.replaceAll("without", "with 0");
+		if (sentence.contains("without")) transformed = sentence.replaceAll("without", "with 0");
+		else transformed = sentence;
 		
-		Sentence orig = new Sentence(sentence);
-		original = StringUtils.join(orig.words(), " ");
-		
-		transformed = original;
 		Sentence sent = new Sentence(transformed);
 		int negFound = findNegative(sent);
+		int found = negFound;
 		List<String> wordList = new ArrayList<String>();
 		
 		int gov = -999, det = -999, noun = -999, verbAcl = -999;
 		boolean objExist = false, compExist = false;
 		
 		while (negFound > 0) {
+			
+			System.out.println(negFound);
 			
 			gov = sent.governor(negFound).get();
 			wordList.clear();
