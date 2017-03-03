@@ -130,7 +130,7 @@ public class Transform {
 		transformed = transform.transform(sentence, true, true, true, true);
 		System.out.println(sentence + " --> " + transformed);
 		
-		sentence = "One novel and one tale can not be placed in sequence .";
+		sentence = "One novel and one tale can not be placed in sequence, and one novel is never written in one night.";
 		transformed = transform.transform(sentence, true, true, true, true);
 		System.out.println(sentence + " --> " + transformed);
 	}
@@ -235,8 +235,6 @@ public class Transform {
 	public String transform(String sentence, boolean articles, boolean negative, boolean otherConcepts, boolean latinGreek) throws IOException {
 		String line, transformed = sentence, term;
 		
-		System.out.println("---" + sentence);
-		
 		if (otherConcepts) {
 			BufferedReader br = new BufferedReader(new FileReader(numberRelatedTermsPath));
 			line = br.readLine();
@@ -319,11 +317,12 @@ public class Transform {
 		return StringUtils.join(transformed, " ");
 	}
 	
-	private int findNegative(Sentence sent) {
+	private int findNegative(Sentence sent, List<Integer> skipped) {
 		List<Integer> negFoundList = new ArrayList<Integer>();		
 		for (int i=0; i<sent.words().size(); i++) {
 			if (sent.incomingDependencyLabel(i).isPresent()
-					&& sent.incomingDependencyLabel(i).get().equals("neg")) {
+					&& sent.incomingDependencyLabel(i).get().equals("neg")
+					&& !skipped.contains(i)) {
 				return i;
 			}
 		}
@@ -338,16 +337,14 @@ public class Transform {
 		else transformed = sentence;
 		
 		Sentence sent = new Sentence(transformed);
-		int negFound = findNegative(sent);
-		int found = negFound;
+		List<Integer> skipped = new ArrayList<Integer>();
+		int negFound = findNegative(sent, skipped);
 		List<String> wordList = new ArrayList<String>();
 		
 		int gov = -999, det = -999, noun = -999, verbAcl = -999;
-		boolean objExist = false, compExist = false;
+		boolean objExist = false, compExist = false, negRemoved = false;
 		
 		while (negFound > 0) {
-			
-			System.out.println(negFound);
 			
 			gov = sent.governor(negFound).get();
 			wordList.clear();
@@ -372,15 +369,18 @@ public class Transform {
 									if (det > 0) {
 										wordList.set(det, "0");
 										wordList.remove(negFound);
+										negRemoved = true;
 									}
 									break;
 								} else if (noun > 0) {		//...never saw crazy children
 									wordList.add(noun+1, "0 times");
 									wordList.remove(negFound);
+									negRemoved = true;
 									break;
 								} else if (verbAcl > 0) {	//...have never had any children born
 									wordList.add(verbAcl+1, "0 times");
 									wordList.remove(negFound);
+									negRemoved = true;
 									break;
 								}				
 								
@@ -394,11 +394,13 @@ public class Transform {
 									if (det > 0) {
 										wordList.set(det, "0");
 										wordList.remove(negFound);
+										negRemoved = true;
 									}
 									break;
 								} else {			//...have never had children revealed
 									wordList.add(k+1, "0 times");
 									wordList.remove(negFound);
+									negRemoved = true;
 									break;
 								}
 								
@@ -411,6 +413,7 @@ public class Transform {
 					if (!objExist && !compExist) {	//...have never been married
 						wordList.add(gov+1, "0 times");
 						wordList.remove(negFound);
+						negRemoved = true;
 					}
 					
 				} else {	//not!
@@ -427,16 +430,23 @@ public class Transform {
 								if (det > 0) {
 									wordList.set(det, "0");
 									wordList.remove(negFound);
+									negRemoved = true;
 								}
 								break;
 							} else if (noun > 0) {			//...have young bright children
 								wordList.add(noun, "0");
 								wordList.remove(negFound);
+								negRemoved = true;
 								break;
 							}
 						}
 					}
 				}
+				
+				if (!negRemoved) {
+					skipped.add(negFound);
+				}
+				
 			} else if (sent.posTag(gov).equals("NNS")
 					|| sent.posTag(gov).equals("NN")) {	//if gov is a noun, let's look for the governing verb! e.g., ...have no child
 				for (int k=gov; k<sent.words().size(); k++) {
@@ -450,7 +460,7 @@ public class Transform {
 			
 			transformed = StringUtils.join(wordList, " ");	
 			sent = new Sentence(transformed);
-			negFound = findNegative(sent);
+			negFound = findNegative(sent, skipped);
 		} 
 		
 //		if (!transformed.equals(original))

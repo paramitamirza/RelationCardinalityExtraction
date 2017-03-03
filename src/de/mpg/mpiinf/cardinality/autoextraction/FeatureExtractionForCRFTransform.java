@@ -19,6 +19,7 @@ import java.util.zip.GZIPOutputStream;
 
 import org.json.*;
 
+import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;
 
 public class FeatureExtractionForCRFTransform {
@@ -119,173 +120,74 @@ public class FeatureExtractionForCRFTransform {
 	        
 	        if (wikipediaText != "") {
 	        	
-	        	List<String> articleText = sentExtraction.filterText(wikipediaText, false, false);	//ordinal=false, namedEntity=false --> only cardinal numbers!!
+	        	String transformed;
+	    		Sentence sent;
+	    		
+	    		JSONObject obj = new JSONObject();
+				obj.put("id", wikidataId);
+				obj.put("label", label);
+				JSONArray list = new JSONArray();
 				
-	        	System.out.println("size: " + articleText.size());
-	        	
-				if (articleText.size() > 0) {
-					
-					JSONObject obj = new JSONObject();
-					obj.put("wikidata-id", wikidataId);
-					obj.put("wikidata-label", label);
-					obj.put("count", count);
-
-					JSONArray list = new JSONArray();
-					for (String s : articleText) {
-						
-					}
-					obj.put("article", list);
-//					json.write(obj.toString() + "\n");
-					bw.write(obj.toString());
-					bw.newLine();
-					
-					numOfTriples = Integer.parseInt(count);
-			
-					for (int j=0; j<articleText.size(); j++) {
-						
-						list.put(articleText.get(j));
-								
-						System.out.println(j + "-" + articleText.get(j));
-						Sentence sent;
-						if (training) {
-							sent = new Sentence(articleText.get(j));
-						} else {
-							sent = new Sentence(trans.transform(articleText.get(j), true, true, false, false));
-						}
-						
-						String word = "", lemma = "", pos = "", ner = "", deprel = "";
-						StringBuilder sb = new StringBuilder();
-						int k;
-						boolean lrb = false;
-						
-						idxToAdd = new ArrayList<Integer>();
-						numToAdd = 0;
-						
-						labels = new ArrayList<String>();
-						tokenFeatures = new ArrayList<String>();
-						tokenIdx = 0;
-						
-						for (k=0; k<sent.words().size(); k++) {
-							pos = sent.posTag(k);
-							ner = sent.nerTag(k);
-							deprel = "O";
-							if (sent.incomingDependencyLabel(k).isPresent()) {
-								deprel = sent.incomingDependencyLabel(k).get();
-							}
-							label = "O";
+				int j=0;
+	    		
+	    		for (String l : wikipediaText.split("\\r?\\n")) {	//Split the paragraphs
+	    			Document doc = new Document(l);
+	    			
+	    			for (Sentence s : doc.sentences()) {	//Split the sentences
+	    				
+	    				transformed = trans.transform(s.text(), false, false, true, true);
+	    				sent = new Sentence(transformed);
+	    				
+	    				if (sentExtraction.containNumbers(transformed, sent, false, false)) {
+	    					//filtered.add(sent.text());
+	    					
+	    					list.put(s.text());
+	    					
+	    					if (!training) 
+	    						sent = new Sentence(trans.transform(transformed, true, true, false, false));
+	    					
+	    					String word = "", lemma = "", pos = "", ner = "", deprel = "";
+							StringBuilder sb = new StringBuilder();
+							int k;
+							boolean lrb = false;
 							
-							if (sent.word(k).startsWith("LatinGreek_")) {
-								System.err.println(sent.word(k));
-								word = sent.word(k).split("_")[0] + "_" + sent.word(k).split("_")[1] + "_" + sent.word(k).split("_")[2];
-								lemma = "_" + sent.word(k).split("_")[3] + "_";
+							idxToAdd = new ArrayList<Integer>();
+							numToAdd = 0;
+							
+							labels = new ArrayList<String>();
+							tokenFeatures = new ArrayList<String>();
+							tokenIdx = 0;
+							
+							for (k=0; k<sent.words().size(); k++) {
+								pos = sent.posTag(k);
+								ner = sent.nerTag(k);
+								deprel = "O";
+								if (sent.incomingDependencyLabel(k).isPresent()) {
+									deprel = sent.incomingDependencyLabel(k).get();
+								}
+								label = "O";
 								
-								numInt = Long.parseLong(sent.word(k).split("_")[2]);
-								
-								if (compositional) {
-									if (numToAdd > 0) {
-										if (numInt == numOfTriples) {
-											label = "_YES_";
-											numToAdd = 0;
-											idxToAdd.clear();
-											
-										} else {
-											if ((numToAdd+numInt) == numOfTriples) {
-												label = "_YES_";
-												for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
-												numToAdd = 0;
-												idxToAdd.clear();
-											} else if ((numToAdd+numInt) < numOfTriples) {
-												label = "O";
-												numToAdd += numInt;
-												idxToAdd.add(tokenIdx);
-											} else {	//(numToAdd+numInt) > numOfTriples
-												label = "O";
-												numToAdd = 0;
-												idxToAdd.clear();
-											}
-										}
-										
-									} else {
-										if (numInt == numOfTriples) {
-											label = "_YES_";
-										} else if (numInt < numOfTriples) {
-											label = "O";
-											numToAdd += numInt;
-											idxToAdd.add(tokenIdx);
-										} else {	//numInt > numOfTriples
-											label = "O";
-										}
-									}
+								if (sent.word(k).startsWith("LatinGreek_")) {
+									System.err.println(sent.word(k));
+									word = sent.word(k).split("_")[0] + "_" + sent.word(k).split("_")[1] + "_" + sent.word(k).split("_")[2];
+									lemma = "_" + sent.word(k).split("_")[3] + "_";
 									
-								} else {
-									if (numInt == numOfTriples) {
-										label = "_YES_";
-//										} else if (numInt < numOfTriples) {
-//											label = "_NO_";
-//										} else if (numInt > numOfTriples) {
-//											label = "_MAYBE_";
-									} else {
-										label = "O";
-									}
-								}
-								
-//								sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
-//								sb.append(System.getProperty("line.separator"));
-								tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
-								labels.add(label);
-								tokenIdx ++;								
-								
-							} else if (Numbers.properNumber(pos, ner)) {						
-								word = ""; lemma = ""; deprel = "";
-								
-								while (k<sent.words().size()) {
-									if (Numbers.properNumber(sent.posTag(k), sent.nerTag(k))) {
-										word += sent.word(k) + "_";
-										lemma += sent.lemma(k) + "_";
-										if (sent.incomingDependencyLabel(k).isPresent()) deprel = sent.incomingDependencyLabel(k).get();
-										else deprel = "O";
-										if (sent.governor(k).isPresent() && !deprel.equals("root")) {
-											deprel += "_" + sent.lemma(sent.governor(k).get());
-										}
-										k++;
-										
-									} else {
-										break;
-									}
-								}
-								word = word.substring(0, word.length()-1);
-								lemma = lemma.substring(0, lemma.length()-1);
-								
-								numInt = Numbers.getInteger(word.toLowerCase());
-								if (numInt > 0) {
-									lemma = "_num_";
+									numInt = Long.parseLong(sent.word(k).split("_")[2]);
 									
 									if (compositional) {
 										if (numToAdd > 0) {
-											if (numInt == numOfTriples
-													&& ((nummod && deprel.startsWith("nummod"))
-															|| !nummod)
-													&& numOfTriples > threshold
-													) {
+											if (numInt == numOfTriples) {
 												label = "_YES_";
 												numToAdd = 0;
 												idxToAdd.clear();
 												
 											} else {
-												if ((numToAdd+numInt) == numOfTriples
-														&& ((nummod && deprel.startsWith("nummod"))
-																|| !nummod)
-														&& numOfTriples > threshold
-														) {
+												if ((numToAdd+numInt) == numOfTriples) {
 													label = "_YES_";
 													for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
 													numToAdd = 0;
 													idxToAdd.clear();
-												} else if ((numToAdd+numInt) < numOfTriples
-														&& ((nummod && deprel.startsWith("nummod"))
-																|| !nummod)
-														&& numOfTriples > threshold
-														) {
+												} else if ((numToAdd+numInt) < numOfTriples) {
 													label = "O";
 													numToAdd += numInt;
 													idxToAdd.add(tokenIdx);
@@ -297,17 +199,9 @@ public class FeatureExtractionForCRFTransform {
 											}
 											
 										} else {
-											if (numInt == numOfTriples
-													&& ((nummod && deprel.startsWith("nummod"))
-															|| !nummod)
-													&& numOfTriples > threshold
-													) {
+											if (numInt == numOfTriples) {
 												label = "_YES_";
-											} else if (numInt < numOfTriples
-													&& ((nummod && deprel.startsWith("nummod"))
-															|| !nummod)
-													&& numOfTriples > threshold
-													) {
+											} else if (numInt < numOfTriples) {
 												label = "O";
 												numToAdd += numInt;
 												idxToAdd.add(tokenIdx);
@@ -317,11 +211,7 @@ public class FeatureExtractionForCRFTransform {
 										}
 										
 									} else {
-										if (numInt == numOfTriples
-												&& ((nummod && deprel.startsWith("nummod"))
-														|| !nummod)
-												&& numOfTriples > threshold
-												) {
+										if (numInt == numOfTriples) {
 											label = "_YES_";
 //											} else if (numInt < numOfTriples) {
 //												label = "_NO_";
@@ -331,102 +221,194 @@ public class FeatureExtractionForCRFTransform {
 											label = "O";
 										}
 									}
-								}
-								
-//								sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
-//								sb.append(System.getProperty("line.separator"));
-								tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
-								labels.add(label);
-								tokenIdx ++;
-								
-								word = ""; lemma = ""; deprel = "";
-								k--;
-								
-							} else if (Numbers.properName(pos, ner)) {
-								word = ""; lemma = ""; deprel = "";
-								
-								while (k<sent.words().size()) {
-									if (Numbers.properName(sent.posTag(k), sent.nerTag(k))) {
-										word += sent.word(k) + "_";
-										lemma = "_name_";
-										if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
-										else deprel += "O_";
-										k++;
-										
-									} else if ((sent.posTag(k).equals("-LRB-") || sent.posTag(k).equals("``")) 
-											&& ( (k+1<sent.words().size() && Numbers.properName(sent.posTag(k+1), sent.nerTag(k+1))) 
-													|| ((k+2<sent.words().size() && Numbers.properName(sent.posTag(k+2), sent.nerTag(k+2))))
-											   )) {
-										word += sent.word(k) + "_";
-										lemma = "_name_";
-										if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
-										else deprel += "O_";
-										k++;
-										lrb = true;
-										
-									} else if (lrb && (sent.posTag(k).equals("-RRB-") || sent.posTag(k).equals("''"))) {
-										word += sent.word(k) + "_";
-										lemma = "_name_";
-										if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
-										else deprel += "O_";
-										k++;
-										lrb = false;
-										
-									} else {
-										break;
-									}
-								}
-								
-//									sb.append(generateLine(wikidataId, j+"", k+"", word.substring(0, word.length()-1), lemma, pos, ner, deprel.substring(0, deprel.length()-1), label));
-//									sb.append(System.getProperty("line.separator"));
-								tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word.substring(0, word.length()-1), lemma, pos, ner, deprel.substring(0, deprel.length()-1)));
-								labels.add(label);
-								tokenIdx ++;
-								
-								word = ""; lemma = ""; deprel = "";
-								k--;
-								
-							} else {							
-								word = sent.word(k);
-								lemma = sent.lemma(k);
+									
 //									sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
 //									sb.append(System.getProperty("line.separator"));
-								tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
-								labels.add(label);
-								tokenIdx ++;
-							}
-						}
-						
-						for (int t=0; t<tokenFeatures.size(); t++) {
-							sb.append(tokenFeatures.get(t) + "\t" + labels.get(t));
-							sb.append(System.getProperty("line.separator"));
-						}
-						
-						sb.append(System.getProperty("line.separator"));
-						outfile.print(sb.toString());
-						numSent ++;
-						
-//							if (testInstances.contains(wikidataId)) {
-//								sb.append(System.getProperty("line.separator"));
-//								outfile.print(sb.toString());
-//								numSent ++;
-//								
-//							} else {
-////								if (labelJoinStr.contains("_YES_") || labelJoinStr.contains("_NO_")
-////										|| labelJoinStr.contains("_MAYBE_")
-////										) {
+									tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
+									labels.add(label);
+									tokenIdx ++;								
+									
+								} else if (Numbers.properNumber(pos, ner)) {						
+									word = ""; lemma = ""; deprel = "";
+									
+									while (k<sent.words().size()) {
+										if (Numbers.properNumber(sent.posTag(k), sent.nerTag(k))) {
+											word += sent.word(k) + "_";
+											lemma += sent.lemma(k) + "_";
+											if (sent.incomingDependencyLabel(k).isPresent()) deprel = sent.incomingDependencyLabel(k).get();
+											else deprel = "O";
+											if (sent.governor(k).isPresent() && !deprel.equals("root")) {
+												deprel += "_" + sent.lemma(sent.governor(k).get());
+											}
+											k++;
+											
+										} else {
+											break;
+										}
+									}
+									word = word.substring(0, word.length()-1);
+									lemma = lemma.substring(0, lemma.length()-1);
+									
+									numInt = Numbers.getInteger(word.toLowerCase());
+									if (numInt > 0) {
+										lemma = "_num_";
+										
+										if (compositional) {
+											if (numToAdd > 0) {
+												if (numInt == numOfTriples
+														&& ((nummod && deprel.startsWith("nummod"))
+																|| !nummod)
+														&& numOfTriples > threshold
+														) {
+													label = "_YES_";
+													numToAdd = 0;
+													idxToAdd.clear();
+													
+												} else {
+													if ((numToAdd+numInt) == numOfTriples
+															&& ((nummod && deprel.startsWith("nummod"))
+																	|| !nummod)
+															&& numOfTriples > threshold
+															) {
+														label = "_YES_";
+														for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
+														numToAdd = 0;
+														idxToAdd.clear();
+													} else if ((numToAdd+numInt) < numOfTriples
+															&& ((nummod && deprel.startsWith("nummod"))
+																	|| !nummod)
+															&& numOfTriples > threshold
+															) {
+														label = "O";
+														numToAdd += numInt;
+														idxToAdd.add(tokenIdx);
+													} else {	//(numToAdd+numInt) > numOfTriples
+														label = "O";
+														numToAdd = 0;
+														idxToAdd.clear();
+													}
+												}
+												
+											} else {
+												if (numInt == numOfTriples
+														&& ((nummod && deprel.startsWith("nummod"))
+																|| !nummod)
+														&& numOfTriples > threshold
+														) {
+													label = "_YES_";
+												} else if (numInt < numOfTriples
+														&& ((nummod && deprel.startsWith("nummod"))
+																|| !nummod)
+														&& numOfTriples > threshold
+														) {
+													label = "O";
+													numToAdd += numInt;
+													idxToAdd.add(tokenIdx);
+												} else {	//numInt > numOfTriples
+													label = "O";
+												}
+											}
+											
+										} else {
+											if (numInt == numOfTriples
+													&& ((nummod && deprel.startsWith("nummod"))
+															|| !nummod)
+													&& numOfTriples > threshold
+													) {
+												label = "_YES_";
+//												} else if (numInt < numOfTriples) {
+//													label = "_NO_";
+//												} else if (numInt > numOfTriples) {
+//													label = "_MAYBE_";
+											} else {
+												label = "O";
+											}
+										}
+									}
+									
+//									sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
 //									sb.append(System.getProperty("line.separator"));
-//									outfile.print(sb.toString());
-//									numSent ++;
-////								}
-//							}		
-					}
-					
-					obj.put("article", list);
-//					json.write(obj.toString() + "\n");
-					bw.write(obj.toString());
-					bw.newLine();
-				}
+									k--;
+									tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
+									labels.add(label);
+									tokenIdx ++;
+									
+									word = ""; lemma = ""; deprel = "";
+									
+								} else if (Numbers.properName(pos, ner)) {
+									word = ""; lemma = ""; deprel = "";
+									
+									while (k<sent.words().size()) {
+										if (Numbers.properName(sent.posTag(k), sent.nerTag(k))) {
+											word += sent.word(k) + "_";
+											lemma = "_name_";
+											if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
+											else deprel += "O_";
+											k++;
+											
+										} else if ((sent.posTag(k).equals("-LRB-") || sent.posTag(k).equals("``")) 
+												&& ( (k+1<sent.words().size() && Numbers.properName(sent.posTag(k+1), sent.nerTag(k+1))) 
+														|| ((k+2<sent.words().size() && Numbers.properName(sent.posTag(k+2), sent.nerTag(k+2))))
+												   )) {
+											word += sent.word(k) + "_";
+											lemma = "_name_";
+											if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
+											else deprel += "O_";
+											k++;
+											lrb = true;
+											
+										} else if (lrb && (sent.posTag(k).equals("-RRB-") || sent.posTag(k).equals("''"))) {
+											word += sent.word(k) + "_";
+											lemma = "_name_";
+											if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
+											else deprel += "O_";
+											k++;
+											lrb = false;
+											
+										} else {
+											break;
+										}
+									}
+									
+//										sb.append(generateLine(wikidataId, j+"", k+"", word.substring(0, word.length()-1), lemma, pos, ner, deprel.substring(0, deprel.length()-1), label));
+//										sb.append(System.getProperty("line.separator"));
+									k--;
+									tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word.substring(0, word.length()-1), lemma, pos, ner, deprel.substring(0, deprel.length()-1)));
+									labels.add(label);
+									tokenIdx ++;
+									
+									word = ""; lemma = ""; deprel = "";
+									
+								} else {							
+									word = sent.word(k);
+									lemma = sent.lemma(k);
+//										sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
+//										sb.append(System.getProperty("line.separator"));
+									tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
+									labels.add(label);
+									tokenIdx ++;
+								}
+							}
+							
+							for (int t=0; t<tokenFeatures.size(); t++) {
+								sb.append(tokenFeatures.get(t) + "\t" + labels.get(t));
+								sb.append(System.getProperty("line.separator"));
+							}
+							
+							sb.append(System.getProperty("line.separator"));
+							outfile.print(sb.toString());
+							numSent ++;
+	    				}
+	    				
+	    				j ++;
+	    	        }
+	    	    }
+	    		
+	    		obj.put("sentences", list);
+//				json.write(obj.toString() + "\n");
+				bw.write(obj.toString());
+				bw.newLine();
+	    		
 	        }
 			
 			outfile.close();
