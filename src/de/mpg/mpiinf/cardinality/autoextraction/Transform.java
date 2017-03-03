@@ -443,10 +443,6 @@ public class Transform {
 					}
 				}
 				
-				if (!negRemoved) {
-					skipped.add(negFound);
-				}
-				
 			} else if (sent.posTag(gov).equals("NNS")
 					|| sent.posTag(gov).equals("NN")) {	//if gov is a noun, let's look for the governing verb! e.g., ...have no child
 				for (int k=gov; k<sent.words().size(); k++) {
@@ -454,8 +450,13 @@ public class Transform {
 							&& sent.incomingDependencyLabel(k).get().equals("dobj")) {
 						wordList.add(negFound, "0");
 						wordList.remove(negFound+1);
+						negRemoved = true;
 					}
 				}
+			}
+			
+			if (!negRemoved) {
+				skipped.add(negFound);
 			}
 			
 			transformed = StringUtils.join(wordList, " ");	
