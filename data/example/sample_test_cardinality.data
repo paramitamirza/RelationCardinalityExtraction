@@ -4,7 +4,7 @@ Q625703	0	2	Fire	fire	NN	O	nmod:on	O
 Q625703	0	3	is	be	VBZ	O	cop	O
 Q625703	0	4	1	_num_	CD	NUMBER	nummod_latingreek_trilogy_3_logy	O
 Q625703	0	5	fantasy	fantasy	NN	O	compound	O
-Q625703	0	6	LatinGreek_trilogy_3	_logy_	NN	O	root	O
+Q625703	0	6	LatinGreek_trilogy_3	_logy_	NN	O	root	_YES_
 Q625703	0	7	written	write	VBN	O	acl	O
 Q625703	0	8	by	by	IN	O	case	O
 Q625703	0	10	William_Nicholson	_name_	NNP	PERSON	compound_nmod:by	O
@@ -54,7 +54,7 @@ Q625703	5	40	homeland	homeland	NN	O	nmod:to	O
 Q625703	5	41	.	.	.	O	punct	O
 
 Q625703	6	0	The	the	DT	O	det	O
-Q625703	6	1	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	O
+Q625703	6	1	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	_YES_
 Q625703	6	2	begins	begin	VBZ	O	root	O
 Q625703	6	3	with	with	IN	O	case	O
 Q625703	6	4	The	the	DT	O	det	O
@@ -76,7 +76,7 @@ Q625703	6	19	Bowman	_name_	NNP	PERSON	appos	O
 Q625703	6	20	.	.	.	O	punct	O
 
 Q625703	19	0	The	the	DT	O	det	O
-Q625703	19	1	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	O
+Q625703	19	1	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	_YES_
 Q625703	19	2	concludes	conclude	VBZ	O	root	O
 Q625703	19	3	with	with	IN	O	case	O
 Q625703	19	4	Firesong	Firesong	NNP	ORGANIZATION	nmod:with	O
@@ -104,7 +104,7 @@ Q625703	29	4	main	main	JJ	O	amod	O
 Q625703	29	5	character	character	NN	O	dep	O
 Q625703	29	6	in	in	IN	O	case	O
 Q625703	29	7	the	the	DT	O	det	O
-Q625703	29	8	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	O
+Q625703	29	8	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	_YES_
 Q625703	29	9	.	.	.	O	punct	O
 
 Q625703	32	0	At	at	IN	O	case	O
@@ -217,7 +217,7 @@ Q625703	44	7	of	of	IN	O	case	O
 Q625703	44	8	Gang	gang	NN	O	nmod:of	O
 Q625703	44	9	and	and	CC	O	cc	O
 Q625703	44	10	has	have	VBZ	O	conj:and	O
-Q625703	44	11	three	_num_	CD	NUMBER	nummod_child	O
+Q625703	44	11	three	_num_	CD	NUMBER	nummod_child	_YES_
 Q625703	44	12	children	child	NNS	O	dobj	O
 Q625703	44	13	:	:	:	O	punct	O
 Q625703	44	14	Sirharani	sirharanus	NNS	PERSON	dep	O
@@ -462,7 +462,7 @@ Q625703	107	5	major	major	JJ	O	amod	O
 Q625703	107	6	role	role	NN	O	dobj	O
 Q625703	107	7	in	in	IN	O	case	O
 Q625703	107	8	the	the	DT	O	det	O
-Q625703	107	9	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	O
+Q625703	107	9	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	_YES_
 Q625703	107	10	.	.	.	O	punct	O
 
 Q625703	114	0	If	if	IN	O	mark	O
@@ -517,7 +517,7 @@ Q1002223	0	7	Chrestomanci	Chrestomanci	NNP	LOCATION	nmod:of	O
 Q1002223	0	8	,	,	,	O	punct	O
 Q1002223	0	9	is	be	VBZ	O	cop	O
 Q1002223	0	10	1	_num_	CD	NUMBER	nummod_latingreek_heptalogy_7_logy	O
-Q1002223	0	11	LatinGreek_heptalogy_7	_logy_	NN	O	dep	O
+Q1002223	0	11	LatinGreek_heptalogy_7	_logy_	NN	O	dep	_YES_
 Q1002223	0	12	of	of	IN	O	case	O
 Q1002223	0	13	children	child	NNS	O	nmod:poss	O
 Q1002223	0	14	's	's	POS	O	case	O
@@ -685,7 +685,7 @@ Q1002223	23	28	.	.	.	O	punct	O
 
 Q1002223	26	0	There	there	EX	O	expl	O
 Q1002223	26	1	are	be	VBP	O	root	O
-Q1002223	26	2	seven	_num_	CD	NUMBER	nummod_book	O
+Q1002223	26	2	seven	_num_	CD	NUMBER	nummod_book	_YES_
 Q1002223	26	3	Chrestomanci	_name_	NNP	PERSON	compound	O
 Q1002223	26	4	books	book	NNS	O	nsubj	O
 Q1002223	26	5	:	:	:	O	punct	O
@@ -1237,7 +1237,7 @@ Q2731931	8	12	Books	Books	NNPS	O	compound	O
 Q2731931	8	13	imprint	imprint	NN	O	appos	O
 Q2731931	8	14	-RRB-	-rrb-	-RRB-	O	punct	O
 Q2731931	8	15	as	as	IN	O	case	O
-Q2731931	8	16	four	_num_	CD	NUMBER	nummod_title	O
+Q2731931	8	16	four	_num_	CD	NUMBER	nummod_title	_YES_
 Q2731931	8	17	individual	individual	JJ	O	amod	O
 Q2731931	8	18	titles	title	NNS	O	nmod:as	O
 Q2731931	8	19	,	,	,	O	punct	O
@@ -1287,7 +1287,7 @@ Q2731931	11	11	1	_num_	CD	NUMBER	nummod_appendix	O
 Q2731931	11	12	appendix	appendix	NN	O	nmod:as	O
 Q2731931	11	13	into	into	IN	O	case	O
 Q2731931	11	14	the	the	DT	O	det	O
-Q2731931	11	15	four	_num_	CD	NUMBER	nummod_title	O
+Q2731931	11	15	four	_num_	CD	NUMBER	nummod_title	_YES_
 Q2731931	11	16	titles	title	NNS	O	nmod:into	O
 Q2731931	11	17	in	in	IN	O	case	O
 Q2731931	11	18	later	later	JJ	O	amod	O
@@ -1428,7 +1428,7 @@ Q2731931	38	3	is	be	VBZ	O	auxpass	O
 Q2731931	38	4	divided	divide	VBN	O	root	O
 Q2731931	38	5	between	between	IN	O	case	O
 Q2731931	38	6	the	the	DT	O	det	O
-Q2731931	38	7	four	_num_	CD	NUMBER	nummod_title	O
+Q2731931	38	7	four	_num_	CD	NUMBER	nummod_title	_YES_
 Q2731931	38	8	titles	title	NNS	O	nmod:between	O
 Q2731931	38	9	in	in	IN	O	case	O
 Q2731931	38	10	the	the	DT	O	det	O
@@ -1459,7 +1459,7 @@ Q2731931	40	20	Kharé	Kharé	NNP	LOCATION	nmod:of	O
 Q2731931	40	21	and	and	CC	O	cc	O
 Q2731931	40	22	find	find	VB	O	acl:to	O
 Q2731931	40	23	the	the	DT	O	det	O
-Q2731931	40	24	four	_num_	CD	NUMBER	nummod_line	O
+Q2731931	40	24	four	_num_	CD	NUMBER	nummod_line	_YES_
 Q2731931	40	25	lines	line	NNS	O	dobj	O
 Q2731931	40	26	of	of	IN	O	case	O
 Q2731931	40	27	1	_num_	CD	NUMBER	nummod_spell	O
@@ -1635,7 +1635,7 @@ Q18669965	38	22	the	the	DT	O	det	O
 Q18669965	38	23	main	main	JJ	O	amod	O
 Q18669965	38	24	Maze	maze	NN	O	compound	O
 Q18669965	38	25	Runner	Runner	NNP	O	compound	O
-Q18669965	38	26	LatinGreek_trilogy_3	_logy_	NNP	O	nmod:of	O
+Q18669965	38	26	LatinGreek_trilogy_3	_logy_	NNP	O	nmod:of	_YES_
 Q18669965	38	27	.	.	.	O	punct	O
 
 Q18669965	39	0	He	he	PRP	O	nsubj	O
@@ -1671,7 +1671,7 @@ Q18669965	39	29	third	third	JJ	ORDINAL	amod	O
 Q18669965	39	30	book	book	NN	O	dobj	O
 Q18669965	39	31	in	in	IN	O	case	O
 Q18669965	39	32	the	the	DT	O	det	O
-Q18669965	39	33	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	O
+Q18669965	39	33	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	_YES_
 Q18669965	39	34	.	.	.	O	punct	O
 
 Q18669965	55	0	It	it	PRP	O	nsubj	O
@@ -1686,7 +1686,7 @@ Q18669965	56	1	book	book	NN	O	nsubjpass	O
 Q18669965	56	2	is	be	VBZ	O	auxpass	O
 Q18669965	56	3	divided	divide	VBN	O	root	O
 Q18669965	56	4	into	into	IN	O	case	O
-Q18669965	56	5	three	_num_	CD	NUMBER	nummod_part	O
+Q18669965	56	5	three	_num_	CD	NUMBER	nummod_part	_YES_
 Q18669965	56	6	parts	part	NNS	O	nmod:into	O
 Q18669965	56	7	:	:	:	O	punct	O
 Q18669965	56	8	Confidential	Confidential	NNP	O	compound	O
@@ -1716,7 +1716,7 @@ Q18669965	58	12	,	,	,	O	punct	O
 Q18669965	58	13	Minho	Minho	NNP	O	nmod:poss	O
 Q18669965	58	14	's	's	POS	O	case	O
 Q18669965	58	15	Phase	phase	NN	O	compound	O
-Q18669965	58	16	Three	_num_	CD	NUMBER	nummod_trial	O
+Q18669965	58	16	Three	_num_	CD	NUMBER	nummod_trial	_YES_
 Q18669965	58	17	Trial	trial	NN	O	appos	O
 Q18669965	58	18	,	,	,	O	punct	O
 Q18669965	58	19	Frypan	Frypan	NNP	O	nmod:poss	O
@@ -1791,7 +1791,7 @@ Q3121563	0	4	1	_num_	CD	NUMBER	nummod_fantasy	O
 Q3121563	0	5	fantasy	fantasy	NN	O	root	O
 Q3121563	0	6	and	and	CC	O	cc	O
 Q3121563	0	7	adventure	adventure	NN	O	compound	O
-Q3121563	0	8	LatinGreek_trilogy_3	_logy_	NN	O	conj:and	O
+Q3121563	0	8	LatinGreek_trilogy_3	_logy_	NN	O	conj:and	_YES_
 Q3121563	0	9	written	write	VBN	O	acl	O
 Q3121563	0	10	by	by	IN	O	case	O
 Q3121563	0	11	the	the	DT	O	det	O
@@ -1817,7 +1817,7 @@ Q3121563	1	1	story	story	NN	O	nsubjpass	O
 Q3121563	1	2	is	be	VBZ	O	auxpass	O
 Q3121563	1	3	based	base	VBN	O	root	O
 Q3121563	1	4	on	on	IN	O	case	O
-Q3121563	1	5	three	_num_	CD	NUMBER	nummod_child	O
+Q3121563	1	5	three	_num_	CD	NUMBER	nummod_child	_YES_
 Q3121563	1	6	children	child	NNS	O	nmod:on	O
 Q3121563	1	7	:	:	:	O	punct	O
 Q3121563	1	8	Jack	_name_	NNP	PERSON	dep	O
@@ -1846,13 +1846,13 @@ Q3121563	1	30	forever	forever	RB	O	advmod	O
 Q3121563	1	31	.	.	.	O	punct	O
 
 Q3121563	2	0	The	the	DT	O	det	O
-Q3121563	2	1	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	O
+Q3121563	2	1	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	_YES_
 Q3121563	2	2	consists	consist	VBZ	O	root	O
 Q3121563	2	3	of	of	IN	O	nmod	O
 Q3121563	2	4	:	:	:	O	punct	O
 
 Q3121563	7	0	The	the	DT	O	det	O
-Q3121563	7	1	LatinGreek_trilogy_3	_logy_	NN	O	nsubjpass	O
+Q3121563	7	1	LatinGreek_trilogy_3	_logy_	NN	O	nsubjpass	_YES_
 Q3121563	7	2	has	have	VBZ	O	aux	O
 Q3121563	7	3	been	be	VBN	O	auxpass	O
 Q3121563	7	4	translated	translate	VBN	O	root	O
@@ -1945,7 +1945,7 @@ Q3121563	13	14	1	_num_	CD	NUMBER	nummod_conjunction	O
 Q3121563	13	15	conjunction	conjunction	NN	O	dobj	O
 Q3121563	13	16	of	of	IN	O	case	O
 Q3121563	13	17	the	the	DT	O	det	O
-Q3121563	13	18	three	_num_	CD	NUMBER	nummod_sun	O
+Q3121563	13	18	three	_num_	CD	NUMBER	nummod_sun	_YES_
 Q3121563	13	19	suns	sun	NNS	O	nmod:of	O
 Q3121563	13	20	and	and	CC	O	cc	O
 Q3121563	13	21	moons	moon	NNS	O	nmod:of	O
@@ -2317,7 +2317,7 @@ Q3121563	64	36	.	.	.	O	punct	O
 Q3121563	65	0	Those	those	DT	O	nsubj	O
 Q3121563	65	1	are	be	VBP	O	cop	O
 Q3121563	65	2	the	the	DT	O	det	O
-Q3121563	65	3	three	_num_	CD	NUMBER	nummod_book	O
+Q3121563	65	3	three	_num_	CD	NUMBER	nummod_book	_YES_
 Q3121563	65	4	books	book	NNS	O	root	O
 Q3121563	65	5	we	we	PRP	O	nsubj	O
 Q3121563	65	6	know	know	VBP	O	acl:relcl	O
@@ -2368,7 +2368,7 @@ Q3121563	73	8	movie	movie	NN	O	nmod:for	O
 Q3121563	73	9	based	base	VBN	O	case	O
 Q3121563	73	10	on	on	IN	O	case	O
 Q3121563	73	11	the	the	DT	O	det	O
-Q3121563	73	12	LatinGreek_trilogy_3	_logy_	NN	O	nmod:on	O
+Q3121563	73	12	LatinGreek_trilogy_3	_logy_	NN	O	nmod:on	_YES_
 Q3121563	73	13	,	,	,	O	punct	O
 Q3121563	73	14	the	the	DT	O	det	O
 Q3121563	73	15	author	author	NN	O	nsubj	O
@@ -2397,7 +2397,7 @@ Q3121563	73	37	.	.	.	O	punct	O
 
 Q3213021	9	0	The	the	DT	O	det	O
 Q3213021	9	1	first	first	JJ	ORDINAL	amod	O
-Q3213021	9	2	three	_num_	CD	NUMBER	nummod_center	O
+Q3213021	9	2	three	_num_	CD	NUMBER	nummod_center	_YES_
 Q3213021	9	3	works	work	NNS	O	compound	O
 Q3213021	9	4	center	center	NN	O	root	O
 Q3213021	9	5	on	on	IN	O	case	O
@@ -2510,7 +2510,7 @@ Q3213021	12	58	.	.	.	O	punct	O
 
 Q3213021	14	0	The	the	DT	O	det	O
 Q3213021	14	1	original	original	JJ	O	amod	O
-Q3213021	14	2	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	O
+Q3213021	14	2	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	_YES_
 Q3213021	14	3	had	have	VBD	O	root	O
 Q3213021	14	4	its	its	PRP$	O	nmod:poss	O
 Q3213021	14	5	counterpart	counterpart	NN	O	compound	O
@@ -2520,7 +2520,7 @@ Q3213021	14	8	,	,	,	O	punct	O
 Q3213021	14	9	even	even	RB	O	advmod	O
 Q3213021	14	10	though	though	IN	O	mark	O
 Q3213021	14	11	these	these	DT	O	det	O
-Q3213021	14	12	three	_num_	CD	NUMBER	nummod_adventure	O
+Q3213021	14	12	three	_num_	CD	NUMBER	nummod_adventure	_YES_
 Q3213021	14	13	adventures	adventure	NNS	O	nsubj	O
 Q3213021	14	14	did	do	VBD	O	aux	O
 Q3213021	14	15	not	not	RB	O	neg	O
@@ -2549,7 +2549,7 @@ Q3213021	20	0	The	the	DT	O	det	O
 Q3213021	20	1	objective	objective	NN	O	nsubj	O
 Q3213021	20	2	of	of	IN	O	case	O
 Q3213021	20	3	this	this	DT	O	det	O
-Q3213021	20	4	LatinGreek_trilogy_3	_logy_	NN	O	nmod:of	O
+Q3213021	20	4	LatinGreek_trilogy_3	_logy_	NN	O	nmod:of	_YES_
 Q3213021	20	5	was	be	VBD	O	root	O
 Q3213021	20	6	to	to	TO	O	mark	O
 Q3213021	20	7	transition	transition	NN	O	xcomp	O
@@ -2604,7 +2604,7 @@ Q3226602	0	20	author	author	NN	O	appos	O
 Q3226602	0	21	,	,	,	O	punct	O
 Q3226602	0	22	consisting	consist	VBG	O	acl	O
 Q3226602	0	23	of	of	IN	O	case	O
-Q3226602	0	24	three	_num_	CD	NUMBER	nummod_novel	O
+Q3226602	0	24	three	_num_	CD	NUMBER	nummod_novel	_YES_
 Q3226602	0	25	novels	novel	NNS	O	nmod:of	O
 Q3226602	0	26	:	:	:	O	punct	O
 Q3226602	0	27	The	the	DT	O	det	O

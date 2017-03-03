@@ -1529,7 +1529,7 @@ Q19319226	28	10	backdrop	backdrop	NN	O	nmod:as	O
 Q19319226	28	11	for	for	IN	O	case	O
 Q19319226	28	12	the	the	DT	O	det	O
 Q19319226	28	13	remaining	remain	VBG	O	amod	O
-Q19319226	28	14	three	_num_	CD	NUMBER	nummod_novella	O
+Q19319226	28	14	three	_num_	CD	NUMBER	nummod_novella	_YES_
 Q19319226	28	15	novellas	novella	NNS	O	nmod:for	O
 Q19319226	28	16	,	,	,	O	punct	O
 Q19319226	28	17	as	as	IN	O	case	O
@@ -1666,7 +1666,7 @@ Q19319226	35	4	close	close	JJ	O	dobj	O
 Q19319226	35	5	to	to	TO	O	case	O
 Q19319226	35	6	the	the	DT	O	det	O
 Q19319226	35	7	prequel	prequel	NN	O	compound	O
-Q19319226	35	8	LatinGreek_trilogy_3	_logy_	NN	O	nmod:to	O
+Q19319226	35	8	LatinGreek_trilogy_3	_logy_	NN	O	nmod:to	_YES_
 Q19319226	35	9	.	.	.	O	punct	O
 
 Q19319226	36	0	It	it	PRP	O	nsubj	O
@@ -1779,7 +1779,7 @@ Q19610143	3	4	The	the	DT	O	det	O
 Q19610143	3	5	Expanse	expanse	NN	MISC	nsubj	O
 Q19610143	3	6	consists	consist	VBZ	O	root	O
 Q19610143	3	7	of	of	IN	O	case	O
-Q19610143	3	8	six	_num_	CD	NUMBER	nummod_novel	O
+Q19610143	3	8	six	_num_	CD	NUMBER	nummod_novel	_YES_
 Q19610143	3	9	main	main	JJ	O	amod	O
 Q19610143	3	10	novels	novel	NNS	O	nmod:of	O
 Q19610143	3	11	and	and	CC	O	cc	O
@@ -2334,7 +2334,7 @@ Q21716265	14	26	Oxford	Oxford	NNP	ORGANIZATION	nmod:by	O
 Q21716265	14	27	.	.	.	O	punct	O
 
 Q175077	0	0	The	the	DT	O	det	O
-Q175077	0	1	Twenty-Four	_num_	CD	NUMBER	nummod_history	O
+Q175077	0	1	Twenty-Four	_num_	CD	NUMBER	nummod_history	_YES_
 Q175077	0	2	Histories	history	NNS	MISC	root	O
 Q175077	0	3	-LRB-	-lrb-	-LRB-	O	punct	O
 Q175077	0	4	Chinese	Chinese	NNPS	MISC	dep	O
@@ -2950,7 +2950,7 @@ Q325283	0	2	is	be	VBZ	O	cop	O
 Q325283	0	3	a	a	DT	O	det	O
 Q325283	0	4	series	series	NN	O	root	O
 Q325283	0	5	of	of	IN	O	case	O
-Q325283	0	6	eight	_num_	CD	NUMBER	nummod_novel	O
+Q325283	0	6	eight	_num_	CD	NUMBER	nummod_novel	_YES_
 Q325283	0	7	science	science	NN	O	compound	O
 Q325283	0	8	fiction	fiction	NN	O	compound	O
 Q325283	0	9	fantasy	fantasy	NN	O	compound	O
@@ -3568,7 +3568,7 @@ Q334750	3	2	--	--	:	O	punct	O
 Q334750	3	3	01	_num_	CD	NUMBER	dep_2000	O
 Q334750	3	4	,	,	,	O	punct	O
 Q334750	3	5	the	the	DT	O	det	O
-Q334750	3	6	twelve	_num_	CD	NUMBER	nummod_volume	O
+Q334750	3	6	twelve	_num_	CD	NUMBER	nummod_volume	_YES_
 Q334750	3	7	volumes	volume	NNS	O	nsubjpass	O
 Q334750	3	8	were	be	VBD	O	auxpass	O
 Q334750	3	9	republished	republish	VBN	O	acl:relcl	O
@@ -3635,7 +3635,7 @@ Q334750	8	4	of	of	IN	O	case	O
 Q334750	8	5	material	material	NN	O	nmod:of	O
 Q334750	8	6	in	in	IN	O	case	O
 Q334750	8	7	the	the	DT	O	det	O
-Q334750	8	8	twelve	_num_	CD	NUMBER	nummod_volume	O
+Q334750	8	8	twelve	_num_	CD	NUMBER	nummod_volume	_YES_
 Q334750	8	9	volumes	volume	NNS	O	nmod:in	O
 Q334750	8	10	,	,	,	O	punct	O
 Q334750	8	11	numerous	numerous	JJ	O	amod	O
@@ -3835,7 +3835,7 @@ Q363967	1	3	are	be	VBP	O	cop	O
 Q363967	1	4	four	_num_	CD	NUMBER	root	O
 Q363967	1	5	-LRB-	-lrb-	-LRB-	O	punct	O
 Q363967	1	6	later	later	RB	O	advmod	O
-Q363967	1	7	five	_num_	CD	NUMBER	nummod_girl	O
+Q363967	1	7	five	_num_	CD	NUMBER	nummod_girl	_YES_
 Q363967	1	8	-RRB-	-rrb-	-RRB-	O	punct	O
 Q363967	1	9	girls	girl	NNS	O	dep	O
 Q363967	1	10	,	,	,	O	punct	O
@@ -3856,7 +3856,7 @@ Q363967	1	24	girl	girl	NN	O	compound	O
 Q363967	1	25	gang	gang	NN	O	dobj	O
 Q363967	1	26	.	.	.	O	punct	O
 
-Q363967	2	0	Five	_num_	CD	NUMBER	nummod_book	O
+Q363967	2	0	Five	_num_	CD	NUMBER	nummod_book	_YES_
 Q363967	2	1	books	book	NNS	O	nsubjpass	O
 Q363967	2	2	were	be	VBD	O	auxpass	O
 Q363967	2	3	published	publish	VBN	O	root	O
@@ -3891,7 +3891,7 @@ Q363967	10	3	are	be	VBP	O	cop	O
 Q363967	10	4	four	_num_	CD	NUMBER	root	O
 Q363967	10	5	--	--	:	O	punct	O
 Q363967	10	6	later	later	RB	O	advmod	O
-Q363967	10	7	five	_num_	CD	NUMBER	nummod_girl	O
+Q363967	10	7	five	_num_	CD	NUMBER	nummod_girl	_YES_
 Q363967	10	8	--	--	:	O	punct	O
 Q363967	10	9	girls	girl	NNS	O	dep	O
 Q363967	10	10	:	:	:	O	punct	O
@@ -3985,7 +3985,7 @@ Q363967	31	3	,	,	,	O	punct	O
 Q363967	31	4	Funke	_name_	NNP	PERSON	nsubj	O
 Q363967	31	5	has	have	VBZ	O	aux	O
 Q363967	31	6	written	write	VBN	O	root	O
-Q363967	31	7	five	_num_	CD	NUMBER	nummod_book	O
+Q363967	31	7	five	_num_	CD	NUMBER	nummod_book	_YES_
 Q363967	31	8	books	book	NNS	O	dobj	O
 Q363967	31	9	about	about	IN	O	case	O
 Q363967	31	10	the	the	DT	O	det	O
@@ -4887,7 +4887,7 @@ Q450330	9	6	1985	1985	CD	DATE	appos	O
 Q450330	10	0	March	March	NNP	DATE	root	O
 Q450330	10	1	1917	1917	CD	DATE	nummod	O
 Q450330	10	2	,	,	,	O	punct	O
-Q450330	10	3	4	_num_	CD	NUMBER	nummod_volume	O
+Q450330	10	3	4	_num_	CD	NUMBER	nummod_volume	_YES_
 Q450330	10	4	volumes	volume	NNS	O	appos	O
 Q450330	10	5	,	,	,	O	punct	O
 Q450330	10	6	1989	1989	CD	DATE	dep	O
@@ -4913,7 +4913,7 @@ Q458982	1	17	States	States	NNPS	LOCATION	nmod:in	O
 Q458982	1	18	,	,	,	O	punct	O
 Q458982	1	19	consists	consist	VBZ	O	root	O
 Q458982	1	20	of	of	IN	O	case	O
-Q458982	1	21	ten	_num_	CD	NUMBER	nummod_volume	O
+Q458982	1	21	ten	_num_	CD	NUMBER	nummod_volume	_YES_
 Q458982	1	22	volumes	volume	NNS	O	nmod:of	O
 Q458982	1	23	beginning	begin	VBG	O	case	O
 Q458982	1	24	with	with	IN	O	case	O
@@ -5036,7 +5036,7 @@ Q458982	18	8	voted	vote	VBN	O	root	O
 Q458982	18	9	one	_num_	CD	NUMBER	xcomp_vote	O
 Q458982	18	10	of	of	IN	O	case	O
 Q458982	18	11	the	the	DT	O	det	O
-Q458982	18	12	ten	_num_	CD	NUMBER	nummod_novel	O
+Q458982	18	12	ten	_num_	CD	NUMBER	nummod_novel	_YES_
 Q458982	18	13	best	best	JJS	O	amod	O
 Q458982	18	14	fantasy	fantasy	NN	O	compound	O
 Q458982	18	15	novels	novel	NNS	O	nmod:of	O
@@ -5946,7 +5946,7 @@ Q464928	0	25	is	be	VBZ	O	root	O
 Q464928	0	26	a	a	DT	O	det	O
 Q464928	0	27	novel	novel	JJ	O	nsubj	O
 Q464928	0	28	in	in	IN	O	case	O
-Q464928	0	29	seven	_num_	CD	NUMBER	nummod_volume	O
+Q464928	0	29	seven	_num_	CD	NUMBER	nummod_volume	_YES_
 Q464928	0	30	volumes	volume	NNS	O	nmod:in	O
 Q464928	0	31	,	,	,	O	punct	O
 Q464928	0	32	written	write	VBN	O	acl	O
@@ -5993,7 +5993,7 @@ Q464928	6	1	last	last	JJ	O	amod	O
 Q464928	6	2	three	_num_	CD	NUMBER	nsubj_contain	O
 Q464928	6	3	of	of	IN	O	case	O
 Q464928	6	4	the	the	DT	O	det	O
-Q464928	6	5	seven	_num_	CD	NUMBER	nummod_volume	O
+Q464928	6	5	seven	_num_	CD	NUMBER	nummod_volume	_YES_
 Q464928	6	6	volumes	volume	NNS	O	nmod:of	O
 Q464928	6	7	contain	contain	VBP	O	root	O
 Q464928	6	8	oversights	oversight	NNS	O	dobj	O
@@ -6118,7 +6118,7 @@ Q464928	13	2	was	be	VBD	O	auxpass	O
 Q464928	13	3	initially	initially	RB	O	advmod	O
 Q464928	13	4	published	publish	VBN	O	root	O
 Q464928	13	5	in	in	IN	O	case	O
-Q464928	13	6	seven	_num_	CD	NUMBER	nummod_volume	O
+Q464928	13	6	seven	_num_	CD	NUMBER	nummod_volume	_YES_
 Q464928	13	7	volumes	volume	NNS	O	nmod:in	O
 Q464928	13	8	:	:	:	O	punct	O
 
@@ -6775,7 +6775,7 @@ Q464928	221	1	joins	join	VBZ	O	root	O
 Q464928	221	2	in	in	IN	O	mark	O
 Q464928	221	3	performing	perform	VBG	O	advcl:in	O
 Q464928	221	4	a	a	DT	O	det	O
-Q464928	221	5	LatinGreek_septet_7	_et_	NN	O	dobj	O
+Q464928	221	5	LatinGreek_septet_7	_et_	NN	O	dobj	_YES_
 Q464928	221	6	by	by	IN	O	case	O
 Q464928	221	7	Vinteuil	_name_	NNP	PERSON	nmod:by	O
 Q464928	221	8	,	,	,	O	punct	O
@@ -6861,7 +6861,7 @@ Q464928	234	22	.	.	.	O	punct	O
 
 Q464928	254	0	===	===	CD	NUMBER	nummod_volume	O
 Q464928	254	1	Volume	volume	NN	O	root	O
-Q464928	254	2	Seven	_num_	CD	NUMBER	nummod_volume	O
+Q464928	254	2	Seven	_num_	CD	NUMBER	nummod_volume	_YES_
 Q464928	254	3	:	:	:	O	punct	O
 Q464928	254	4	Time	Time	NNP	O	compound	O
 Q464928	254	5	Regained	Regained	NNP	O	dep	O
@@ -7610,7 +7610,7 @@ Q464928	451	30	by	by	IN	O	case	O
 Q464928	451	31	a	a	DT	O	det	O
 Q464928	451	32	team	team	NN	O	nmod:by	O
 Q464928	451	33	of	of	IN	O	case	O
-Q464928	451	34	seven	_num_	CD	NUMBER	nummod_translator	O
+Q464928	451	34	seven	_num_	CD	NUMBER	nummod_translator	_YES_
 Q464928	451	35	different	different	JJ	O	amod	O
 Q464928	451	36	translators	translator	NNS	O	nmod:of	O
 Q464928	451	37	overseen	oversee	VBN	O	acl	O
@@ -8091,7 +8091,7 @@ Q464928	507	19	movie	movie	NN	O	appos	O
 Q464928	507	20	that	that	WDT	O	ref	O
 Q464928	507	21	covers	cover	VBZ	O	acl:relcl	O
 Q464928	507	22	all	all	DT	O	advmod	O
-Q464928	507	23	seven	_num_	CD	NUMBER	nummod_volume	O
+Q464928	507	23	seven	_num_	CD	NUMBER	nummod_volume	_YES_
 Q464928	507	24	volumes	volume	NNS	O	dobj	O
 
 Q464928	516	0	Eleven	_num_	CD	ORGANIZATION	nummod_room	O
@@ -8252,7 +8252,7 @@ Q464928	528	17	all	all	DT	O	dobj	O
 Q464928	528	18	of	of	IN	O	case	O
 Q464928	528	19	Proust	Proust	NNP	ORGANIZATION	nmod:poss	O
 Q464928	528	20	's	's	POS	O	case	O
-Q464928	528	21	seven	_num_	CD	NUMBER	nummod_volume	O
+Q464928	528	21	seven	_num_	CD	NUMBER	nummod_volume	_YES_
 Q464928	528	22	volumes	volume	NNS	O	nmod:of	O
 Q464928	528	23	of	of	IN	O	case	O
 Q464928	528	24	the	the	DT	O	det	O
@@ -8349,7 +8349,7 @@ Q474845	0	16	-RRB-	-rrb-	-RRB-	O	punct	O
 Q474845	0	17	is	be	VBZ	O	auxpass	O
 Q474845	0	18	composed	compose	VBN	O	root	O
 Q474845	0	19	of	of	IN	O	case	O
-Q474845	0	20	three	_num_	CD	NUMBER	nummod_volume	O
+Q474845	0	20	three	_num_	CD	NUMBER	nummod_volume	_YES_
 Q474845	0	21	volumes	volume	NNS	O	nmod:of	O
 Q474845	0	22	of	of	IN	O	case	O
 Q474845	0	23	poetry	poetry	NN	O	compound	O
@@ -8424,7 +8424,7 @@ Q474845	3	7	in	in	IN	O	case	O
 Q474845	3	8	any	any	DT	O	nmod:in	O
 Q474845	3	9	of	of	IN	O	case	O
 Q474845	3	10	the	the	DT	O	det	O
-Q474845	3	11	three	_num_	CD	NUMBER	nummod_volume	O
+Q474845	3	11	three	_num_	CD	NUMBER	nummod_volume	_YES_
 Q474845	3	12	volumes	volume	NNS	O	nmod:of	O
 Q474845	3	13	.	.	.	O	punct	O
 
@@ -8484,7 +8484,7 @@ Q474845	11	9	that	that	WDT	O	ref	O
 Q474845	11	10	appeared	appear	VBD	O	acl:relcl	O
 Q474845	11	11	in	in	IN	O	case	O
 Q474845	11	12	the	the	DT	O	det	O
-Q474845	11	13	three	_num_	CD	NUMBER	nummod_collection	O
+Q474845	11	13	three	_num_	CD	NUMBER	nummod_collection	_YES_
 Q474845	11	14	collections	collection	NNS	O	nmod:in	O
 Q474845	11	15	-LRB-	-lrb-	-LRB-	O	punct	O
 Q474845	11	16	1866	1866	NNP	DATE	dep	O
@@ -8916,7 +8916,7 @@ Q524957	0	1	Fionavar	Fionavar	NNP	O	compound	O
 Q524957	0	2	Tapestry	Tapestry	NNP	O	nsubj	O
 Q524957	0	3	is	be	VBZ	O	cop	O
 Q524957	0	4	a	a	DT	O	det	O
-Q524957	0	5	LatinGreek_trilogy_3	_logy_	NN	O	root	O
+Q524957	0	5	LatinGreek_trilogy_3	_logy_	NN	O	root	_YES_
 Q524957	0	6	of	of	IN	O	case	O
 Q524957	0	7	fantasy	fantasy	NN	O	compound	O
 Q524957	0	8	novels	novel	NNS	O	nmod:of	O
@@ -9024,7 +9024,7 @@ Q524957	23	5	the	the	DT	O	det	O
 Q524957	23	6	events	event	NNS	O	dep	O
 Q524957	23	7	of	of	IN	O	case	O
 Q524957	23	8	the	the	DT	O	det	O
-Q524957	23	9	LatinGreek_trilogy_3	_logy_	NN	O	nmod:of	O
+Q524957	23	9	LatinGreek_trilogy_3	_logy_	NN	O	nmod:of	_YES_
 Q524957	23	10	.	.	.	O	punct	O
 
 Q524957	34	0	He	he	PRP	O	nsubj	O
@@ -9370,7 +9370,7 @@ Q524957	96	15	working	work	VBG	O	dep	O
 Q524957	96	16	out	out	RP	O	compound:prt	O
 Q524957	96	17	their	they	PRP$	O	nmod:poss	O
 Q524957	96	18	love	love	NN	O	compound	O
-Q524957	96	19	LatinGreek_triangle_3	_angle_	NN	O	dobj	O
+Q524957	96	19	LatinGreek_triangle_3	_angle_	NN	O	dobj	_YES_
 Q524957	96	20	and	and	CC	O	cc	O
 Q524957	96	21	atoning	atone	VBG	O	dep	O
 Q524957	96	22	for	for	IN	O	case	O
@@ -9506,7 +9506,7 @@ Q524957	106	34	is	be	VBZ	O	auxpass	O
 Q524957	106	35	,	,	,	O	punct	O
 Q524957	106	36	in	in	IN	O	case	O
 Q524957	106	37	the	the	DT	O	det	O
-Q524957	106	38	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	O
+Q524957	106	38	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	_YES_
 Q524957	106	39	,	,	,	O	punct	O
 Q524957	106	40	ascribed	ascribe	VBN	O	acl:relcl	O
 Q524957	106	41	to	to	TO	O	case	O
@@ -9661,19 +9661,19 @@ Q524957	121	27	Rangat	Rangat	NNP	LOCATION	nmod:under	O
 Q524957	121	28	.	.	.	O	punct	O
 
 Q524957	125	0	The	the	DT	O	det	O
-Q524957	125	1	three	_num_	CD	NUMBER	nummod_book	O
+Q524957	125	1	three	_num_	CD	NUMBER	nummod_book	_YES_
 Q524957	125	2	books	book	NNS	O	nsubj	O
 Q524957	125	3	are	be	VBP	O	root	O
 Q524957	125	4	:	:	:	O	punct	O
 
 Q632554	0	0	The	the	DT	O	det	O
 Q632554	0	1	Inkheart	Inkheart	NNP	O	compound	O
-Q632554	0	2	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	O
+Q632554	0	2	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	_YES_
 Q632554	0	3	is	be	VBZ	O	cop	O
 Q632554	0	4	a	a	DT	O	det	O
 Q632554	0	5	series	series	NN	O	root	O
 Q632554	0	6	of	of	IN	O	case	O
-Q632554	0	7	three	_num_	CD	NUMBER	nummod_novel	O
+Q632554	0	7	three	_num_	CD	NUMBER	nummod_novel	_YES_
 Q632554	0	8	fantasy	fantasy	NN	O	compound	O
 Q632554	0	9	novels	novel	NNS	O	nmod:of	O
 Q632554	0	10	written	write	VBN	O	acl	O
@@ -9710,7 +9710,7 @@ Q632554	4	6	film	film	NN	O	compound	O
 Q632554	4	7	rights	rights	NNS	O	dobj	O
 Q632554	4	8	to	to	TO	O	case	O
 Q632554	4	9	all	all	DT	O	det	O
-Q632554	4	10	three	_num_	CD	NUMBER	nummod_book	O
+Q632554	4	10	three	_num_	CD	NUMBER	nummod_book	_YES_
 Q632554	4	11	books	book	NNS	O	nmod:to	O
 Q632554	4	12	to	to	TO	O	case	O
 Q632554	4	13	New	New	NNP	LOCATION	compound	O
@@ -9907,7 +9907,7 @@ Q632554	31	5	prince	prince	NN	O	dobj	O
 Q632554	31	6	is	be	VBZ	O	root	O
 Q632554	31	7	that	that	IN	O	nsubj	O
 Q632554	31	8	if	if	IN	O	mark	O
-Q632554	31	9	three	_num_	CD	NUMBER	nummod_word	O
+Q632554	31	9	three	_num_	CD	NUMBER	nummod_word	_YES_
 Q632554	31	10	words	word	NNS	O	nsubjpass	O
 Q632554	31	11	are	be	VBP	O	auxpass	O
 Q632554	31	12	written	write	VBN	O	advcl:if	O
@@ -10028,7 +10028,7 @@ Q632554	49	32	Adderhead	_name_	NNP	PERSON	dobj	O
 Q632554	49	33	by	by	IN	O	mark	O
 Q632554	49	34	writing	write	VBG	O	advcl:by	O
 Q632554	49	35	the	the	DT	O	det	O
-Q632554	49	36	three	_num_	CD	NUMBER	nummod_word	O
+Q632554	49	36	three	_num_	CD	NUMBER	nummod_word	_YES_
 Q632554	49	37	words	word	NNS	O	dobj	O
 Q632554	49	38	in	in	IN	O	case	O
 Q632554	49	39	the	the	DT	O	det	O
@@ -10063,7 +10063,7 @@ Q632554	49	66	.	.	.	O	punct	O
 Q632554	58	0	Mo	mo	NN	PERSON	nsubj	O
 Q632554	58	1	writes	write	VBZ	O	root	O
 Q632554	58	2	the	the	DT	O	det	O
-Q632554	58	3	three	_num_	CD	NUMBER	nummod_word	O
+Q632554	58	3	three	_num_	CD	NUMBER	nummod_word	_YES_
 Q632554	58	4	words	word	NNS	O	nsubj	O
 Q632554	58	5	and	and	CC	O	cc	O
 Q632554	58	6	the	the	DT	O	det	O
@@ -10136,7 +10136,7 @@ Q632554	74	8	film	film	NN	O	compound	O
 Q632554	74	9	rights	rights	NNS	O	dobj	O
 Q632554	74	10	to	to	TO	O	case	O
 Q632554	74	11	all	all	DT	O	det	O
-Q632554	74	12	three	_num_	CD	NUMBER	nummod_book	O
+Q632554	74	12	three	_num_	CD	NUMBER	nummod_book	_YES_
 Q632554	74	13	books	book	NNS	O	nmod:to	O
 Q632554	74	14	for	for	IN	O	case	O
 Q632554	74	15	a	a	DT	O	det	O
@@ -10175,7 +10175,7 @@ Q644852	0	16	is	be	VBZ	O	cop	O
 Q644852	0	17	a	a	DT	O	det	O
 Q644852	0	18	series	series	NN	O	parataxis	O
 Q644852	0	19	of	of	IN	O	case	O
-Q644852	0	20	ten	_num_	CD	NUMBER	nummod_fiction	O
+Q644852	0	20	ten	_num_	CD	NUMBER	nummod_fiction	_YES_
 Q644852	0	21	young	young	JJ	O	amod	O
 Q644852	0	22	adult	adult	JJ	O	amod	O
 Q644852	0	23	science	science	NN	O	compound	O
@@ -10223,7 +10223,7 @@ Q644852	1	25	the	the	DT	O	det	O
 Q644852	1	26	destruction	destruction	NN	O	dobj	O
 Q644852	1	27	of	of	IN	O	case	O
 Q644852	1	28	the	the	DT	O	det	O
-Q644852	1	29	ten	_num_	CD	NUMBER	nummod_territory	O
+Q644852	1	29	ten	_num_	CD	NUMBER	nummod_territory	_YES_
 Q644852	1	30	``	``	``	O	punct	O
 Q644852	1	31	territories	territory	NNS	O	nmod:of	O
 Q644852	1	32	''	''	''	O	punct	O
@@ -10466,7 +10466,7 @@ Q644852	19	20	to	to	TO	O	case	O
 Q644852	19	21	journey	journey	NN	O	nmod:to	O
 Q644852	19	22	among	among	IN	O	case	O
 Q644852	19	23	the	the	DT	O	det	O
-Q644852	19	24	ten	_num_	CD	NUMBER	nummod_territory	O
+Q644852	19	24	ten	_num_	CD	NUMBER	nummod_territory	_YES_
 Q644852	19	25	``	``	``	O	punct	O
 Q644852	19	26	territories	territory	NNS	O	nmod:among	O
 Q644852	19	27	''	''	''	O	punct	O
@@ -10503,7 +10503,7 @@ Q644852	21	16	one	_num_	CD	NUMBER	nmod:as_reach	O
 Q644852	21	17	of	of	IN	O	case	O
 Q644852	21	18	Halla	Halla	NNP	ORGANIZATION	nmod:poss	O
 Q644852	21	19	's	's	POS	O	case	O
-Q644852	21	20	ten	_num_	CD	NUMBER	nummod_territory	O
+Q644852	21	20	ten	_num_	CD	NUMBER	nummod_territory	_YES_
 Q644852	21	21	territories	territory	NNS	O	nmod:of	O
 Q644852	21	22	reaches	reach	VBZ	O	parataxis	O
 Q644852	21	23	a	a	DT	O	det	O
@@ -10575,7 +10575,7 @@ Q644852	26	1	turning	turn	VBG	O	amod	O
 Q644852	26	2	points	point	NNS	O	nsubj	O
 Q644852	26	3	of	of	IN	O	case	O
 Q644852	26	4	the	the	DT	O	det	O
-Q644852	26	5	ten	_num_	CD	NUMBER	nummod_territory	O
+Q644852	26	5	ten	_num_	CD	NUMBER	nummod_territory	_YES_
 Q644852	26	6	territories	territory	NNS	O	nmod:of	O
 Q644852	26	7	,	,	,	O	punct	O
 Q644852	26	8	in	in	IN	O	case	O
@@ -10754,7 +10754,7 @@ Q675872	1	1	all	all	DT	O	nmod:in	O
 Q675872	1	2	,	,	,	O	punct	O
 Q675872	1	3	it	it	PRP	O	nsubj	O
 Q675872	1	4	features	feature	VBZ	O	root	O
-Q675872	1	5	seven	_num_	CD	NUMBER	nummod_novel	O
+Q675872	1	5	seven	_num_	CD	NUMBER	nummod_novel	_YES_
 Q675872	1	6	novels	novel	NNS	O	dobj	O
 Q675872	1	7	,	,	,	O	punct	O
 Q675872	1	8	entitled	entitle	VBN	O	acl	O
@@ -10867,7 +10867,7 @@ Q675872	39	24	,	,	,	O	punct	O
 Q675872	39	25	Sarah	_name_	NNP	PERSON	dep	O
 Q675872	39	26	and	and	CC	O	cc	O
 Q675872	39	27	their	they	PRP$	O	nmod:poss	O
-Q675872	39	28	seven	_num_	CD	NUMBER	nummod_child	O
+Q675872	39	28	seven	_num_	CD	NUMBER	nummod_child	_YES_
 Q675872	39	29	children	child	NNS	O	dep	O
 Q675872	39	30	.	.	.	O	punct	O
 
@@ -11092,7 +11092,7 @@ Q675872	99	36	charm	charm	NN	O	compound	O
 Q675872	99	37	theory	theory	NN	O	conj	O
 Q675872	99	38	,	,	,	O	punct	O
 Q675872	99	39	the	the	DT	O	det	O
-Q675872	99	40	seven	_num_	CD	NUMBER	nummod_spell	O
+Q675872	99	40	seven	_num_	CD	NUMBER	nummod_spell	_YES_
 Q675872	99	41	basic	basic	JJ	O	amod	O
 Q675872	99	42	spells	spell	NNS	O	conj	O
 Q675872	99	43	,	,	,	O	punct	O
@@ -12057,7 +12057,7 @@ Q860102	0	6	Trilogy	Trilogy	NNP	O	nmod:of	O
 Q860102	0	7	is	be	VBZ	O	cop	O
 Q860102	0	8	a	a	DT	O	det	O
 Q860102	0	9	book	book	NN	O	compound	O
-Q860102	0	10	LatinGreek_trilogy_3	_logy_	NN	O	parataxis	O
+Q860102	0	10	LatinGreek_trilogy_3	_logy_	NN	O	parataxis	_YES_
 Q860102	0	11	written	write	VBN	O	acl	O
 Q860102	0	12	by	by	IN	O	case	O
 Q860102	0	15	Richard_A._Knaak	_name_	NNP	PERSON	compound_compound_nmod:by	O
@@ -12075,7 +12075,7 @@ Q860102	0	26	Warcraft	Warcraft	NNP	O	appos	O
 Q860102	0	27	.	.	.	O	punct	O
 
 Q860102	3	0	The	the	DT	O	det	O
-Q860102	3	1	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	O
+Q860102	3	1	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	_YES_
 Q860102	3	2	takes	take	VBZ	O	root	O
 Q860102	3	3	place	place	NN	O	compound	O
 Q860102	3	4	ten	ten	CD	DURATION	nummod	O
@@ -12109,7 +12109,7 @@ Q860102	5	8	the	the	DT	DATE	det	O
 Q860102	5	9	past	past	NN	DATE	nmod:in	O
 Q860102	5	10	,	,	,	O	punct	O
 Q860102	5	11	the	the	DT	O	det	O
-Q860102	5	12	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	O
+Q860102	5	12	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	_YES_
 Q860102	5	13	involves	involve	VBZ	O	root	O
 Q860102	5	14	time	time	NN	O	nsubj	O
 Q860102	5	15	travel	travel	VB	O	ccomp	O
@@ -12137,7 +12137,7 @@ Q860102	5	35	.	.	.	O	punct	O
 Q860102	6	0	This	this	DT	O	det	O
 Q860102	6	1	series	series	NN	O	nsubj	O
 Q860102	6	2	contains	contain	VBZ	O	root	O
-Q860102	6	3	three	_num_	CD	NUMBER	nummod_book	O
+Q860102	6	3	three	_num_	CD	NUMBER	nummod_book	_YES_
 Q860102	6	4	books	book	NNS	O	dobj	O
 Q860102	6	5	:	:	:	O	punct	O
 
@@ -12164,7 +12164,7 @@ Q860102	15	9	mountains	mountain	NNS	O	nmod:within	O
 Q860102	15	10	of	of	IN	O	case	O
 Q860102	15	11	Kalimdor	Kalimdor	NNP	LOCATION	nmod:of	O
 Q860102	15	12	propels	propel	VBZ	O	root	O
-Q860102	15	13	three	_num_	CD	NUMBER	nummod_warrior	O
+Q860102	15	13	three	_num_	CD	NUMBER	nummod_warrior	_YES_
 Q860102	15	14	former	former	JJ	O	amod	O
 Q860102	15	15	warriors	warrior	NNS	O	dobj	O
 Q860102	15	16	into	into	IN	O	case	O
@@ -12232,7 +12232,7 @@ Q860102	18	3	chapter	chapter	NN	O	nmod:in	O
 Q860102	18	4	of	of	IN	O	case	O
 Q860102	18	5	this	this	DT	O	det	O
 Q860102	18	6	epic	epic	NN	O	compound	O
-Q860102	18	7	LatinGreek_trilogy_3	_logy_	NN	O	nmod:of	O
+Q860102	18	7	LatinGreek_trilogy_3	_logy_	NN	O	nmod:of	_YES_
 Q860102	18	8	,	,	,	O	punct	O
 Q860102	18	9	the	the	DT	O	det	O
 Q860102	18	10	outcome	outcome	NN	O	nsubjpass	O
@@ -12250,7 +12250,7 @@ Q860102	18	21	by	by	IN	O	case	O
 Q860102	18	22	the	the	DT	O	det	O
 Q860102	18	23	arrival	arrival	NN	O	nmod:agent	O
 Q860102	18	24	of	of	IN	O	case	O
-Q860102	18	25	three	_num_	CD	NUMBER	nummod_hero	O
+Q860102	18	25	three	_num_	CD	NUMBER	nummod_hero	_YES_
 Q860102	18	26	time-lost	time-lost	JJ	O	amod	O
 Q860102	18	27	heroes	hero	NNS	O	nmod:of	O
 Q860102	18	28	:	:	:	O	punct	O
@@ -12347,7 +12347,7 @@ Q860102	23	25	.	.	.	O	punct	O
 
 Q860102	29	0	===	===	NNP	O	compound	O
 Q860102	29	1	Book	Book	NNP	O	root	O
-Q860102	29	2	Three	_num_	CD	NUMBER	nummod_Book	O
+Q860102	29	2	Three	_num_	CD	NUMBER	nummod_Book	_YES_
 Q860102	29	3	-	-	:	O	punct	O
 Q860102	29	4	The	the	DT	O	det	O
 Q860102	29	5	Sundering	sunder	VBG	O	amod	O
@@ -12362,7 +12362,7 @@ Q860102	34	5	chapter	chapter	NN	O	nmod:in	O
 Q860102	34	6	of	of	IN	O	case	O
 Q860102	34	7	this	this	DT	O	det	O
 Q860102	34	8	epic	epic	NN	O	compound	O
-Q860102	34	9	LatinGreek_trilogy_3	_logy_	NN	O	nmod:of	O
+Q860102	34	9	LatinGreek_trilogy_3	_logy_	NN	O	nmod:of	_YES_
 Q860102	34	10	,	,	,	O	punct	O
 Q860102	34	11	the	the	DT	O	det	O
 Q860102	34	12	dragon-mage	dragon-mage	NN	O	compound	O
@@ -12387,7 +12387,7 @@ Q860102	39	0	War	war	NN	O	root	O
 Q860102	39	1	of	of	IN	O	case	O
 Q860102	39	2	the	the	DT	O	det	O
 Q860102	39	3	Ancients	Ancients	NNP	O	compound	O
-Q860102	39	4	LatinGreek_Trilogy_3	_logy_	NN	O	nmod:of	O
+Q860102	39	4	LatinGreek_Trilogy_3	_logy_	NN	O	nmod:of	_YES_
 Q860102	39	5	on	on	IN	O	case	O
 Q860102	39	6	Wowpedia	Wowpedia	NNP	O	nmod:on	O
 Q860102	39	7	,	,	,	O	punct	O
@@ -13125,7 +13125,7 @@ Q950075	0	5	a	a	DT	O	det	O
 Q950075	0	6	seven-part	seven-part	JJ	O	amod	O
 Q950075	0	7	series	series	NN	O	root	O
 Q950075	0	8	-LRB-	-lrb-	-LRB-	O	punct	O
-Q950075	0	9	LatinGreek_heptalogy_7	_logy_	NN	O	appos	O
+Q950075	0	9	LatinGreek_heptalogy_7	_logy_	NN	O	appos	_YES_
 Q950075	0	10	-RRB-	-rrb-	-RRB-	O	punct	O
 Q950075	0	11	of	of	IN	O	case	O
 Q950075	0	12	fantasy	fantasy	NN	O	compound	O
@@ -14089,7 +14089,7 @@ Q950075	223	2	-RSB-	-rsb-	-RRB-	O	punct	O
 
 Q989760	0	0	The	the	DT	O	det	O
 Q989760	0	1	Danzig	_name_	NNP	PERSON	compound	O
-Q989760	0	2	LatinGreek_Trilogy_3	_logy_	NN	O	nsubj	O
+Q989760	0	2	LatinGreek_Trilogy_3	_logy_	NN	O	nsubj	_YES_
 Q989760	0	3	-LRB-	-lrb-	-LRB-	O	punct	O
 Q989760	0	4	German	german	JJ	MISC	dep	O
 Q989760	0	5	:	:	:	O	punct	O
@@ -14109,7 +14109,7 @@ Q989760	0	20	Günter_Grass	_name_	NNP	PERSON	compound_nmod:by	O
 Q989760	0	21	.	.	.	O	punct	O
 
 Q989760	1	0	The	the	DT	O	det	O
-Q989760	1	1	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	O
+Q989760	1	1	LatinGreek_trilogy_3	_logy_	NN	O	nsubj	_YES_
 Q989760	1	2	focuses	focus	VBZ	O	root	O
 Q989760	1	3	on	on	IN	O	case	O
 Q989760	1	4	the	the	DT	O	det	O
@@ -14132,11 +14132,11 @@ Q989760	1	20	-RRB-	-rrb-	-RRB-	O	punct	O
 Q989760	1	21	.	.	.	O	punct	O
 
 Q989760	2	0	The	the	DT	O	det	O
-Q989760	2	1	three	_num_	CD	NUMBER	nummod_book	O
+Q989760	2	1	three	_num_	CD	NUMBER	nummod_book	_YES_
 Q989760	2	2	books	book	NNS	O	nsubj	O
 Q989760	2	3	in	in	IN	O	case	O
 Q989760	2	4	the	the	DT	O	det	O
-Q989760	2	5	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	O
+Q989760	2	5	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	_YES_
 Q989760	2	6	are	be	VBP	O	root	O
 Q989760	2	7	:	:	:	O	punct	O
 
@@ -14214,7 +14214,7 @@ Q1053330	4	23	the	the	DT	O	det	O
 Q1053330	4	24	Courts	Courts	NNPS	O	nmod:of	O
 Q1053330	4	25	.	.	.	O	punct	O
 
-Q1053330	10	0	Ten	_num_	CD	NUMBER	nummod_novel	O
+Q1053330	10	0	Ten	_num_	CD	NUMBER	nummod_novel	_YES_
 Q1053330	10	1	Amber	Amber	NNP	O	compound	O
 Q1053330	10	2	novels	novel	NNS	O	nsubjpass	O
 Q1053330	10	3	were	be	VBD	O	auxpass	O
@@ -14324,7 +14324,7 @@ Q1053330	14	40	of	of	IN	O	case	O
 Q1053330	14	41	Amber	Amber	NNP	O	nmod:of	O
 Q1053330	14	42	-RRB-	-rrb-	-RRB-	O	punct	O
 Q1053330	14	43	all	all	DT	O	det	O
-Q1053330	14	44	10	_num_	CD	NUMBER	nummod_novel	O
+Q1053330	14	44	10	_num_	CD	NUMBER	nummod_novel	_YES_
 Q1053330	14	45	novels	novel	NNS	O	nmod:of	O
 Q1053330	14	46	.	.	.	O	punct	O
 
@@ -15670,7 +15670,7 @@ Q1053330	147	14	,	,	,	O	punct	O
 Q1053330	147	15	February	February	NNP	DATE	appos	O
 Q1053330	147	16	1994	1994	CD	DATE	nummod	O
 Q1053330	147	17	and	and	CC	O	cc	O
-Q1053330	147	18	Ten	_num_	CD	NUMBER	nummod_tale	O
+Q1053330	147	18	Ten	_num_	CD	NUMBER	nummod_tale	_YES_
 Q1053330	147	19	Tales	tale	NNS	MISC	appos	O
 Q1053330	147	20	,	,	,	O	punct	O
 Q1053330	147	21	edited	edit	VBN	O	acl	O
@@ -15763,7 +15763,7 @@ Q1053330	170	11	stated	state	VBN	O	acl	O
 Q1053330	170	12	in	in	IN	O	case	O
 Q1053330	170	13	the	the	DT	O	det	O
 Q1053330	170	14	original	original	JJ	O	amod	O
-Q1053330	170	15	ten	_num_	CD	NUMBER	nummod_book	O
+Q1053330	170	15	ten	_num_	CD	NUMBER	nummod_book	_YES_
 Q1053330	170	16	books	book	NNS	O	nmod:in	O
 Q1053330	170	17	.	.	.	O	punct	O
 
@@ -17156,7 +17156,7 @@ Q1068292	15	14	.	.	.	O	punct	O
 
 Q1068292	17	0	While	while	IN	O	mark	O
 Q1068292	17	1	the	the	DT	O	det	O
-Q1068292	17	2	LatinGreek_quartet_4	_et_	NN	O	nsubj	O
+Q1068292	17	2	LatinGreek_quartet_4	_et_	NN	O	nsubj	_YES_
 Q1068292	17	3	has	have	VBZ	O	advcl:while	O
 Q1068292	17	4	its	its	PRP$	O	nmod:poss	O
 Q1068292	17	5	share	share	NN	O	dobj	O
@@ -17183,7 +17183,7 @@ Q1141213	0	6	is	be	VBZ	O	cop	O
 Q1141213	0	7	a	a	DT	O	det	O
 Q1141213	0	8	series	series	NN	O	root	O
 Q1141213	0	9	of	of	IN	O	case	O
-Q1141213	0	10	six	_num_	CD	NUMBER	nummod_novel	O
+Q1141213	0	10	six	_num_	CD	NUMBER	nummod_novel	_YES_
 Q1141213	0	11	fantasy	fantasy	NN	O	compound	O
 Q1141213	0	12	novels	novel	NNS	O	nmod:of	O
 Q1141213	0	13	by	by	IN	O	case	O
@@ -17806,7 +17806,7 @@ Q1151168	0	7	term	term	NN	O	root	O
 Q1151168	0	8	for	for	IN	O	case	O
 Q1151168	0	9	Japan	Japan	NNP	LOCATION	nmod:poss	O
 Q1151168	0	10	's	's	POS	O	case	O
-Q1151168	0	11	six	_num_	CD	NUMBER	nummod_history	O
+Q1151168	0	11	six	_num_	CD	NUMBER	nummod_history	_YES_
 Q1151168	0	12	national	national	JJ	O	amod	O
 Q1151168	0	13	histories	history	NNS	O	nmod:for	O
 Q1151168	0	14	chronicling	chronicle	VBG	O	acl	O
@@ -17825,7 +17825,7 @@ Q1151168	0	26	887	_num_	CD	NUMBER	nmod:to_time	O
 Q1151168	0	27	.	.	.	O	punct	O
 
 Q1151168	1	0	The	the	DT	O	det	O
-Q1151168	1	1	six	_num_	CD	NUMBER	nummod_history	O
+Q1151168	1	1	six	_num_	CD	NUMBER	nummod_history	_YES_
 Q1151168	1	2	histories	history	NNS	O	nsubjpass	O
 Q1151168	1	3	were	be	VBD	O	auxpass	O
 Q1151168	1	4	written	write	VBN	O	root	O
@@ -18093,12 +18093,12 @@ Q1151168	18	7	history	history	NN	O	compound	O
 Q1151168	18	8	text	text	NN	O	appos	O
 Q1151168	18	9	of	of	IN	O	case	O
 Q1151168	18	10	the	the	DT	O	det	O
-Q1151168	18	11	Six	_num_	CD	NUMBER	nummod_Histories	O
+Q1151168	18	11	Six	_num_	CD	NUMBER	nummod_Histories	_YES_
 Q1151168	18	12	National	National	NNP	O	compound	O
 Q1151168	18	13	Histories	Histories	NNPS	O	nmod:of	O
 
 Q1151168	28	0	The	the	DT	O	det	O
-Q1151168	28	1	Six	_num_	CD	NUMBER	nummod_Histories	O
+Q1151168	28	1	Six	_num_	CD	NUMBER	nummod_Histories	_YES_
 Q1151168	28	2	National	National	NNP	O	compound	O
 Q1151168	28	3	Histories	Histories	NNPS	O	root	O
 Q1151168	28	4	of	of	IN	O	case	O
@@ -18114,7 +18114,7 @@ Q1198153	0	5	a	a	DT	O	det	O
 Q1198153	0	6	sequence	sequence	NN	O	root	O
 Q1198153	0	7	of	of	IN	O	case	O
 Q1198153	0	8	novel	novel	JJ	O	amod	O
-Q1198153	0	9	LatinGreek_trilogies_3	_logy_	NN	O	nmod:of	O
+Q1198153	0	9	LatinGreek_trilogies_3	_logy_	NN	O	nmod:of	_YES_
 Q1198153	0	10	written	write	VBN	O	acl	O
 Q1198153	0	11	by	by	IN	O	case	O
 Q1198153	0	13	Brian_Herbert	_name_	NNP	PERSON	compound_nmod:by	O
@@ -18172,7 +18172,7 @@ Q1198153	2	11	with	with	IN	O	case	O
 Q1198153	2	12	the	the	DT	O	det	O
 Q1198153	2	13	authors	author	NNS	O	nmod:with	O
 Q1198153	2	14	for	for	IN	O	case	O
-Q1198153	2	15	three	_num_	CD	NUMBER	nummod_novel	O
+Q1198153	2	15	three	_num_	CD	NUMBER	nummod_novel	_YES_
 Q1198153	2	16	Dune	dune	NN	MISC	compound	O
 Q1198153	2	17	prequel	prequel	NN	O	compound	O
 Q1198153	2	18	novels	novel	NNS	O	nmod:for	O
@@ -18197,7 +18197,7 @@ Q1198153	2	37	the	the	DT	O	det	O
 Q1198153	2	38	Prelude	prelude	NN	O	nmod:as	O
 Q1198153	2	39	to	to	TO	O	case	O
 Q1198153	2	40	Dune	dune	NN	O	compound	O
-Q1198153	2	41	LatinGreek_trilogy_3	_logy_	NN	O	nmod:to	O
+Q1198153	2	41	LatinGreek_trilogy_3	_logy_	NN	O	nmod:to	_YES_
 Q1198153	2	42	.	.	.	O	punct	O
 
 Q1198153	3	0	Starting	start	VBG	O	root	O
@@ -18245,7 +18245,7 @@ Q1198153	11	2	Dune	_name_	NNP	PERSON	nmod:to	O
 Q1198153	11	3	is	be	VBZ	O	cop	O
 Q1198153	11	4	a	a	DT	O	det	O
 Q1198153	11	5	prequel	prequel	NN	O	compound	O
-Q1198153	11	6	LatinGreek_trilogy_3	_logy_	NN	O	root	O
+Q1198153	11	6	LatinGreek_trilogy_3	_logy_	NN	O	root	_YES_
 Q1198153	11	7	of	of	IN	O	case	O
 Q1198153	11	8	novels	novel	NNS	O	nmod:of	O
 Q1198153	11	9	written	write	VBN	O	acl	O
@@ -18277,7 +18277,7 @@ Q1198153	13	11	with	with	IN	O	case	O
 Q1198153	13	12	the	the	DT	O	det	O
 Q1198153	13	13	authors	author	NNS	O	nmod:with	O
 Q1198153	13	14	for	for	IN	O	case	O
-Q1198153	13	15	three	_num_	CD	NUMBER	nummod_novel	O
+Q1198153	13	15	three	_num_	CD	NUMBER	nummod_novel	_YES_
 Q1198153	13	16	Dune	dune	NN	PERSON	compound	O
 Q1198153	13	17	prequel	prequel	NN	O	compound	O
 Q1198153	13	18	novels	novel	NNS	O	nmod:for	O
@@ -18292,7 +18292,7 @@ Q1198153	13	26	the	the	DT	O	det	O
 Q1198153	13	27	Prelude	prelude	NN	O	nmod:as	O
 Q1198153	13	28	to	to	TO	O	case	O
 Q1198153	13	29	Dune	dune	NN	O	compound	O
-Q1198153	13	30	LatinGreek_trilogy_3	_logy_	NN	O	nmod:to	O
+Q1198153	13	30	LatinGreek_trilogy_3	_logy_	NN	O	nmod:to	_YES_
 Q1198153	13	31	.	.	.	O	punct	O
 
 Q1198153	20	0	As	as	IN	O	case	O
@@ -18335,7 +18335,7 @@ Q1198153	29	2	Dune	dune	NN	O	nmod:of	O
 Q1198153	29	3	is	be	VBZ	O	cop	O
 Q1198153	29	4	a	a	DT	O	det	O
 Q1198153	29	5	prequel	prequel	NN	O	compound	O
-Q1198153	29	6	LatinGreek_trilogy_3	_logy_	NN	O	root	O
+Q1198153	29	6	LatinGreek_trilogy_3	_logy_	NN	O	root	_YES_
 Q1198153	29	7	of	of	IN	O	case	O
 Q1198153	29	8	novels	novel	NNS	O	nmod:of	O
 Q1198153	29	9	written	write	VBN	O	acl	O
@@ -18514,7 +18514,7 @@ Q1198153	63	22	Anderson	_name_	NNP	PERSON	nmod:by	O
 Q1198153	63	23	to	to	TO	O	mark	O
 Q1198153	63	24	publish	publish	VB	O	acl:to	O
 Q1198153	63	25	a	a	DT	O	det	O
-Q1198153	63	26	LatinGreek_trilogy_3	_logy_	NN	O	dobj	O
+Q1198153	63	26	LatinGreek_trilogy_3	_logy_	NN	O	dobj	_YES_
 Q1198153	63	27	-LRB-	-lrb-	-LRB-	O	punct	O
 Q1198153	63	28	later	later	RB	O	advmod	O
 Q1198153	63	29	known	know	VBN	O	dep	O
@@ -18597,7 +18597,7 @@ Q1198153	71	3	Dune	Dune	NNP	O	nmod:of	O
 Q1198153	71	4	is	be	VBZ	O	cop	O
 Q1198153	71	5	a	a	DT	O	det	O
 Q1198153	71	6	prequel	prequel	NN	O	compound	O
-Q1198153	71	7	LatinGreek_trilogy_3	_logy_	NN	O	root	O
+Q1198153	71	7	LatinGreek_trilogy_3	_logy_	NN	O	root	_YES_
 Q1198153	71	8	of	of	IN	O	case	O
 Q1198153	71	9	novels	novel	NNS	O	nmod:of	O
 Q1198153	71	10	written	write	VBN	O	acl	O
@@ -18621,7 +18621,7 @@ Q1198153	72	3	the	the	DT	O	det	O
 Q1198153	72	4	Legends	Legends	NNPS	O	nmod:to	O
 Q1198153	72	5	of	of	IN	O	case	O
 Q1198153	72	6	Dune	Dune	NNP	O	compound	O
-Q1198153	72	7	LatinGreek_trilogy_3	_logy_	NN	O	nmod:of	O
+Q1198153	72	7	LatinGreek_trilogy_3	_logy_	NN	O	nmod:of	_YES_
 Q1198153	72	8	-LRB-	-lrb-	-LRB-	O	punct	O
 Q1198153	72	9	2002-2004	2002-2004	CD	DURATION	appos	O
 Q1198153	72	10	-RRB-	-rrb-	-RRB-	O	punct	O
@@ -18672,7 +18672,7 @@ Q1198153	74	1	Great	Great	NNP	O	compound	O
 Q1198153	74	2	Schools	Schools	NNP	O	nsubj	O
 Q1198153	74	3	of	of	IN	O	case	O
 Q1198153	74	4	Dune	Dune	NNP	O	compound	O
-Q1198153	74	5	LatinGreek_trilogy_3	_logy_	NNP	O	nmod:of	O
+Q1198153	74	5	LatinGreek_trilogy_3	_logy_	NNP	O	nmod:of	_YES_
 Q1198153	74	6	,	,	,	O	punct	O
 Q1198153	74	7	first	first	JJ	ORDINAL	advmod	O
 Q1198153	74	8	discussed	discuss	VBN	O	dep	O
@@ -18747,7 +18747,7 @@ Q1198153	86	33	.	.	.	O	punct	O
 
 Q1213577	3	0	Of	of	IN	O	case	O
 Q1213577	3	1	the	the	DT	O	det	O
-Q1213577	3	2	four	_num_	CD	NUMBER	nummod_novel	O
+Q1213577	3	2	four	_num_	CD	NUMBER	nummod_novel	_YES_
 Q1213577	3	3	novels	novel	NNS	O	nmod:of	O
 Q1213577	3	4	,	,	,	O	punct	O
 Q1213577	3	5	Hyperion	hyperion	NN	PERSON	nsubj	O
@@ -18790,7 +18790,7 @@ Q1213577	3	41	1998	1998	CD	DATE	nmod:in	O
 Q1213577	3	42	.	.	.	O	punct	O
 
 Q1213577	4	0	All	all	DT	O	det	O
-Q1213577	4	1	four	_num_	CD	NUMBER	nummod_novel	O
+Q1213577	4	1	four	_num_	CD	NUMBER	nummod_novel	_YES_
 Q1213577	4	2	novels	novel	NNS	O	nsubjpass	O
 Q1213577	4	3	were	be	VBD	O	auxpass	O
 Q1213577	4	4	also	also	RB	O	advmod	O
@@ -18829,7 +18829,7 @@ Q1213577	26	7	:	:	:	O	punct	O
 
 Q1213577	33	0	After	after	IN	O	mark	O
 Q1213577	33	1	the	the	DT	O	det	O
-Q1213577	33	2	LatinGreek_quartet_4	_et_	NN	O	nsubjpass	O
+Q1213577	33	2	LatinGreek_quartet_4	_et_	NN	O	nsubjpass	_YES_
 Q1213577	33	3	was	be	VBD	O	auxpass	O
 Q1213577	33	4	published	publish	VBN	O	root	O
 Q1213577	33	5	came	come	VBD	O	ccomp	O
@@ -18878,7 +18878,7 @@ Q1213577	37	5	that	that	IN	O	mark	O
 Q1213577	37	6	I	I	PRP	O	nsubj	O
 Q1213577	37	7	've	have	VBP	O	aux	O
 Q1213577	37	8	written	write	VBN	O	ccomp	O
-Q1213577	37	9	four	_num_	CD	NUMBER	nummod_novel	O
+Q1213577	37	9	four	_num_	CD	NUMBER	nummod_novel	_YES_
 Q1213577	37	10	novels	novel	NNS	O	dobj	O
 Q1213577	37	11	set	set	VBN	O	acl	O
 Q1213577	37	12	in	in	IN	O	case	O
@@ -18944,7 +18944,7 @@ Q1213577	38	36	combined	combine	VBN	O	acl	O
 Q1213577	38	37	,	,	,	O	punct	O
 Q1213577	38	38	broken	break	VBN	O	acl	O
 Q1213577	38	39	into	into	IN	O	case	O
-Q1213577	38	40	four	_num_	CD	NUMBER	nummod_book	O
+Q1213577	38	40	four	_num_	CD	NUMBER	nummod_book	_YES_
 Q1213577	38	41	books	book	NNS	O	nmod:into	O
 Q1213577	38	42	because	because	IN	O	case	O
 Q1213577	38	43	of	of	IN	O	mwe	O
@@ -19127,7 +19127,7 @@ Q1213577	63	14	menacing	menacing	JJ	O	amod	O
 Q1213577	63	15	half-mechanical	half-mechanical	JJ	O	appos	O
 Q1213577	63	16	,	,	,	O	punct	O
 Q1213577	63	17	half-organic	half-organic	JJ	O	amod	O
-Q1213577	63	18	four	_num_	CD	NUMBER	nummod_creature	O
+Q1213577	63	18	four	_num_	CD	NUMBER	nummod_creature	_YES_
 Q1213577	63	19	armed	armed	JJ	O	amod	O
 Q1213577	63	20	creature	creature	NN	O	appos	O
 Q1213577	63	21	that	that	WDT	O	ref	O
@@ -19142,7 +19142,7 @@ Q1213577	64	0	It	it	PRP	O	nsubj	O
 Q1213577	64	1	appears	appear	VBZ	O	root	O
 Q1213577	64	2	in	in	IN	O	case	O
 Q1213577	64	3	all	all	DT	O	det	O
-Q1213577	64	4	four	_num_	CD	NUMBER	nummod_book	O
+Q1213577	64	4	four	_num_	CD	NUMBER	nummod_book	_YES_
 Q1213577	64	5	Hyperion	Hyperion	NNP	MISC	compound	O
 Q1213577	64	6	Cantos	Cantos	NNP	MISC	compound	O
 Q1213577	64	7	books	book	NNS	O	nmod:in	O
@@ -19312,7 +19312,7 @@ Q1213846	32	4	Grandmother	grandmother	NN	O	compound	O
 Q1213846	32	5	Bone	bone	NN	O	nsubj	O
 Q1213846	32	6	and	and	CC	O	cc	O
 Q1213846	32	7	her	she	PRP$	O	nmod:poss	O
-Q1213846	32	8	three	_num_	CD	NUMBER	nummod_sister	O
+Q1213846	32	8	three	_num_	CD	NUMBER	nummod_sister	_YES_
 Q1213846	32	9	evil	evil	JJ	O	amod	O
 Q1213846	32	10	sisters	sister	NNS	O	conj:and	O
 Q1213846	32	11	send	send	VBP	O	root	O
@@ -19406,7 +19406,7 @@ Q1213846	59	1	Grizelda	_name_	NNP	PERSON	compound	O
 Q1213846	59	2	Bone	bone	NN	PERSON	nsubj	O
 Q1213846	59	3	and	and	CC	O	cc	O
 Q1213846	59	4	her	she	PRP$	O	nmod:poss	O
-Q1213846	59	5	three	_num_	CD	NUMBER	nummod_sister	O
+Q1213846	59	5	three	_num_	CD	NUMBER	nummod_sister	_YES_
 Q1213846	59	6	sisters	sister	NNS	O	conj:and	O
 Q1213846	59	7	introduce	introduce	VB	O	root	O
 Q1213846	59	8	Charlie	_name_	NNP	PERSON	dobj	O
@@ -19677,7 +19677,7 @@ Q1213846	266	1	and	and	CC	O	cc	O
 Q1213846	266	2	Egmont	Egmont	NNP	O	conj:and	O
 Q1213846	266	3	have	have	VBP	O	aux	O
 Q1213846	266	4	completed	complete	VBN	O	root	O
-Q1213846	266	5	three	_num_	CD	NUMBER	nummod_volume	O
+Q1213846	266	5	three	_num_	CD	NUMBER	nummod_volume	_YES_
 Q1213846	266	6	volumes	volume	NNS	O	dobj	O
 Q1213846	266	7	of	of	IN	O	case	O
 Q1213846	266	8	a	a	DT	O	det	O
@@ -19898,7 +19898,7 @@ Q1408715	96	1	-	-	:	O	punct	O
 Q1408715	96	2	A	a	NN	O	compound	O
 Q1408715	96	3	race	race	NN	O	dep	O
 Q1408715	96	4	of	of	IN	O	case	O
-Q1408715	96	5	7	_num_	CD	NUMBER	nummod_giant	O
+Q1408715	96	5	7	_num_	CD	NUMBER	nummod_giant	_YES_
 Q1408715	96	6	ft.	ft.	NN	O	compound	O
 Q1408715	96	7	primitive	primitive	JJ	O	amod	O
 Q1408715	96	8	man-eating	man-eating	JJ	O	amod	O
@@ -20096,7 +20096,7 @@ Q1856030	1	1	series	series	NN	O	nsubj	O
 Q1856030	1	2	began	begin	VBD	O	root	O
 Q1856030	1	3	as	as	IN	O	case	O
 Q1856030	1	4	a	a	DT	O	det	O
-Q1856030	1	5	LatinGreek_trilogy_3	_logy_	NN	O	nmod:as	O
+Q1856030	1	5	LatinGreek_trilogy_3	_logy_	NN	O	nmod:as	_YES_
 Q1856030	1	6	,	,	,	O	punct	O
 Q1856030	1	7	entitled	entitle	VBN	O	acl	O
 Q1856030	1	8	The	the	DT	O	det	O
@@ -20114,7 +20114,7 @@ Q1856030	2	1	was	be	VBD	O	auxpass	O
 Q1856030	2	2	followed	follow	VBN	O	root	O
 Q1856030	2	3	by	by	IN	O	case	O
 Q1856030	2	4	another	another	DT	O	det	O
-Q1856030	2	5	LatinGreek_trilogy_3	_logy_	NN	O	nmod:agent	O
+Q1856030	2	5	LatinGreek_trilogy_3	_logy_	NN	O	nmod:agent	_YES_
 Q1856030	2	6	,	,	,	O	punct	O
 Q1856030	2	7	The	the	DT	O	det	O
 Q1856030	2	8	Second	second	JJ	ORDINAL	amod	O
@@ -20198,7 +20198,7 @@ Q1856030	7	13	and	and	CC	O	cc	O
 Q1856030	7	14	history	history	NN	O	nmod:of	O
 Q1856030	7	15	enables	enable	VBZ	O	root	O
 Q1856030	7	16	all	all	DT	O	det	O
-Q1856030	7	17	three	_num_	CD	NUMBER	nummod_series	O
+Q1856030	7	17	three	_num_	CD	NUMBER	nummod_series	_YES_
 Q1856030	7	18	series	series	NN	O	dobj	O
 Q1856030	7	19	of	of	IN	O	case	O
 Q1856030	7	20	the	the	DT	O	det	O
@@ -20600,7 +20600,7 @@ Q1856030	130	0	Ramen	Ramen	NNP	O	nsubjpass	O
 Q1856030	130	1	are	be	VBP	O	auxpass	O
 Q1856030	130	2	organised	organise	VBN	O	root	O
 Q1856030	130	3	into	into	IN	O	case	O
-Q1856030	130	4	three	_num_	CD	NUMBER	nummod_rank	O
+Q1856030	130	4	three	_num_	CD	NUMBER	nummod_rank	_YES_
 Q1856030	130	5	``	``	``	O	punct	O
 Q1856030	130	6	ranks	rank	NNS	O	nmod:into	O
 Q1856030	130	7	''	''	''	O	punct	O
@@ -20663,7 +20663,7 @@ Q1856030	131	26	.	.	.	O	punct	O
 Q1856030	142	0	There	there	EX	O	expl	O
 Q1856030	142	1	are	be	VBP	O	root	O
 Q1856030	142	2	only	only	RB	O	advmod	O
-Q1856030	142	3	three	_num_	CD	NUMBER	nummod_raver	O
+Q1856030	142	3	three	_num_	CD	NUMBER	nummod_raver	_YES_
 Q1856030	142	4	Ravers	raver	NNS	MISC	nsubj	O
 Q1856030	142	5	,	,	,	O	punct	O
 Q1856030	142	6	ancient	ancient	JJ	O	amod	O
@@ -20844,7 +20844,7 @@ Q1856030	201	0	The	the	DT	O	det	O
 Q1856030	201	1	novels	novel	NNS	O	nsubj	O
 Q1856030	201	2	have	have	VBP	O	aux	O
 Q1856030	201	3	discussed	discuss	VBN	O	root	O
-Q1856030	201	4	three	_num_	CD	NUMBER	nummod_law	O
+Q1856030	201	4	three	_num_	CD	NUMBER	nummod_law	_YES_
 Q1856030	201	5	Laws	law	NNS	O	dobj	O
 Q1856030	201	6	in	in	IN	O	case	O
 Q1856030	201	7	detail	detail	NN	O	nmod:in	O
@@ -21564,7 +21564,7 @@ Q1998865	93	19	.	.	.	O	punct	O
 Q1998865	94	0	Paladins	paladin	NNS	O	root	O
 Q1998865	94	1	of	of	IN	O	case	O
 Q1998865	94	2	Shannara	Shannara	NNP	O	nmod:of	O
-Q1998865	94	3	02	_num_	CD	NUMBER	nummod_Shannara	O
+Q1998865	94	3	02	_num_	CD	NUMBER	nummod_Shannara	_YES_
 Q1998865	94	4	--	--	:	O	punct	O
 Q1998865	94	5	The	the	DT	O	det	O
 Q1998865	94	6	Weapons	Weapons	NNP	O	compound	O
@@ -21607,7 +21607,7 @@ Q1998865	95	19	.	.	.	O	punct	O
 
 Q1998865	99	0	There	there	EX	O	expl	O
 Q1998865	99	1	are	be	VBP	O	root	O
-Q1998865	99	2	two	_num_	CD	NUMBER	nummod_story	O
+Q1998865	99	2	two	_num_	CD	NUMBER	nummod_story	_YES_
 Q1998865	99	3	other	other	JJ	O	amod	O
 Q1998865	99	4	short	short	JJ	O	amod	O
 Q1998865	99	5	stories	story	NNS	O	nsubj	O
@@ -21844,7 +21844,7 @@ Q2526986	0	3	is	be	VBZ	O	cop	O
 Q2526986	0	4	a	a	DT	O	det	O
 Q2526986	0	5	series	series	NN	O	root	O
 Q2526986	0	6	of	of	IN	O	case	O
-Q2526986	0	7	four	_num_	CD	NUMBER	nummod_novel	O
+Q2526986	0	7	four	_num_	CD	NUMBER	nummod_novel	_YES_
 Q2526986	0	8	science	science	NN	O	compound	O
 Q2526986	0	9	fiction	fiction	NN	O	compound	O
 Q2526986	0	10	novels	novel	NNS	O	nmod:of	O
@@ -21961,7 +21961,7 @@ Q2526986	5	46	.	.	.	O	punct	O
 Q2526986	6	0	Each	each	DT	O	nsubj	O
 Q2526986	6	1	of	of	IN	O	case	O
 Q2526986	6	2	the	the	DT	O	det	O
-Q2526986	6	3	four	_num_	CD	NUMBER	nummod_novel	O
+Q2526986	6	3	four	_num_	CD	NUMBER	nummod_novel	_YES_
 Q2526986	6	4	novels	novel	NNS	O	nmod:of	O
 Q2526986	6	5	relates	relate	VBZ	O	root	O
 Q2526986	6	6	Reith	_name_	NNP	PERSON	nmod:poss	O
@@ -22053,7 +22053,7 @@ Q2526986	41	11	scout-boat	scout-boat	NN	O	nmod:in	O
 Q2526986	41	12	.	.	.	O	punct	O
 
 Q2526986	43	0	The	the	DT	O	det	O
-Q2526986	43	1	four	_num_	CD	NUMBER	nummod_book	O
+Q2526986	43	1	four	_num_	CD	NUMBER	nummod_book	_YES_
 Q2526986	43	2	books	book	NNS	O	nsubj	O
 Q2526986	43	3	describe	describe	VBP	O	root	O
 Q2526986	43	4	the	the	DT	O	det	O
@@ -22128,7 +22128,7 @@ Q2526986	44	7	obstacles	obstacle	NNS	O	dobj	O
 Q2526986	44	8	of	of	IN	O	mark	O
 Q2526986	44	9	dealing	deal	VBG	O	acl:of	O
 Q2526986	44	10	with	with	IN	O	case	O
-Q2526986	44	11	four	_num_	CD	NUMBER	nummod_race	O
+Q2526986	44	11	four	_num_	CD	NUMBER	nummod_race	_YES_
 Q2526986	44	12	different	different	JJ	O	amod	O
 Q2526986	44	13	alien	alien	JJ	O	amod	O
 Q2526986	44	14	races	race	NNS	O	nmod:with	O
@@ -22315,7 +22315,7 @@ Q2601750	0	3	Blades	Blades	NNP	O	compound	O
 Q2601750	0	4	Trilogy	Trilogy	NNP	O	nsubj	O
 Q2601750	0	5	is	be	VBZ	O	cop	O
 Q2601750	0	6	a	a	DT	O	det	O
-Q2601750	0	7	LatinGreek_trilogy_3	_logy_	NN	O	root	O
+Q2601750	0	7	LatinGreek_trilogy_3	_logy_	NN	O	root	_YES_
 Q2601750	0	8	written	write	VBN	O	acl	O
 Q2601750	0	9	by	by	IN	O	case	O
 Q2601750	0	10	science	science	NN	O	compound	O
@@ -22337,7 +22337,7 @@ Q2601750	1	7	and	and	CC	O	cc	O
 Q2601750	1	8	is	be	VBZ	O	auxpass	O
 Q2601750	1	9	composed	compose	VBN	O	conj:and	O
 Q2601750	1	10	of	of	IN	O	case	O
-Q2601750	1	11	three	_num_	CD	NUMBER	nummod_book	O
+Q2601750	1	11	three	_num_	CD	NUMBER	nummod_book	_YES_
 Q2601750	1	12	books	book	NNS	O	nmod:of	O
 Q2601750	1	13	,	,	,	O	punct	O
 Q2601750	1	14	The	the	DT	O	det	O
@@ -22425,7 +22425,7 @@ Q2601750	23	8	first	first	JJ	ORDINAL	amod	O
 Q2601750	23	9	book	book	NN	O	dobj	O
 Q2601750	23	10	of	of	IN	O	case	O
 Q2601750	23	11	the	the	DT	O	det	O
-Q2601750	23	12	LatinGreek_trilogy_3	_logy_	NN	O	nmod:of	O
+Q2601750	23	12	LatinGreek_trilogy_3	_logy_	NN	O	nmod:of	_YES_
 Q2601750	23	13	.	.	.	O	punct	O
 
 Q2601750	25	0	Cassada	Cassada	NNP	O	nsubjpass	O
@@ -22443,7 +22443,7 @@ Q2601750	25	11	second	second	JJ	ORDINAL	amod	O
 Q2601750	25	12	novel	novel	NN	O	nmod:agent	O
 Q2601750	25	13	in	in	IN	O	case	O
 Q2601750	25	14	the	the	DT	O	det	O
-Q2601750	25	15	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	O
+Q2601750	25	15	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	_YES_
 Q2601750	25	16	,	,	,	O	punct	O
 Q2601750	25	17	praising	praise	VBG	O	xcomp	O
 Q2601750	25	18	the	the	DT	O	det	O
@@ -23061,7 +23061,7 @@ Q2642928	42	1	date	date	NN	O	nmod:to	O
 Q2642928	42	2	,	,	,	O	punct	O
 Q2642928	42	3	there	there	EX	O	expl	O
 Q2642928	42	4	are	be	VBP	O	root	O
-Q2642928	42	5	six	_num_	CD	NUMBER	nummod_novel	O
+Q2642928	42	5	six	_num_	CD	NUMBER	nummod_novel	_YES_
 Q2642928	42	6	novels	novel	NNS	O	nsubj	O
 Q2642928	42	7	in	in	IN	O	case	O
 Q2642928	42	8	the	the	DT	O	det	O
@@ -23217,7 +23217,7 @@ Q2704365	6	1	Volume	volume	NN	O	root	O
 Q2704365	6	2	2	_num_	CD	NUMBER	nummod_volume	O
 Q2704365	6	3	and	and	CC	O	cc	O
 Q2704365	6	4	Volume	volume	NN	O	conj:and	O
-Q2704365	6	5	3	_num_	CD	NUMBER	nummod_volume	O
+Q2704365	6	5	3	_num_	CD	NUMBER	nummod_volume	_YES_
 Q2704365	6	6	,	,	,	O	punct	O
 Q2704365	6	7	Foucault	foucault	NN	PERSON	compound	O
 Q2704365	6	8	addresses	address	NNS	O	root	O
@@ -23232,7 +23232,7 @@ Q2704365	6	16	Roman	roman	JJ	MISC	conj:and	O
 Q2704365	6	17	antiquity	antiquity	NN	O	nmod:in	O
 Q2704365	6	18	.	.	.	O	punct	O
 
-Q2704365	11	0	Three	_num_	CD	NUMBER	nummod_volume	O
+Q2704365	11	0	Three	_num_	CD	NUMBER	nummod_volume	_YES_
 Q2704365	11	1	volumes	volume	NNS	O	nsubjpass	O
 Q2704365	11	2	of	of	IN	O	case	O
 Q2704365	11	3	The	the	DT	O	det	O
@@ -23383,7 +23383,7 @@ Q2704365	14	50	Christianity	Christianity	NNP	O	nmod:in	O
 Q2704365	14	51	''	''	''	O	punct	O
 Q2704365	14	52	;	;	:	O	punct	O
 Q2704365	14	53	Volume	volume	NN	O	nsubj	O
-Q2704365	14	54	3	_num_	CD	NUMBER	nummod_volume	O
+Q2704365	14	54	3	_num_	CD	NUMBER	nummod_volume	_YES_
 Q2704365	14	55	,	,	,	O	punct	O
 Q2704365	14	56	The	the	DT	O	det	O
 Q2704365	14	57	Children	Children	NNP	ORGANIZATION	nmod:poss	O
@@ -23687,7 +23687,7 @@ Q2704365	37	1	notes	note	VBZ	O	root	O
 Q2704365	37	2	that	that	IN	O	mark	O
 Q2704365	37	3	this	this	DT	O	nsubj	O
 Q2704365	37	4	had	have	VBD	O	ccomp	O
-Q2704365	37	5	three	_num_	CD	NUMBER	nummod_effect	O
+Q2704365	37	5	three	_num_	CD	NUMBER	nummod_effect	_YES_
 Q2704365	37	6	major	major	JJ	O	amod	O
 Q2704365	37	7	effects	effect	NNS	O	dobj	O
 Q2704365	37	8	on	on	IN	O	case	O
@@ -23704,7 +23704,7 @@ Q2704365	41	6	===	===	FW	O	dep	O
 
 Q2704365	42	0	In	in	IN	O	case	O
 Q2704365	42	1	part	part	NN	O	nmod:in	O
-Q2704365	42	2	three	_num_	CD	NUMBER	nummod_part	O
+Q2704365	42	2	three	_num_	CD	NUMBER	nummod_part	_YES_
 Q2704365	42	3	,	,	,	O	punct	O
 Q2704365	42	4	Foucault	foucault	NN	PERSON	nsubj	O
 Q2704365	42	5	explores	explore	VBZ	O	root	O
@@ -24338,7 +24338,7 @@ Q2905261	0	2	All	all	DT	O	det	O
 Q2905261	0	3	Clear	clear	JJ	O	conj:and	O
 Q2905261	0	4	are	be	VBP	O	cop	O
 Q2905261	0	5	the	the	DT	O	det	O
-Q2905261	0	6	two	_num_	CD	NUMBER	nummod_volume	O
+Q2905261	0	6	two	_num_	CD	NUMBER	nummod_volume	_YES_
 Q2905261	0	7	volumes	volume	NNS	O	nsubj	O
 Q2905261	0	8	that	that	WDT	O	ref	O
 Q2905261	0	9	comprise	comprise	VBP	O	acl:relcl	O
@@ -24354,7 +24354,7 @@ Q2905261	0	19	Connie_Willis	_name_	NNP	PERSON	compound_nmod:by	O
 Q2905261	0	20	.	.	.	O	punct	O
 
 Q2905261	4	0	These	these	DT	O	det	O
-Q2905261	4	1	two	_num_	CD	NUMBER	nummod_volume	O
+Q2905261	4	1	two	_num_	CD	NUMBER	nummod_volume	_YES_
 Q2905261	4	2	volumes	volume	NNS	O	nsubj	O
 Q2905261	4	3	are	be	VBP	O	cop	O
 Q2905261	4	4	the	the	DT	O	det	O
@@ -24875,7 +24875,7 @@ Q2905261	160	19	marry	marry	VB	O	ccomp	O
 Q2905261	160	20	and	and	CC	O	cc	O
 Q2905261	160	21	raise	raise	VB	O	ccomp	O
 Q2905261	160	22	the	the	DT	O	det	O
-Q2905261	160	23	two	_num_	CD	NUMBER	nummod_orphan	O
+Q2905261	160	23	two	_num_	CD	NUMBER	nummod_orphan	_YES_
 Q2905261	160	24	orphans	orphan	NNS	O	dobj	O
 Q2905261	160	25	together	together	RB	O	advmod	O
 Q2905261	160	26	.	.	.	O	punct	O
@@ -25090,7 +25090,7 @@ Q2905261	174	64	says	say	VBZ	O	dep	O
 Q2905261	174	65	-RRB-	-rrb-	-RRB-	O	punct	O
 Q2905261	174	66	consisting	consist	VBG	O	acl	O
 Q2905261	174	67	of	of	IN	O	case	O
-Q2905261	174	68	two	_num_	CD	NUMBER	nummod_word	O
+Q2905261	174	68	two	_num_	CD	NUMBER	nummod_word	_YES_
 Q2905261	174	69	words	word	NNS	O	nmod:of	O
 Q2905261	174	70	which	which	WDT	O	ref	O
 Q2905261	174	71	begin	begin	VBP	O	acl:relcl	O
@@ -25134,7 +25134,7 @@ Q2905261	180	27	's	be	VBZ	O	cop	O
 Q2905261	180	28	about	about	IN	O	case	O
 Q2905261	180	29	World	World	NNP	MISC	compound	O
 Q2905261	180	30	War	War	NNP	MISC	parataxis	O
-Q2905261	180	31	2	_num_	CD	NUMBER	nummod_War	O
+Q2905261	180	31	2	_num_	CD	NUMBER	nummod_War	_YES_
 Q2905261	180	32	,	,	,	O	punct	O
 Q2905261	180	33	and	and	CC	O	cc	O
 Q2905261	180	34	I	I	PRP	O	nsubj	O
@@ -25286,7 +25286,7 @@ Q2905261	198	20	that	that	IN	O	mark	O
 Q2905261	198	21	it	it	PRP	O	nsubj	O
 Q2905261	198	22	's	be	VBZ	O	aux	O
 Q2905261	198	23	taking	take	VBG	O	ccomp	O
-Q2905261	198	24	two	_num_	CD	NUMBER	nummod_volume	O
+Q2905261	198	24	two	_num_	CD	NUMBER	nummod_volume	_YES_
 Q2905261	198	25	volumes	volume	NNS	O	dobj	O
 Q2905261	198	26	to	to	TO	O	mark	O
 Q2905261	198	27	tell	tell	VB	O	advcl:to	O
@@ -25608,7 +25608,7 @@ Q2905261	208	13	n't	not	RB	O	neg	O
 Q2905261	208	14	have	have	VB	O	dep	O
 Q2905261	208	15	to	to	TO	O	mark	O
 Q2905261	208	16	encompass	encompass	VB	O	xcomp	O
-Q2905261	208	17	two	_num_	CD	NUMBER	nummod_novel	O
+Q2905261	208	17	two	_num_	CD	NUMBER	nummod_novel	_YES_
 Q2905261	208	18	novels	novel	NNS	O	dobj	O
 Q2905261	208	19	.	.	.	O	punct	O
 
@@ -25855,7 +25855,7 @@ Q3480545	0	0	The	the	DT	O	det	O
 Q3480545	0	1	Sellswords	Sellswords	NNPS	MISC	nsubj	O
 Q3480545	0	2	is	be	VBZ	O	cop	O
 Q3480545	0	3	a	a	DT	O	det	O
-Q3480545	0	4	LatinGreek_trilogy_3	_logy_	NN	O	root	O
+Q3480545	0	4	LatinGreek_trilogy_3	_logy_	NN	O	root	_YES_
 Q3480545	0	5	of	of	IN	O	case	O
 Q3480545	0	6	fantasy	fantasy	NN	O	compound	O
 Q3480545	0	7	novels	novel	NNS	O	nmod:of	O
@@ -25882,7 +25882,7 @@ Q3480545	0	29	.	.	.	O	punct	O
 
 Q3480545	1	0	It	it	PRP	O	nsubj	O
 Q3480545	1	1	contains	contain	VBZ	O	root	O
-Q3480545	1	2	three	_num_	CD	NUMBER	nummod_book	O
+Q3480545	1	2	three	_num_	CD	NUMBER	nummod_book	_YES_
 Q3480545	1	3	books	book	NNS	O	dobj	O
 Q3480545	1	4	,	,	,	O	punct	O
 Q3480545	1	5	Servant	servant	NN	O	appos	O
@@ -25949,7 +25949,7 @@ Q3480545	4	11	,	,	,	O	punct	O
 Q3480545	4	12	in	in	IN	O	case	O
 Q3480545	4	13	The	the	DT	O	det	O
 Q3480545	4	14	Sellswords	Sellswords	NNPS	O	compound	O
-Q3480545	4	15	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	O
+Q3480545	4	15	LatinGreek_trilogy_3	_logy_	NN	O	nmod:in	_YES_
 Q3480545	4	16	they	they	PRP	O	nsubj	O
 Q3480545	4	17	are	be	VBP	O	cop	O
 Q3480545	4	18	the	the	DT	O	det	O
@@ -26075,7 +26075,7 @@ Q3656893	14	3	and	and	CC	O	cc	O
 Q3656893	14	4	Schizophrenia	Schizophrenia	NNP	O	nmod:of	O
 Q3656893	14	5	.	.	.	O	punct	O
 
-Q3656893	15	0	2	_num_	CD	NUMBER	nummod_vol	O
+Q3656893	15	0	2	_num_	CD	NUMBER	nummod_vol	_YES_
 Q3656893	15	1	vols	vol	NNS	O	root	O
 Q3656893	15	2	.	.	.	O	punct	O
 
@@ -26086,7 +26086,7 @@ Q3656893	28	3	and	and	CC	O	cc	O
 Q3656893	28	4	Schizophrenia	Schizophrenia	NNP	O	nmod:of	O
 Q3656893	28	5	.	.	.	O	punct	O
 
-Q3656893	29	0	2	_num_	CD	NUMBER	nummod_vol	O
+Q3656893	29	0	2	_num_	CD	NUMBER	nummod_vol	_YES_
 Q3656893	29	1	vols	vol	NNS	O	root	O
 Q3656893	29	2	.	.	.	O	punct	O
 
@@ -26117,7 +26117,7 @@ Q4069404	0	8	the	the	DT	O	det	O
 Q4069404	0	9	central	central	JJ	O	amod	O
 Q4069404	0	10	character	character	NN	O	acl:relcl	O
 Q4069404	0	11	of	of	IN	O	case	O
-Q4069404	0	12	eight	_num_	CD	NUMBER	nummod_novel	O
+Q4069404	0	12	eight	_num_	CD	NUMBER	nummod_novel	_YES_
 Q4069404	0	13	novels	novel	NNS	O	nmod:of	O
 Q4069404	0	14	by	by	IN	O	case	O
 Q4069404	0	15	the	the	DT	O	det	O
@@ -26382,7 +26382,7 @@ Q4404357	15	29	;	;	:	O	punct	O
 Q4404357	15	30	audio	audio	NN	O	compound	O
 Q4404357	15	31	book	book	NN	O	dep	O
 Q4404357	15	32	,	,	,	O	punct	O
-Q4404357	15	33	5	_num_	CD	NUMBER	nummod_book	O
+Q4404357	15	33	5	_num_	CD	NUMBER	nummod_book	_YES_
 Q4404357	15	34	.	.	.	O	punct	O
 
 Q4404357	17	0	Book	book	VB	O	compound	O
@@ -26869,7 +26869,7 @@ Q4404357	50	27	;	;	:	O	punct	O
 Q4404357	50	28	audio	audio	NN	O	compound	O
 Q4404357	50	29	book	book	NN	O	dep	O
 Q4404357	50	30	,	,	,	O	punct	O
-Q4404357	50	31	5	_num_	CD	NUMBER	nummod_book	O
+Q4404357	50	31	5	_num_	CD	NUMBER	nummod_book	_YES_
 Q4404357	50	32	.	.	.	O	punct	O
 
 Q4404357	52	0	Book	book	VB	O	compound	O
@@ -27630,7 +27630,7 @@ Q4571857	7	15	acts	act	NNS	O	nmod:into	O
 Q4571857	7	16	:	:	:	O	punct	O
 
 Q4571857	8	0	Act	Act	NNP	O	root	O
-Q4571857	8	1	one	_num_	CD	NUMBER	nummod_Act	O
+Q4571857	8	1	one	_num_	CD	NUMBER	nummod_Act	_YES_
 Q4571857	8	2	:	:	:	O	punct	O
 Q4571857	8	3	Deverry	deverry	JJ	PERSON	dep	O
 
@@ -28510,7 +28510,7 @@ Q4898254	9	35	each	each	DT	O	nsubj	O
 Q4898254	9	36	of	of	IN	O	case	O
 Q4898254	9	37	which	which	WDT	O	ref	O
 Q4898254	9	38	covers	cover	VBZ	O	acl:relcl	O
-Q4898254	9	39	one	_num_	CD	NUMBER	nummod_year	O
+Q4898254	9	39	one	_num_	CD	NUMBER	nummod_year	_YES_
 Q4898254	9	40	high	high	JJ	O	amod	O
 Q4898254	9	41	school	school	NN	O	compound	O
 Q4898254	9	42	year	year	NN	DURATION	nmod:tmod	O
@@ -28653,10 +28653,10 @@ Q4898254	42	30	on	on	IN	O	case	O
 Q4898254	42	31	the	the	DT	O	det	O
 Q4898254	42	32	piano	piano	NN	O	nmod:on	O
 Q4898254	42	33	,	,	,	O	punct	O
-Q4898254	42	34	one	_num_	CD	NUMBER	nummod_waltz	O
+Q4898254	42	34	one	_num_	CD	NUMBER	nummod_waltz	_YES_
 Q4898254	42	35	waltz	waltz	NN	O	appos	O
 Q4898254	42	36	and	and	CC	O	cc	O
-Q4898254	42	37	one	_num_	CD	NUMBER	nummod_two-step	O
+Q4898254	42	37	one	_num_	CD	NUMBER	nummod_two-step	_YES_
 Q4898254	42	38	two-step	two-step	JJ	O	appos	O
 Q4898254	42	39	.	.	.	O	punct	O
 
@@ -29184,7 +29184,7 @@ Q6536298	6	10	uncle	uncle	NN	O	nsubj	O
 Q6536298	6	11	is	be	VBZ	O	aux	O
 Q6536298	6	12	now	now	RB	DATE	advmod	O
 Q6536298	6	13	living	live	VBG	O	acl:relcl	O
-Q6536298	6	14	1	_num_	CD	NUMBER	nummod_time	O
+Q6536298	6	14	1	_num_	CD	NUMBER	nummod_time	_YES_
 Q6536298	6	15	time	time	NN	O	nsubj	O
 Q6536298	6	16	belonged	belong	VBD	O	ccomp	O
 Q6536298	6	17	to	to	TO	O	case	O
@@ -29204,7 +29204,7 @@ Q6536298	6	31	Selenna	_name_	NNP	PERSON	xcomp	O
 Q6536298	6	32	.	.	.	O	punct	O
 
 Q6536298	11	0	At	at	IN	O	case	O
-Q6536298	11	1	one	_num_	CD	NUMBER	nummod_point	O
+Q6536298	11	1	one	_num_	CD	NUMBER	nummod_point	_YES_
 Q6536298	11	2	point	point	NN	O	nmod:at	O
 Q6536298	11	3	in	in	IN	O	case	O
 Q6536298	11	4	the	the	DT	O	det	O
@@ -29257,7 +29257,7 @@ Q6536298	59	11	Brad_Strickland	_name_	NNP	PERSON	compound_nmod:agent	O
 Q6536298	59	12	.	.	.	O	punct	O
 
 Q7004501	1	0	The	the	DT	O	det	O
-Q7004501	1	1	LatinGreek_tetralogy_4	_logy_	NN	O	nsubj	O
+Q7004501	1	1	LatinGreek_tetralogy_4	_logy_	NN	O	nsubj	_YES_
 Q7004501	1	2	begins	begin	VBZ	O	root	O
 Q7004501	1	3	with	with	IN	O	case	O
 Q7004501	1	4	Gauntlgrym	gauntlgrym	NN	MISC	nmod:with	O
@@ -29294,7 +29294,7 @@ Q7004501	2	15	Do'Urden	Do'Urden	NNP	O	appos	O
 Q7004501	2	16	.	.	.	O	punct	O
 
 Q7004501	4	0	This	this	DT	O	det	O
-Q7004501	4	1	LatinGreek_tetralogy_4	_logy_	NN	O	nsubjpass	O
+Q7004501	4	1	LatinGreek_tetralogy_4	_logy_	NN	O	nsubjpass	_YES_
 Q7004501	4	2	is	be	VBZ	O	auxpass	O
 Q7004501	4	3	preceded	precede	VBN	O	root	O
 Q7004501	4	4	by	by	IN	O	case	O
@@ -29361,7 +29361,7 @@ Q7004501	40	7	bestseller	bestseller	NN	O	compound	O
 Q7004501	40	8	list	list	NN	O	nmod:on	O
 Q7004501	40	9	at	at	IN	O	case	O
 Q7004501	40	10	number	number	NN	O	nmod:at	O
-Q7004501	40	11	4	_num_	CD	NUMBER	nummod_number	O
+Q7004501	40	11	4	_num_	CD	NUMBER	nummod_number	_YES_
 Q7004501	40	12	.	.	.	O	punct	O
 
 Q7004501	41	0	A	a	DT	O	det	O
@@ -29823,7 +29823,7 @@ Q7666221	0	29	to	to	TO	O	case	O
 Q7666221	0	30	a	a	DT	O	det	O
 Q7666221	0	31	series	series	NN	O	nmod:to	O
 Q7666221	0	32	of	of	IN	O	case	O
-Q7666221	0	33	23	_num_	CD	NUMBER	nummod_novel	O
+Q7666221	0	33	23	_num_	CD	NUMBER	nummod_novel	_YES_
 Q7666221	0	34	fantasy	fantasy	NN	O	compound	O
 Q7666221	0	35	novels	novel	NNS	O	nmod:of	O
 Q7666221	0	36	written	write	VBN	O	acl	O
@@ -30044,7 +30044,7 @@ Q7721753	4	3	series	series	NN	O	nsubjpass	O
 Q7721753	4	4	was	be	VBD	O	auxpass	O
 Q7721753	4	5	published	publish	VBN	O	root	O
 Q7721753	4	6	in	in	IN	O	case	O
-Q7721753	4	7	two	_num_	CD	NUMBER	nummod_volume	O
+Q7721753	4	7	two	_num_	CD	NUMBER	nummod_volume	_YES_
 Q7721753	4	8	omnibus	omnibus	JJ	O	amod	O
 Q7721753	4	9	volumes	volume	NNS	O	nmod:in	O
 Q7721753	4	10	as	as	IN	O	case	O
@@ -30119,7 +30119,7 @@ Q7721753	6	16	''	''	''	O	punct	O
 Q7721753	6	17	as	as	IN	O	case	O
 Q7721753	6	18	``	``	``	O	punct	O
 Q7721753	6	19	grades	grade	NNS	O	nmod:as	O
-Q7721753	6	20	2	_num_	CD	NUMBER	nummod_grade	O
+Q7721753	6	20	2	_num_	CD	NUMBER	nummod_grade	_YES_
 Q7721753	6	21	--	--	:	O	punct	O
 Q7721753	6	22	5	_num_	CD	NUMBER	nummod_grade	O
 Q7721753	6	23	''	''	''	O	punct	O
@@ -30512,7 +30512,7 @@ Q7721753	59	0	Its	its	PRP$	O	nmod:poss	O
 Q7721753	59	1	records	record	NNS	O	root	O
 Q7721753	59	2	for	for	IN	O	case	O
 Q7721753	59	3	those	those	DT	O	det	O
-Q7721753	59	4	two	_num_	CD	NUMBER	nummod_book	O
+Q7721753	59	4	two	_num_	CD	NUMBER	nummod_book	_YES_
 Q7721753	59	5	books	book	NNS	O	nmod:for	O
 Q7721753	59	6	alone	alone	RB	O	advmod	O
 Q7721753	59	7	credit	credit	NN	O	compound	O
@@ -30689,7 +30689,7 @@ Q7727861	0	3	are	be	VBP	O	cop	O
 Q7727861	0	4	a	a	DT	O	det	O
 Q7727861	0	5	series	series	NN	O	root	O
 Q7727861	0	6	of	of	IN	O	case	O
-Q7727861	0	7	thirteen	_num_	CD	NUMBER	nummod_novel	O
+Q7727861	0	7	thirteen	_num_	CD	NUMBER	nummod_novel	_YES_
 Q7727861	0	8	novels	novel	NNS	O	nmod:of	O
 Q7727861	0	9	published	publish	VBN	O	acl	O
 Q7727861	0	10	between	between	IN	O	case	O
@@ -31433,7 +31433,7 @@ Q16325203	0	9	an	a	DT	O	det	O
 Q16325203	0	10	autobiographical	autobiographical	JJ	O	amod	O
 Q16325203	0	11	series	series	NN	O	root	O
 Q16325203	0	12	of	of	IN	O	case	O
-Q16325203	0	13	six	_num_	CD	NUMBER	nummod_novel	O
+Q16325203	0	13	six	_num_	CD	NUMBER	nummod_novel	_YES_
 Q16325203	0	14	novels	novel	NNS	O	nmod:of	O
 Q16325203	0	15	written	write	VBN	O	acl	O
 Q16325203	0	16	in	in	IN	O	case	O
@@ -31576,7 +31576,7 @@ Q16325203	27	3	planning	plan	VBG	O	root	O
 Q16325203	27	4	to	to	TO	O	mark	O
 Q16325203	27	5	finish	finish	VB	O	xcomp	O
 Q16325203	27	6	the	the	DT	O	det	O
-Q16325203	27	7	six	_num_	CD	NUMBER	nummod_volume	O
+Q16325203	27	7	six	_num_	CD	NUMBER	nummod_volume	_YES_
 Q16325203	27	8	volumes	volume	NNS	O	dobj	O
 Q16325203	27	9	within	within	IN	O	case	O
 Q16325203	27	10	the	the	DT	DATE	det	O
@@ -32183,7 +32183,7 @@ Q16934308	6	6	British	british	JJ	O	amod	O
 Q16934308	6	7	Empire	empire	NN	O	nmod:of	O
 Q16934308	6	8	,	,	,	O	punct	O
 Q16934308	6	9	a	a	DT	O	det	O
-Q16934308	6	10	one	_num_	CD	NUMBER	nummod_work	O
+Q16934308	6	10	one	_num_	CD	NUMBER	nummod_work	_YES_
 Q16934308	6	11	volume	volume	NN	O	compound	O
 Q16934308	6	12	work	work	NN	O	appos	O
 Q16934308	6	13	edited	edit	VBN	O	acl	O
@@ -32227,7 +32227,7 @@ Q16934308	18	5	.	.	.	O	punct	O
 
 Q16934308	28	0	VII	VII	NNP	O	compound	O
 Q16934308	28	1	Part	Part	NNP	O	root	O
-Q16934308	28	2	1	_num_	CD	NUMBER	nummod_Part	O
+Q16934308	28	2	1	_num_	CD	NUMBER	nummod_Part	_YES_
 Q16934308	28	3	.	.	.	O	punct	O
 
 Q16934308	33	0	VII	VII	NNP	O	compound	O
