@@ -138,6 +138,8 @@ public class FeatureExtractionForCRFTransform {
 	    				transformed = trans.transform(s.text(), false, false, true, true);
 	    				sent = new Sentence(transformed);
 	    				
+//	    				System.out.println(transformed);
+	    				
 	    				if (sentExtraction.containNumbers(transformed, sent, false, false)) {
 	    					//filtered.add(sent.text());
 	    					

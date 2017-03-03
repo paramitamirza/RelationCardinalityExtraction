@@ -65,6 +65,12 @@ public class Transform {
 		String transformed;
 		String sentence;
 		
+		
+		///Problematic
+//		sentence = "";
+//		transformed = transform.transform(sentence, true, true, true, true);
+//		System.out.println(sentence + " --> " + transformed);
+		
 		///test!!!
 		sentence = "John has an ugly son and a beautiful daughter.";
 		transformed = transform.transform(sentence, true, true, true, true);
@@ -130,9 +136,6 @@ public class Transform {
 		transformed = transform.transform(sentence, true, true, true, true);
 		System.out.println(sentence + " --> " + transformed);
 		
-		sentence = "One novel and one tale can not be placed in sequence, and one novel is never written in one night.";
-		transformed = transform.transform(sentence, true, true, true, true);
-		System.out.println(sentence + " --> " + transformed);
 	}
 	
 	private int getDetAny(Sentence sent, int objIdx) {
@@ -351,6 +354,7 @@ public class Transform {
 			gov = sent.governor(negFound).get();
 			wordList.clear();
 			wordList.addAll(sent.words());
+			negRemoved = false;
 			
 			if (sent.posTag(gov).startsWith("V")) {	//if gov is a verb, let's look for the object!
 				if (sent.word(negFound).equals("never")) {
@@ -460,6 +464,7 @@ public class Transform {
 			if (!negRemoved) {
 				skipped.add(negFound);
 			}
+			
 			
 			transformed = StringUtils.join(wordList, " ");	
 			sent = new Sentence(transformed);
