@@ -4,15 +4,18 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.json.*;
 
@@ -89,6 +92,11 @@ public class FeatureExtractionForCRFTransform {
 		
 		Transform trans = new Transform();
 		
+		BufferedWriter bw = new BufferedWriter(
+                new OutputStreamWriter(
+                        new GZIPOutputStream(new FileOutputStream(this.getInputCsvFile().replace(".csv", ".jsonl.gz")))
+                    ));
+		
 		System.out.println("Generate feature file (in column format) for CRF++...");
 		while (line != null) {
 			
@@ -115,9 +123,25 @@ public class FeatureExtractionForCRFTransform {
 				
 				if (articleText.size() > 0) {
 					
+					JSONObject obj = new JSONObject();
+					obj.put("wikidata-id", wikidataId);
+					obj.put("wikidata-label", label);
+					obj.put("count", count);
+
+					JSONArray list = new JSONArray();
+					for (String s : articleText) {
+						
+					}
+					obj.put("article", list);
+//					json.write(obj.toString() + "\n");
+					bw.write(obj.toString());
+					bw.newLine();
+					
 					numOfTriples = Integer.parseInt(count);
 			
 					for (int j=0; j<articleText.size(); j++) {
+						
+						list.put(articleText.get(j));
 								
 //						System.out.println(articleText.get(j));
 						Sentence sent;
@@ -395,6 +419,11 @@ public class FeatureExtractionForCRFTransform {
 ////								}
 //							}		
 					}
+					
+					obj.put("article", list);
+//					json.write(obj.toString() + "\n");
+					bw.write(obj.toString());
+					bw.newLine();
 				}
 	        }
 			
@@ -403,6 +432,7 @@ public class FeatureExtractionForCRFTransform {
 		}
 		
 		br.close();
+		bw.close();
 		System.out.println(numSent);
 		
 	}
