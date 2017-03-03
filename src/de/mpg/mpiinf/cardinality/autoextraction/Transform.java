@@ -235,6 +235,8 @@ public class Transform {
 	public String transform(String sentence, boolean articles, boolean negative, boolean otherConcepts, boolean latinGreek) throws IOException {
 		String line, transformed = sentence, term;
 		
+//		System.out.println(sentence);
+		
 		if (otherConcepts) {
 			BufferedReader br = new BufferedReader(new FileReader(numberRelatedTermsPath));
 			line = br.readLine();
