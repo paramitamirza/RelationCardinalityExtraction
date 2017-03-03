@@ -78,8 +78,6 @@ public class FeatureExtractionForCRFTransform {
 		
 		BufferedReader br = new BufferedReader(new FileReader(this.getInputCsvFile()));
 		line = br.readLine();
-		JSONObject obj;
-		JSONArray lines;
 		int numOfTriples = -99;
 		PrintWriter outfile;
 		
