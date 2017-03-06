@@ -42,5 +42,12 @@
 	    <artifactId>jena-arq</artifactId>
 	    <version>3.2.0</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/de.tudarmstadt.ukp.wikipedia/de.tudarmstadt.ukp.wikipedia.datamachine -->
+	<dependency>
+	    <groupId>de.tudarmstadt.ukp.wikipedia</groupId>
+	    <artifactId>de.tudarmstadt.ukp.wikipedia.datamachine</artifactId>
+	    <version>1.1.0</version>
+	</dependency>
+	
   </dependencies>
 </project>
