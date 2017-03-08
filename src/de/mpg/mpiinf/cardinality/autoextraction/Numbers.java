@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.stanford.nlp.simple.Sentence;
+
 public class Numbers {
 	
 	private static String[] digitsArr = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
@@ -121,6 +123,49 @@ public class Numbers {
 		} else {
 			return false;
 		}
+	}
+	
+	public static boolean containNumbers(String transformed, Sentence sent, 
+			boolean ordinal, boolean namedEntity) {
+		
+		if (transformed.contains("LatinGreek_")) {
+			return true;
+			
+		} else {
+			boolean entityFound = false, numberFound = false, ordinalFound = false;
+			for (int i=0; i<sent.words().size(); i++) {
+//				System.err.println(sent.word(i) + "\t" + sent.posTag(i) + "\t" + sent.nerTag(i));
+				if (sent.posTag(i).equals("CD")
+						&& !sent.word(i).contains("=")
+						&& !sent.nerTag(i).equals("MONEY")
+						&& !sent.nerTag(i).equals("PERCENT")
+						&& !sent.nerTag(i).equals("DATE")
+						&& !sent.nerTag(i).equals("TIME")
+						&& !sent.nerTag(i).equals("DURATION")
+						&& !sent.nerTag(i).equals("SET")) {
+					numberFound = true;
+					break;
+				} else if (ordinal && sent.posTag(i).equals("JJ")
+						&& sent.nerTag(i).equals("ORDINAL")) {
+					ordinalFound = true;
+					break;
+				} else if (namedEntity && sent.posTag(i).equals("NNP")
+						&& (sent.nerTag(i).equals("PERSON")
+								|| sent.nerTag(i).equals("LOCATION")
+								|| sent.nerTag(i).equals("ORGANIZATION"))) {
+					entityFound = true;
+					break;
+				}
+			}
+			if (ordinal && (numberFound || ordinalFound)) {
+				return true;
+			} else if (namedEntity && (numberFound || entityFound)) {
+				return true;
+			} else if (numberFound) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

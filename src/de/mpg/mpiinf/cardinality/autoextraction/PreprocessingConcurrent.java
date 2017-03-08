@@ -8,7 +8,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-public class Preprocessing {
+public class PreprocessingConcurrent {
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -92,10 +92,7 @@ public class Preprocessing {
 	            return;
 	            
 			} else {
-//				FeatureExtractionForCRF featExtraction = new FeatureExtractionForCRF(inputJsonFile, inputRandomCsvFile, relName, dirFeature);
-//				FeatureExtractionForCRFTransform featExtraction = new FeatureExtractionForCRFTransform(inputCsvFile, inputRandomCsvFile, relName, dirFeature);
-				
-				FeatureExtraction featExtraction = new FeatureExtraction(inputCsvFile, inputRandomCsvFile, relName, dirFeature);
+				FeatureExtractionConcurrent featExtraction = new FeatureExtractionConcurrent(inputCsvFile, inputRandomCsvFile, relName, dirFeature);
 				
 				boolean nummod = cmd.hasOption("d");
 				boolean compositional = cmd.hasOption("c");
