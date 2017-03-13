@@ -107,6 +107,9 @@ public class Evaluation {
 	public void evaluate(String csvPath, String resultPath, String[] labels, String outPath,
 			boolean addSameSentence, boolean addDiffSentence) throws IOException {
 		
+		long startTime = System.currentTimeMillis();
+		System.out.print("Evaluate CRF++ output file... ");
+		
 		//Read .csv file
 		BufferedReader br; String line;
 		Map<String, Integer> instanceNum = new HashMap<String, Integer>();
@@ -114,8 +117,8 @@ public class Evaluation {
 		br = new BufferedReader(new FileReader(csvPath));
 		line = br.readLine();
 		while (line != null) {
-			instanceNum.put(line.split(",")[0], Integer.parseInt(line.split(",")[2]));
-			instanceLabel.put(line.split(",")[0], line.split(",")[1]);
+			instanceNum.put(line.split(",")[0], Integer.parseInt(line.split(",")[1]));
+			instanceLabel.put(line.split(",")[0], line.split(",")[2]);
 			line = br.readLine();
 		}
 		br.close();
@@ -133,7 +136,7 @@ public class Evaluation {
 		
 		int tp = 0;
 		int fp = 0;
-		
+		int total = 0;
 		double threshold = 0.1;
 		
 		String[] cols;
@@ -239,16 +242,16 @@ public class Evaluation {
 					String wikiLabel = instanceLabel.get(entityId);
 					
 					if (bw != null) {
-						bw.write(entityId + ",https://en.wikipedia.org/wiki/" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
+						bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
 						bw.newLine();
-					} else {
-						System.out.println(entityId + ",https://en.wikipedia.org/wiki/" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
+//					} else {
+//						System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
 					}
 					if (numChild > 0) {
 						if (numChild == predictedCardinal) tp ++;
 						else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
 					}
-					
+					total ++;
 					entities.add(entityId);
 					
 					predictedCardinal = 0;
@@ -279,12 +282,18 @@ public class Evaluation {
 		br.close();
 		if (bw != null) bw.close();
 		
+		long endTime   = System.currentTimeMillis();
+		float totalTime = (endTime - startTime)/(float)1000;
+		System.out.println("done [ " + totalTime + " sec].");
+		
 		double precision = (double)tp / (tp + fp);
 		double recall = (double)tp / instanceNum.size();
 		double fscore = (2 * precision * recall) / (precision + recall);
-		System.out.println("Precision: " + precision);
-		System.out.println("Recall: " + recall);
-		System.out.println("F1-score: " + fscore);
+		System.out.println("tp\tfp\ttotal\tprec\trecall\tf1-score");
+		System.out.println(tp + "\t" + fp + "\t" + total  
+				+ "\t" + String.format("%.4f", precision)
+				+ "\t" + String.format("%.4f", recall)
+				+ "\t" + String.format("%.4f", fscore));
 	}
 	
 	//TODO Change the key, should be the index

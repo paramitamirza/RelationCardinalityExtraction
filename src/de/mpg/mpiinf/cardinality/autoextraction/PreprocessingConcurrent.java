@@ -32,43 +32,25 @@ public class PreprocessingConcurrent {
 //		String inputCsvFile = "./data/auto_extraction/wikidata_sample.csv";
 		String inputCsvFile = cmd.getOptionValue("input");
 		
-		//If input CSV file doesn't have Wikipedia labels for each Wikidata ID
-		if (cmd.hasOption("l")) {
-			if (cmd.hasOption("w")) {
-				String wikipediaLinkFile = cmd.getOptionValue("wikiurl");
-				AddWikipediaTitle addWikiTitle = new AddWikipediaTitle(inputCsvFile, wikipediaLinkFile);
-				
-				int nRandom = 0;
-				if (cmd.hasOption("n")) nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
-				addWikiTitle.append(nRandom);
-			} else {
-				System.err.println("Mapping file between Wikipedia English URL and Wikidata entity (.txt.gz) is missing!");
-				System.err.println("-- Specify -w [wiki-mapping file (.txt.gz) path]");
+		//Set Wikipedia resource (Wikipedia dump in plain text, index and mapping files) directory
+		WikipediaArticle wiki;
+		if (cmd.hasOption("w")) {
+			String wikipediaDir = cmd.getOptionValue("wikipedia");
+			wiki = new WikipediaArticle(wikipediaDir, wikipediaDir + "zindex/", wikipediaDir + "wikibase_item.txt.gz");
+			
+		} else {
+			System.err.println("Wikipedia resource directory path is missing!");
+			System.err.println("-- Specify -w [Wikipedia resource directory path]");
 
-	            System.exit(1);
-	            return;
-			}
-		}
-		
-		//Extract Wikipedia sentences (containing numbers) per Wikidata instance
-		if (cmd.hasOption("s")) {
-			String outputJsonFile = inputCsvFile.replace(".csv", ".jsonl.gz");
-			SentenceExtractionFromWikipedia sentExtraction = new SentenceExtractionFromWikipedia(inputCsvFile, outputJsonFile);
-			sentExtraction.extractSentences();
+            System.exit(1);
+            return;
 		}
 		
 		//Generate feature file (in column format) for CRF++
 		if (cmd.hasOption("f")) {
-			String inputJsonFile = inputCsvFile.replace(".csv", ".jsonl.gz");
 			String inputRandomCsvFile = null;
-			
-			if (cmd.hasOption("n")) {
-				int nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
-				inputRandomCsvFile = inputCsvFile.replace(".csv", "_random"+nRandom+".csv");
-			} else {
-				if (cmd.hasOption("r")) {
-					inputRandomCsvFile = cmd.getOptionValue("random");
-				}
+			if (cmd.hasOption("r")) {
+				inputRandomCsvFile = cmd.getOptionValue("random");
 			}
 			String relName = cmd.getOptionValue("relname");
 			
@@ -77,14 +59,7 @@ public class PreprocessingConcurrent {
 				dirFeature = cmd.getOptionValue("output");
 			} 
 			
-			if (inputRandomCsvFile == null) {
-				System.err.println("Input random file (.csv) path for testing is missing!");
-				System.err.println("-- Either specify -n [num_random] or -r [random file (.csv) path]");
-
-	            System.exit(1);
-	            return;
-	            
-			} else if (dirFeature == null) {
+			if (dirFeature == null) {
 				System.err.println("Output directory of feature files (in column format) for CRF++ is missing!");
 				System.err.println("-- Specify -o [dir_path]");
 
@@ -92,13 +67,28 @@ public class PreprocessingConcurrent {
 	            return;
 	            
 			} else {
-				FeatureExtractionConcurrent featExtraction = new FeatureExtractionConcurrent(inputCsvFile, inputRandomCsvFile, relName, dirFeature);
+				FeatureExtractionConcurrent featExtraction;
+				if (inputRandomCsvFile != null)
+					featExtraction = new FeatureExtractionConcurrent(inputCsvFile, inputRandomCsvFile, relName, dirFeature);
+				else {
+					if (cmd.hasOption("n")) {
+						int nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
+						featExtraction = new FeatureExtractionConcurrent(inputCsvFile, nRandom, relName, dirFeature);
+					} else {
+						featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
+					}
+				}
+				
+				if (cmd.hasOption("a")) {
+					wiki.appendCurId(inputCsvFile);
+					wiki.destroyMapping();
+				}
 				
 				boolean nummod = cmd.hasOption("d");
 				boolean compositional = cmd.hasOption("c");
 				int threshold = 0;
 				if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
-				featExtraction.run(nummod, compositional, threshold);
+				featExtraction.run(wiki, nummod, compositional, threshold);
 			}
 		}
 		
@@ -115,13 +105,13 @@ public class PreprocessingConcurrent {
 		relName.setRequired(true);
 		options.addOption(relName);
 		
-		Option addLinks = new Option("l", "links", false, "Add Wikipedia title page for WikiURL");
-		addLinks.setRequired(false);
-		options.addOption(addLinks);
-		
-		Option enLinks = new Option("w", "wikiurl", true, "Wikipedia English URL of Wikidata entity");
-		enLinks.setRequired(false);
+		Option enLinks = new Option("w", "wikipedia", true, "Wikipedia resources directory");
+		enLinks.setRequired(true);
 		options.addOption(enLinks);
+		
+		Option appendCurId = new Option("a", "curid", false, "Append input file (.csv) with Wikipedia curId for each Wikidata instance");
+		appendCurId.setRequired(false);
+		options.addOption(appendCurId);
 		
 		Option random = new Option("n", "randomize", true, "Generate n random instances for testing");
 		random.setRequired(false);
@@ -130,10 +120,6 @@ public class PreprocessingConcurrent {
 		Option randomFile = new Option("r", "random", true, "Input random file (.csv) path for testing");
 		randomFile.setRequired(false);
 		options.addOption(randomFile);
-		
-		Option extractSent = new Option("s", "sentences", false, "Extract Wikipedia sentences (containing numbers) per Wikidata instance");
-		extractSent.setRequired(false);
-		options.addOption(extractSent);
 		
 		Option extractFeature = new Option("f", "features", false, "Generate feature file (in column format) for CRF++");
 		extractFeature.setRequired(false);

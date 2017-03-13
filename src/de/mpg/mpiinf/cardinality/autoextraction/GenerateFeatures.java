@@ -27,9 +27,11 @@ public class GenerateFeatures implements Runnable {
 	private String dirFeature;
 	private String relName;
 	
+	private WikipediaArticle wiki;
+	
 	private String wikidataId;
-	private String label;
 	private String count;
+	private Integer curId;
 	
 	private boolean training;
 	
@@ -37,15 +39,17 @@ public class GenerateFeatures implements Runnable {
 	private boolean compositional;
 	private int threshold;
 	
-	public GenerateFeatures(String dirFeature, String relName, 
-			String wikidataId, String label, String count, boolean training,
+	public GenerateFeatures(String dirFeature, String relName,
+			WikipediaArticle wiki, String wikidataId, String count, Integer curId, boolean training,
 			boolean nummod, boolean compositional, int threshold) {
 		this.setDirFeature(dirFeature);
 		this.setRelName(relName);
 		
+		this.setWiki(wiki);
+		
 		this.setWikidataId(wikidataId);
-		this.setLabel(label);
 		this.setCount(count);
+		this.setCurId(curId);
 		
 		this.setTraining(training);
 		
@@ -62,25 +66,14 @@ public class GenerateFeatures implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub		
         try {
-        	int numOfTriples = Integer.parseInt(count);
-    		SentenceExtractionFromWikipedia sentExtraction = new SentenceExtractionFromWikipedia();
-    		
-			String wikipediaText = sentExtraction.getWikipediaTextFromTitle(label);
-			
-			PrintWriter outfile;
+        	int numOfTriples = Integer.parseInt(this.getCount());
+    		String wikipediaText = this.getWiki().fetchArticle(this.getCurId());
 			
 			if (wikipediaText != "") {
 				
-				synchronized (this) {
-					if (!training) {
-						outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getDirFeature() + this.getRelName() + "_test_cardinality.data", true)));
-					} else {
-						outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getDirFeature() + this.getRelName() + "_train_cardinality.data", true)));
-					}
-				}
-				
 				String original;
 	    		Sentence sent;
+	    		StringBuilder toPrint = new StringBuilder();
 	    		
 	    		int j=0;
 	    		Transform trans = new Transform();
@@ -95,12 +88,8 @@ public class GenerateFeatures implements Runnable {
 	    				
 	    				if (sent != null) {
 	    					
-	    					StringBuilder sb = generateFeatures(sent, j, numOfTriples, outfile,
-	    							nummod, compositional, threshold);
-	    					
-	    					synchronized (this) {
-	    						outfile.print(sb.toString());
-	    					}
+	    					toPrint.append(generateFeatures(sent, j, numOfTriples, 
+	    							nummod, compositional, threshold).toString());
 	    				}
 	    				
 	    				j ++;
@@ -108,6 +97,13 @@ public class GenerateFeatures implements Runnable {
 	    	    }
 	    		
 	    		synchronized (this) {
+	    			PrintWriter outfile;
+	    			if (!this.isTraining()) {
+						outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getDirFeature() + this.getRelName() + "_test_cardinality.data", true)));
+					} else {
+						outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getDirFeature() + this.getRelName() + "_train_cardinality.data", true)));
+					}
+	    			outfile.print(toPrint.toString());
 	    			outfile.close();
 	    		}
 			}			
@@ -169,9 +165,9 @@ public class GenerateFeatures implements Runnable {
 		}
 	}
 	
-	private StringBuilder generateFeatures(Sentence sent, int j, int numOfTriples, PrintWriter outfile,
+	private StringBuilder generateFeatures(Sentence sent, int j, int numOfTriples, 
 			boolean nummod, boolean compositional, int threshold) {
-		String word = "", lemma = "", pos = "", ner = "", deprel = "";
+		String word = "", lemma = "", pos = "", ner = "", deprel = "", label = "";
 		StringBuilder sb = new StringBuilder();
 		int k;
 		boolean lrb = false;
@@ -195,7 +191,6 @@ public class GenerateFeatures implements Runnable {
 			label = "O";
 			
 			if (sent.word(k).startsWith("LatinGreek_")) {
-				System.err.println(sent.word(k));
 				word = sent.word(k).split("_")[0] + "_" + sent.word(k).split("_")[1] + "_" + sent.word(k).split("_")[2];
 				lemma = "_" + sent.word(k).split("_")[3] + "_";
 				
@@ -443,14 +438,6 @@ public class GenerateFeatures implements Runnable {
 		this.wikidataId = wikidataId;
 	}
 
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
-
 	public String getCount() {
 		return count;
 	}
@@ -505,5 +492,21 @@ public class GenerateFeatures implements Runnable {
 
 	public void setThreshold(int threshold) {
 		this.threshold = threshold;
+	}
+
+	public WikipediaArticle getWiki() {
+		return wiki;
+	}
+
+	public void setWiki(WikipediaArticle wiki) {
+		this.wiki = wiki;
+	}
+
+	public Integer getCurId() {
+		return curId;
+	}
+
+	public void setCurId(Integer curId) {
+		this.curId = curId;
 	}
 }

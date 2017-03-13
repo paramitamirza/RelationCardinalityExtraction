@@ -7,10 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -22,14 +25,25 @@ public class FeatureExtraction {
 	private String relName = "sample";
 	private String dirFeature = "./data/example/";
 	
-	private static final int NTHREDS = 200;
-	
 	public FeatureExtraction() {
 		
 	}
 	
+	public FeatureExtraction(String inputCsvFilePath, String relationName, String dirOutput) {
+		this.setInputCsvFile(inputCsvFilePath);
+		this.setInputRandomCsvFile("");
+		this.setRelName(relationName);
+		this.setDirFeature(dirOutput);
+	}
+	
+	public FeatureExtraction(String inputCsvFilePath, int nRandom, String relationName, String dirOutput) throws IOException {
+		this.setInputCsvFile(inputCsvFilePath);
+		this.generateRandomInstances(nRandom);
+		this.setRelName(relationName);
+		this.setDirFeature(dirOutput);
+	}
+	
 	public FeatureExtraction(String inputCsvFilePath, String inputRandomCsvFilePath, String relationName, String dirOutput) {
-		this();
 		this.setInputCsvFile(inputCsvFilePath);
 		this.setInputRandomCsvFile(inputRandomCsvFilePath);
 		this.setRelName(relationName);
@@ -45,16 +59,21 @@ public class FeatureExtraction {
 			featExtraction = new FeatureExtraction(args[0], args[1], args[2], args[3]);
 		}
 		
-		featExtraction.run(true, false, 0);
+		WikipediaArticle wiki = new WikipediaArticle();
+		featExtraction.run(wiki, true, false, 0);
 	}
 	
-	public void run(boolean nummod, boolean compositional, int threshold) throws IOException, InterruptedException {
+	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, int threshold) throws IOException, InterruptedException {
+		
+		long startTime = System.currentTimeMillis();
+		System.out.print("Generate feature file (in column format) for CRF++... ");
 		
 		removeOldFeatureFiles();
 		
 		List<String> testInstances = readRandomInstances(getInputRandomCsvFile());
 		String line;
-		String wikidataId = "", label = "", count = "";
+		String wikidataId = "", count = "";
+		Integer curId;
 		boolean training;
 		
 		BufferedReader br = new BufferedReader(new FileReader(getInputCsvFile()));
@@ -62,13 +81,10 @@ public class FeatureExtraction {
 		
 		List<Thread> threads = new ArrayList<Thread>();
 		
-		System.out.println("Generate feature file (in column format) for CRF++...");
-		
 		while (line != null) {
 			wikidataId = line.split(",")[0];
-	        label = line.split(",")[1];
-	        count = line.split(",")[2];
-	        System.out.println(wikidataId + "\t" + label + "\t" + count);
+	        count = line.split(",")[1];
+	        curId = Integer.parseInt(line.split(",")[2]);
 	        
 	        training = true;
 	        if (testInstances.contains(wikidataId)) {
@@ -76,12 +92,16 @@ public class FeatureExtraction {
 			} 
 	        
 	        GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
-	        		wikidataId, label, count, training,
+	        		wiki, wikidataId, count, curId, training,
 	        		nummod, compositional, threshold);
 			ext.run();
              
             line = br.readLine();
 		}
+		
+		long endTime   = System.currentTimeMillis();
+		float totalTime = (endTime - startTime)/(float)1000;
+		System.out.println("done [ " + totalTime + " sec].");
 		
 		br.close();
 	}
@@ -111,6 +131,43 @@ public class FeatureExtraction {
 		}
 		br.close();
 		return randomInstances;
+	}
+	
+	public void generateRandomInstances(int nRandom) throws IOException {
+		this.setInputRandomCsvFile(this.getInputCsvFile().replace(".csv", "_random"+nRandom+".csv"));
+		BufferedReader br = new BufferedReader(new FileReader(this.getInputCsvFile()));
+		BufferedWriter bwr = new BufferedWriter(new FileWriter(this.getInputRandomCsvFile()));
+		List<Integer> randomList = new ArrayList<Integer>();
+		if (nRandom > 0) {
+			LineNumberReader lnr = new LineNumberReader(new FileReader(this.getInputCsvFile()));
+			Stack<Integer> randomPool = new Stack<Integer>();
+			int linenumber = 0;
+			while (lnr.readLine() != null) {
+				randomPool.add(linenumber);
+				linenumber++;
+			}
+			Collections.shuffle(randomPool);
+			randomList = randomPool.subList(0, nRandom);
+			lnr.close();
+		}
+		
+		String eid = "", count = "";
+		String line = br.readLine();	
+		int n = 0;
+		while (line != null) {
+			eid = line.split(",")[0];
+			count = line.split(",")[1];
+				
+			if (randomList.contains(n)) {
+				bwr.write(eid + "," + count);
+				bwr.newLine();
+			}
+			
+			line = br.readLine();
+			n ++;
+		}
+		br.close();
+		bwr.close();
 	}
 
 	public String getInputCsvFile() {
