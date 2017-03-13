@@ -27,7 +27,7 @@ public class Pipeline {
             
 		} catch (ParseException e) {
 			System.err.println(e.getMessage());
-			formatter.printHelp("RelationCardinalityExtraction: Classifier", options);
+			formatter.printHelp("RelationCardinalityExtraction: Pipeline", options);
 
 			System.exit(1);
 			return;
