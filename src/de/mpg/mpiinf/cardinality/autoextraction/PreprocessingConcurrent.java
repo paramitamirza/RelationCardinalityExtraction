@@ -54,42 +54,33 @@ public class PreprocessingConcurrent {
 			}
 			String relName = cmd.getOptionValue("relname");
 			
-			String dirFeature = null;
+			String dirFeature = "./feature_data/";
 			if (cmd.hasOption("o")) {
 				dirFeature = cmd.getOptionValue("output");
 			} 
 			
-			if (dirFeature == null) {
-				System.err.println("Output directory of feature files (in column format) for CRF++ is missing!");
-				System.err.println("-- Specify -o [dir_path]");
-
-	            System.exit(1);
-	            return;
-	            
-			} else {
-				FeatureExtractionConcurrent featExtraction;
-				if (inputRandomCsvFile != null)
-					featExtraction = new FeatureExtractionConcurrent(inputCsvFile, inputRandomCsvFile, relName, dirFeature);
-				else {
-					if (cmd.hasOption("n")) {
-						int nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
-						featExtraction = new FeatureExtractionConcurrent(inputCsvFile, nRandom, relName, dirFeature);
-					} else {
-						featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
-					}
+			FeatureExtractionConcurrent featExtraction;
+			if (inputRandomCsvFile != null)
+				featExtraction = new FeatureExtractionConcurrent(inputCsvFile, inputRandomCsvFile, relName, dirFeature);
+			else {
+				if (cmd.hasOption("n")) {
+					int nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
+					featExtraction = new FeatureExtractionConcurrent(inputCsvFile, nRandom, relName, dirFeature);
+				} else {
+					featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
 				}
-				
-				if (cmd.hasOption("a")) {
-					wiki.appendCurId(inputCsvFile);
-					wiki.destroyMapping();
-				}
-				
-				boolean nummod = cmd.hasOption("d");
-				boolean compositional = cmd.hasOption("c");
-				int threshold = 0;
-				if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
-				featExtraction.run(wiki, nummod, compositional, threshold);
 			}
+			
+			if (cmd.hasOption("a")) {
+				wiki.appendCurId(inputCsvFile);
+				wiki.destroyMapping();
+			}
+			
+			boolean nummod = cmd.hasOption("d");
+			boolean compositional = cmd.hasOption("c");
+			int threshold = 0;
+			if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
+			featExtraction.run(wiki, nummod, compositional, threshold);
 		}
 		
 	}

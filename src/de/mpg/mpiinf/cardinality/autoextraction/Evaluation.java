@@ -45,17 +45,21 @@ public class Evaluation {
 		}
 		
 		String csvPath = cmd.getOptionValue("input");
-		String resultPath = cmd.getOptionValue("crfout");
+		String crfOutPath = cmd.getOptionValue("crfout");
+		String relName = cmd.getOptionValue("relname");
 		String outputPath = null;
-		boolean outFile = cmd.hasOption("o");
-		if (outFile) {
+		if (cmd.hasOption("o")) {
 			outputPath = cmd.getOptionValue("output");
+		}
+		String resultPath = null;
+		if (cmd.hasOption("r")) {
+			resultPath = cmd.getOptionValue("result");
 		}
 		
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
 		boolean compositional = cmd.hasOption("c");
-		eval.evaluate(csvPath, resultPath, labels, outputPath, compositional, false);
+		eval.evaluate(relName, csvPath, crfOutPath, labels, outputPath, resultPath, compositional, false);
 	}
 	
 	public static Options getEvalOptions() {
@@ -64,14 +68,22 @@ public class Evaluation {
 		Option input = new Option("i", "input", true, "Input evaluation file (.csv) path");
 		input.setRequired(true);
 		options.addOption(input);
-        
-		Option relName = new Option("f", "crfout", true, "CRF++ output file (.out) path");
+		
+		Option relName = new Option("p", "relname", true, "Property/relation name");
 		relName.setRequired(true);
 		options.addOption(relName);
+        
+		Option crfout = new Option("f", "crfout", true, "CRF++ output file (.out) path");
+		crfout.setRequired(true);
+		options.addOption(crfout);
         
 		Option output = new Option("o", "output", true, "Output file (.csv) path");
 		output.setRequired(false);
 		options.addOption(output);
+		
+		Option result = new Option("r", "result", true, "Performance result file path");
+		result.setRequired(false);
+		options.addOption(result);
 		
 		Option compositional = new Option("c", "compositional", false, "Label compositional numbers as true examples");
 		compositional.setRequired(false);
@@ -104,7 +116,8 @@ public class Evaluation {
 		return -999;
 	}
 	
-	public void evaluate(String csvPath, String resultPath, String[] labels, String outPath,
+	public void evaluate(String relName, String csvPath, String crfOutPath, 
+			String[] labels, String outPath, String resultPath,
 			boolean addSameSentence, boolean addDiffSentence) throws IOException {
 		
 		long startTime = System.currentTimeMillis();
@@ -124,7 +137,7 @@ public class Evaluation {
 		br.close();
 		
 		//Read result (.out) file
-		br = new BufferedReader(new FileReader(resultPath));
+		br = new BufferedReader(new FileReader(crfOutPath));
 		BufferedWriter bw = null;
 		if (outPath != null) {
 			bw = new BufferedWriter(new FileWriter(outPath));
@@ -289,11 +302,22 @@ public class Evaluation {
 		double precision = (double)tp / (tp + fp);
 		double recall = (double)tp / instanceNum.size();
 		double fscore = (2 * precision * recall) / (precision + recall);
-		System.out.println("tp\tfp\ttotal\tprec\trecall\tf1-score");
-		System.out.println(tp + "\t" + fp + "\t" + total  
-				+ "\t" + String.format("%.4f", precision)
-				+ "\t" + String.format("%.4f", recall)
-				+ "\t" + String.format("%.4f", fscore));
+		
+		if (resultPath != null) {
+			bw = new BufferedWriter(new FileWriter(resultPath, true));
+			bw.write(relName + "\t" + tp + "\t" + fp + "\t" + total  
+					+ "\t" + String.format("%.4f", precision)
+					+ "\t" + String.format("%.4f", recall)
+					+ "\t" + String.format("%.4f", fscore));
+			bw.newLine();
+			bw.close();
+		} else {
+			System.out.println("tp\tfp\ttotal\tprec\trecall\tf1-score");
+			System.out.println(tp + "\t" + fp + "\t" + total  
+					+ "\t" + String.format("%.4f", precision)
+					+ "\t" + String.format("%.4f", recall)
+					+ "\t" + String.format("%.4f", fscore));
+		}
 	}
 	
 	//TODO Change the key, should be the index

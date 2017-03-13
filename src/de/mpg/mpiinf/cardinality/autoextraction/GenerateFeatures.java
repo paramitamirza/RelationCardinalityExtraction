@@ -99,9 +99,9 @@ public class GenerateFeatures implements Runnable {
 	    		synchronized (this) {
 	    			PrintWriter outfile;
 	    			if (!this.isTraining()) {
-						outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getDirFeature() + this.getRelName() + "_test_cardinality.data", true)));
+						outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getDirFeature() + "/" + this.getRelName() + "_test_cardinality.data", true)));
 					} else {
-						outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getDirFeature() + this.getRelName() + "_train_cardinality.data", true)));
+						outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getDirFeature() + "/" + this.getRelName() + "_train_cardinality.data", true)));
 					}
 	    			outfile.print(toPrint.toString());
 	    			outfile.close();
