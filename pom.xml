@@ -42,16 +42,23 @@
 	    <artifactId>jena-arq</artifactId>
 	    <version>3.1.1</version>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/de.tudarmstadt.ukp.wikipedia/de.tudarmstadt.ukp.wikipedia.datamachine -->
 	<dependency>
-	  <groupId>de.tudarmstadt.ukp.wikipedia</groupId>
-	  <artifactId>de.tudarmstadt.ukp.wikipedia.api</artifactId>
-	  <version>1.0.0</version>
+		<groupId>org.wikidata.wdtk</groupId>
+		<artifactId>wdtk-dumpfiles</artifactId>
+		<version>0.7.0</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
 	<dependency>
-	  <groupId>de.tudarmstadt.ukp.wikipedia</groupId>
-	  <artifactId>de.tudarmstadt.ukp.wikipedia.datamachine</artifactId>
-	  <version>1.0.0</version>
+	    <groupId>org.apache.logging.log4j</groupId>
+	    <artifactId>log4j-api</artifactId>
+	    <version>2.8.1</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/log4j/apache-log4j-extras -->
+	<dependency>
+	    <groupId>log4j</groupId>
+	    <artifactId>apache-log4j-extras</artifactId>
+	    <version>1.0</version>
+	</dependency>
+			
   </dependencies>
 </project>

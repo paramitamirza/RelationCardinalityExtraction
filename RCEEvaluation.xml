@@ -12,7 +12,7 @@
                 <attribute name="Main-Class" value="de.mpg.mpiinf.cardinality.autoextraction.Evaluation"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="${dir.buildfile}/target/classes"/>
+        	<fileset dir="${dir.buildfile}/target/classes"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/commons-cli-1.3.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/json-20160810.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="/local/home/paramita/stanford-corenlp-full-2016-10-31/ejml-0.23.jar"/>
