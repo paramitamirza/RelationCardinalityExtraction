@@ -70,21 +70,24 @@ public class WikipediaArticle {
 		wa.appendCurId("./data/example/wikidata_sample_new.csv");
 		wa.appendCurIdWithoutMap("./data/example/wikidata_sample_new.csv");
 		
+		wa.appendCurIdFromDir("./data/example/sample_dir/");
+	}
+	
+	public void appendCurIdFromDir(String inputCsvDirPath) throws IOException, InterruptedException {
+		
+		File folder = new File(inputCsvDirPath);
+		File[] listOfFiles = folder.listFiles();
+		
+		for (File f : listOfFiles) {
+			if (f.isFile()) {
+				appendCurId(f.getPath());
+			}
+		}
 	}
 	
 	public void appendCurId(String inputCsvFilePath) throws IOException, InterruptedException {	
 		
 		long startTime = System.currentTimeMillis();
-		System.out.print("Load Wikidata Id to Wikipedia article mapping... ");
-		
-		mapWikidataWikipediaCurId();
-		
-		long endTime   = System.currentTimeMillis();
-		float totalTime = (endTime - startTime)/(float)1000;
-		System.out.println("done [ " + totalTime + " sec].");
-		
-		
-		startTime = System.currentTimeMillis();
 		System.out.print("Append .csv file with Wikipedia curId... ");
 		
 		BufferedReader br = new BufferedReader(new FileReader(inputCsvFilePath));
@@ -120,8 +123,8 @@ public class WikipediaArticle {
 		File newFile = new File(inputCsvFilePath.replace(".csv", ".tmp"));
 		newFile.renameTo(oldFile);
 		
-		endTime   = System.currentTimeMillis();
-		totalTime = (endTime - startTime)/(float)1000;
+		long endTime   = System.currentTimeMillis();
+		float totalTime = (endTime - startTime)/(float)1000;
 		System.out.println("done [ " + totalTime + " sec].");
 	}
 	
@@ -172,7 +175,11 @@ public class WikipediaArticle {
 		wikibaseMap = null;
 	}
 	
-	private void mapWikidataWikipediaCurId() throws IOException {
+	public void mapWikidataWikipediaCurId() throws IOException {
+		
+		long startTime = System.currentTimeMillis();
+		System.out.print("Load Wikidata Id to Wikipedia article mapping... ");
+		
 		BufferedReader br = new BufferedReader(
                 new InputStreamReader(
                         new GZIPInputStream(new FileInputStream(this.getWikibaseMapFile()))
@@ -183,6 +190,10 @@ public class WikipediaArticle {
 			line = br.readLine();
 		}
 		br.close();
+		
+		long endTime   = System.currentTimeMillis();
+		float totalTime = (endTime - startTime)/(float)1000;
+		System.out.println("done [ " + totalTime + " sec].");
 	}
 	
 	public String fetchArticleFromWikidataId(String wdId) {

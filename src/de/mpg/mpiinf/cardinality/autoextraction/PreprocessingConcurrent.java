@@ -46,6 +46,17 @@ public class PreprocessingConcurrent {
             return;
 		}
 		
+		if (cmd.hasOption("a")) {
+			wiki.mapWikidataWikipediaCurId();
+			wiki.appendCurId(inputCsvFile);
+			wiki.destroyMapping();
+			
+		} else if (cmd.hasOption("b")) {
+			wiki.mapWikidataWikipediaCurId();
+			wiki.appendCurIdFromDir(cmd.getOptionValue("batch"));
+			wiki.destroyMapping();
+		}
+		
 		//Generate feature file (in column format) for CRF++
 		if (cmd.hasOption("f")) {
 			String inputRandomCsvFile = null;
@@ -69,11 +80,6 @@ public class PreprocessingConcurrent {
 				} else {
 					featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
 				}
-			}
-			
-			if (cmd.hasOption("a")) {
-				wiki.appendCurId(inputCsvFile);
-				wiki.destroyMapping();
 			}
 			
 			boolean nummod = cmd.hasOption("d");
@@ -103,6 +109,10 @@ public class PreprocessingConcurrent {
 		Option appendCurId = new Option("a", "curid", false, "Append input file (.csv) with Wikipedia curId for each Wikidata instance");
 		appendCurId.setRequired(false);
 		options.addOption(appendCurId);
+		
+		Option batch = new Option("b", "batch", true, "Append input files (.csv) in a directory with Wikipedia curId for each Wikidata instance");
+		batch.setRequired(false);
+		options.addOption(batch);
 		
 		Option random = new Option("n", "randomize", true, "Generate n random instances for testing");
 		random.setRequired(false);

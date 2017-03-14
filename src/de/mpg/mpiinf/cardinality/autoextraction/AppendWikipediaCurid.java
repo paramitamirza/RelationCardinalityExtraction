@@ -27,18 +27,10 @@ public class AppendWikipediaCurid implements Runnable {
 			String article = "";
 			for (String curId : curIds.split("\\|")) {
 				article = this.getWiki().fetchArticle(Integer.parseInt(curId));
-				if (!article.equals("")) {				
+				if (!article.equals("")) {	
 					
-					synchronized (this) {
-						try {
-							PrintWriter outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getOutFilePath(), true)));
-							outfile.println(this.getWikidataId() + "," + this.getTripleCount() + "," + curId);
-			    			outfile.close();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-		    		}
+					WriteToFile.getInstance().appendContents(this.getOutFilePath(), 
+		    				this.getWikidataId() + "," + this.getTripleCount() + "," + curId + "\n");
 					
 					break;
 				}
