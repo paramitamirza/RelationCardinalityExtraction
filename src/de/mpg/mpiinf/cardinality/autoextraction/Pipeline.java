@@ -54,7 +54,8 @@ public class Pipeline {
 		}
 		FeatureExtractionConcurrent featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
 		
-		wiki.appendCurId(inputCsvFile);
+//		wiki.appendCurId(inputCsvFile);				//No need anymore... should be handled by PreprocessingConcurrent with -b option
+		
 		boolean nummod = cmd.hasOption("d");
 		boolean compositional = cmd.hasOption("s");
 		int threshold = 0;
