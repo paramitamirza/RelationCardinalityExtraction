@@ -16,6 +16,9 @@ public class Pipeline {
 	
 	public static void main(String[] args) throws Exception {
 		
+		long startTime = System.currentTimeMillis();
+		System.out.println("Start the Relation Cardinality Extraction pipeline... ");
+		
 		Options options = getPreprocessingOptions();
 
 		CommandLineParser parser = new DefaultParser();
@@ -27,7 +30,7 @@ public class Pipeline {
             
 		} catch (ParseException e) {
 			System.err.println(e.getMessage());
-			formatter.printHelp("RelationCardinalityExtraction: Classifier", options);
+			formatter.printHelp("RelationCardinalityExtraction: Pipeline", options);
 
 			System.exit(1);
 			return;
@@ -71,14 +74,15 @@ public class Pipeline {
 		clArgs.add("-m"); clArgs.add(dirModels);
 		
 		String trainData = dirFeature + "/" + relName + "_train_cardinality.data";
-		String evalData = trainData;	//evaluation data = training data
+		String evalData = trainData;					//evaluation data = training data
+		if (cmd.hasOption("e")) evalData = trainData.replace("_train_", "_test_");	
 		clArgs.add("-t"); clArgs.add(trainData);
 		clArgs.add("-e"); clArgs.add(evalData);	
 		Classifier.main(clArgs.toArray(new String[0]));
 		
 		//Evaluation
 		List<String> evalArgs = new ArrayList<String>();
-		evalArgs.add("-i"); evalArgs.add(inputCsvFile);
+		evalArgs.add("-i"); evalArgs.add(testCsvFile);
 		evalArgs.add("-f"); evalArgs.add(evalData.replace(".data", ".out"));
 		evalArgs.add("-p"); evalArgs.add(relName);
 		if (cmd.hasOption("o")) {
@@ -91,6 +95,10 @@ public class Pipeline {
 		}
 		evalArgs.add("-r"); evalArgs.add(resultFile);
 		Evaluation.main(evalArgs.toArray(new String[0]));
+		
+		long endTime   = System.currentTimeMillis();
+		float totalTime = (endTime - startTime)/(float)1000;
+		System.out.println("done [ " + totalTime + " sec].");
 	}
 	
 	public static Options getPreprocessingOptions() {

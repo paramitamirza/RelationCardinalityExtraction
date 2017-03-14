@@ -61,7 +61,8 @@ public class Classifier {
 		Classifier cl = new Classifier(relName, dirCRF, dirModels, templateFile);
 		
 		String trainFile = cmd.getOptionValue("train");
-		String evalFile = cmd.getOptionValue("eval");
+		String evalFile = trainFile;
+		if (cmd.hasOption("e")) evalFile = cmd.getOptionValue("eval");
 		
 		//Train model
 		cl.trainModel(trainFile);
@@ -84,17 +85,17 @@ public class Classifier {
 	    			trainFile, this.getModelDir() + "/" + this.getRelName() + ".model");
 	        Process process = builder.start();
 	        
-//            InputStream inputStream = process.getInputStream();
-//            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
-//            String line = bufferedReader.readLine();
-//            
-//            while (line != null) {
-//            	System.out.println(line);
-//            	line = bufferedReader.readLine();
-//            }
-//            
-//            inputStream.close();
-//            bufferedReader.close();
+            InputStream inputStream = process.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
+            String line = bufferedReader.readLine();
+            
+            while (line != null) {
+            	System.err.println(line);
+            	line = bufferedReader.readLine();
+            }
+            
+            inputStream.close();
+            bufferedReader.close();
 	        
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -160,11 +161,11 @@ public class Classifier {
 		relName.setRequired(true);
 		options.addOption(relName);
 		
-		Option train = new Option("t", "train", true, "Input train file (.csv) path");
+		Option train = new Option("t", "train", true, "Input train feature file (.data) path");
 		train.setRequired(true);
 		options.addOption(train);
 		
-		Option eval = new Option("e", "eval", true, "Input evaluation file (.csv) path");
+		Option eval = new Option("e", "eval", true, "Input evaluation feature file (.data) path");
 		eval.setRequired(true);
 		options.addOption(eval);
 		

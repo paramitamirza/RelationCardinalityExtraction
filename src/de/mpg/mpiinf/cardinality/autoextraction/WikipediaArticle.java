@@ -12,6 +12,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 
 import org.json.JSONObject;
@@ -26,12 +29,14 @@ import java.util.Stack;
 
 public class WikipediaArticle {
 	
-	private String wikiDir = "/local/home/paramita/D5data-8/enwiki_20170101_pages_articles/";
-	private String zindexDir = "/local/home/paramita/D5data-8/enwiki_20170101_pages_articles/zindex/";
-	private String wikibaseMapFile = "/local/home/paramita/D5data-8/enwiki_20170101_pages_articles/wikibase_item.txt.gz";
+	private String wikiDir = "/home/paramita/D5data-8/RelationCardinalityExtraction_pipeline/enwiki_20170101_pages_articles/";
+	private String zindexDir = "/home/paramita/D5data-8/RelationCardinalityExtraction_pipeline/enwiki_20170101_pages_articles/zindex/";
+	private String wikibaseMapFile = "/home/paramita/D5data-8/RelationCardinalityExtraction_pipeline/enwiki_20170101_pages_articles/wikibase_item.txt.gz";
 	
 	private NavigableMap<Integer, String> wikiIndex;
 	private Map<String, String> wikibaseMap;
+	
+	private static final int NTHREDS = 200;
 	
 	public WikipediaArticle() throws IOException {
 		
@@ -52,7 +57,7 @@ public class WikipediaArticle {
 		wikibaseMap = new HashMap<String, String>();
 	}
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		
 		WikipediaArticle wa = new WikipediaArticle();
 		
@@ -67,7 +72,7 @@ public class WikipediaArticle {
 		
 	}
 	
-	public void appendCurId(String inputCsvFilePath) throws IOException {	
+	public void appendCurId(String inputCsvFilePath) throws IOException, InterruptedException {	
 		
 		long startTime = System.currentTimeMillis();
 		System.out.print("Load Wikidata Id to Wikipedia article mapping... ");
@@ -83,29 +88,29 @@ public class WikipediaArticle {
 		System.out.print("Append .csv file with Wikipedia curId... ");
 		
 		BufferedReader br = new BufferedReader(new FileReader(inputCsvFilePath));
-		BufferedWriter bw = new BufferedWriter(new FileWriter(inputCsvFilePath.replace(".csv", ".tmp")));
 		String eid = "", count = "";
 		String line = br.readLine();	
+		
+		ExecutorService executor = Executors.newFixedThreadPool(NTHREDS);
 		
 		while (line != null) {
 			eid = line.split(",")[0];
 			count = line.split(",")[1];
 			
-			String curIds = wikibaseMap.get(eid);
-			String article = "";
-			for (String curId : curIds.split("\\|")) {
-				article = fetchArticle(Integer.parseInt(curId));
-				if (!article.equals("")) {
-					bw.write(eid + "," + count + "," + curId);
-					bw.newLine();
-					break;
-				}
-			}
+			Runnable worker = new AppendWikipediaCurid(this, eid, count, inputCsvFilePath.replace(".csv", ".tmp"));
+			executor.execute(worker);
+			
 			line = br.readLine();
 		}
-		destroyMapping();
+		
+		// This will make the executor accept no new threads
+        // and finish all existing threads in the queue
+        executor.shutdown();
+        // Wait until all threads are finish
+        executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        
+        destroyMapping();
 		br.close();
-		bw.close();
 		
 		// Once everything is complete, delete old file..
 		File oldFile = new File(inputCsvFilePath);
@@ -190,6 +195,22 @@ public class WikipediaArticle {
 		return "";
 	}
 	
+	public NavigableMap<Integer, String> getWikiIndex() {
+		return wikiIndex;
+	}
+
+	public void setWikiIndex(NavigableMap<Integer, String> wikiIndex) {
+		this.wikiIndex = wikiIndex;
+	}
+
+	public Map<String, String> getWikibaseMap() {
+		return wikibaseMap;
+	}
+
+	public void setWikibaseMap(Map<String, String> wikibaseMap) {
+		this.wikibaseMap = wikibaseMap;
+	}
+
 	public String fetchCurId(String wikidataId) {
 		try {
 	    	ProcessBuilder builder = new ProcessBuilder("zgrep", "-m", "1", wikidataId, this.getWikibaseMapFile());
@@ -245,7 +266,7 @@ public class WikipediaArticle {
 		System.out.print("Load Wikipedia article index... ");
 		
 		String indexFile = "articles-index.txt";
-		BufferedReader br = new BufferedReader(new FileReader(wikiDir + indexFile));
+		BufferedReader br = new BufferedReader(new FileReader(wikiDir + "/" + indexFile));
 		String line = br.readLine();
 		while (line != null) {
 			wikiIndex.put(Integer.parseInt(line.split(",")[0]), line.split(",")[1]);
