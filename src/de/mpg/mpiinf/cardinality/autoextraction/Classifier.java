@@ -72,7 +72,7 @@ public class Classifier {
 		
 	}
 	
-	private void trainModel(String trainFile) {
+	public void trainModel(String trainFile) {
 		long startTime = System.currentTimeMillis();
 		System.out.print("Training a CRF++ classification model... ");
 		
@@ -105,7 +105,7 @@ public class Classifier {
 		System.out.println("done [ " + totalTime + " sec].");
 	}
 	
-	private void testModel(String testFile) throws IOException {
+	public void testModel(String testFile) throws IOException {
 		long startTime = System.currentTimeMillis();
 		System.out.print("Test a CRF++ classification model... ");
 		

@@ -17,9 +17,8 @@ public class Pipeline {
 	public static void main(String[] args) throws Exception {
 		
 		// Run configurations' arguments for example
-		// -i ./data/example/wikidata_sample_new.csv -p sample -w /local/home/paramita/D5data-8/RelationCardinalityExtraction_pipeline/enwiki_20170101_pages_articles/ 
-		// -c /local/home/paramita/CRF++-0.58/ -l ./data/example/CRF/template_lemma.txt -f ./data/example/ -m ./data/example/CRF/models/ 
-		// -o ./data/example/predicted_children_count.csv -r ./data/example/performance.txt
+		// -i ./data/example/wikidata_sample_new.csv -p sample -w /local/home/paramita/D5data-8/RelationCardinalityExtraction_pipeline/enwiki_20170101_pages_articles/ -c /local/home/paramita/CRF++-0.58/ -l ./data/example/CRF/template_lemma.txt -d -t 1 -f ./data/example/ -m ./data/example/CRF/models/ -o ./data/example/predicted_children_count.csv -r ./data/example/performance.txt
+		// -Xms2g -Xmx4g
 		
 		long startTime = System.currentTimeMillis();
 		System.out.println("Start the Relation Cardinality Extraction pipeline... ");
@@ -48,21 +47,19 @@ public class Pipeline {
 		
 		//Preprocessing
 		String wikipediaDir = cmd.getOptionValue("wikipedia");
-		
-		List<String> prepArgs = new ArrayList<String>();
-		prepArgs.add("-i"); prepArgs.add(inputCsvFile);
-		prepArgs.add("-p"); prepArgs.add(relName);
-		prepArgs.add("-w"); prepArgs.add(wikipediaDir);
-		prepArgs.add("-a");								//append Wikipedia curid to the input .csv file
-		prepArgs.add("-f");								//generate feature file
+		WikipediaArticle wiki = new WikipediaArticle(wikipediaDir, wikipediaDir + "/zindex/", wikipediaDir + "/wikibase_item.txt.gz");
 		String dirFeature = "./feature_data/";
 		if (cmd.hasOption("f")) {
 			dirFeature = cmd.getOptionValue("feature");
 		}
-		prepArgs.add("-o"); prepArgs.add(dirFeature);
-		prepArgs.add("-d");								//nummod setting
-		prepArgs.add("-t"); prepArgs.add("1");			//consider num triples > 1
-		PreprocessingConcurrent.main(prepArgs.toArray(new String[0]));
+		FeatureExtractionConcurrent featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
+		
+		wiki.appendCurId(inputCsvFile);
+		boolean nummod = cmd.hasOption("d");
+		boolean compositional = cmd.hasOption("s");
+		int threshold = 0;
+		if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
+		featExtraction.run(wiki, nummod, compositional, threshold);
 		
 		//Classifier
 		String dirModels = "./models/";
@@ -71,35 +68,27 @@ public class Pipeline {
 		}
 		String dirCRF = cmd.getOptionValue("crf");
 		String templateFile = cmd.getOptionValue("template");
-		
-		List<String> clArgs = new ArrayList<String>();
-		clArgs.add("-c"); clArgs.add(dirCRF);
-		clArgs.add("-p"); clArgs.add(relName);
-		clArgs.add("-l"); clArgs.add(templateFile);
-		clArgs.add("-m"); clArgs.add(dirModels);
-		
 		String trainData = dirFeature + "/" + relName + "_train_cardinality.data";
 		String evalData = trainData;					//evaluation data = training data
-		if (cmd.hasOption("e")) evalData = trainData.replace("_train_", "_test_");	
-		clArgs.add("-t"); clArgs.add(trainData);
-		clArgs.add("-e"); clArgs.add(evalData);	
-		Classifier.main(clArgs.toArray(new String[0]));
+		
+		Classifier cl = new Classifier(relName, dirCRF, dirModels, templateFile);
+		cl.trainModel(trainData);						//train model
+		cl.testModel(evalData);							//test model
 		
 		//Evaluation
-		List<String> evalArgs = new ArrayList<String>();
-		evalArgs.add("-i"); evalArgs.add(testCsvFile);
-		evalArgs.add("-f"); evalArgs.add(evalData.replace(".data", ".out"));
-		evalArgs.add("-p"); evalArgs.add(relName);
+		String predictionFile = null;
 		if (cmd.hasOption("o")) {
-			String predictionFile = cmd.getOptionValue("output");
-			evalArgs.add("-o"); evalArgs.add(predictionFile);
+			predictionFile = cmd.getOptionValue("output");
 		}
 		String resultFile = "./performance.txt";
 		if (cmd.hasOption("r")) {
 			resultFile = cmd.getOptionValue("result");
 		}
-		evalArgs.add("-r"); evalArgs.add(resultFile);
-		Evaluation.main(evalArgs.toArray(new String[0]));
+		
+		Evaluation eval = new Evaluation();
+		String[] labels = {"O", "_YES_"};
+		String crfOutPath = evalData.replace(".data", ".out");
+		eval.evaluate(relName, testCsvFile, crfOutPath, labels, predictionFile, resultFile, compositional, false);
 		
 		long endTime   = System.currentTimeMillis();
 		float totalTime = (endTime - startTime)/(float)1000;
@@ -148,6 +137,18 @@ public class Pipeline {
 		Option result = new Option("r", "result", true, "Performance result file path");
 		result.setRequired(false);
 		options.addOption(result);
+		
+		Option nummod = new Option("d", "nummod", false, "Only if dependency label is 'nummod' to be labelled as positive examples");
+		nummod.setRequired(false);
+		options.addOption(nummod);
+		
+		Option compositional = new Option("s", "compositional", false, "Label compositional numbers as true examples");
+		compositional.setRequired(false);
+		options.addOption(compositional);
+		
+		Option threshold = new Option("t", "threshold", true, "Threshold for number of triples to be labelled as positive examples");
+		threshold.setRequired(false);
+		options.addOption(threshold);
 		
 		return options;
 	}

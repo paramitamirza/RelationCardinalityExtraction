@@ -1,6 +1,7 @@
 package de.mpg.mpiinf.cardinality.autoextraction;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,7 +44,9 @@ public class GenerateFeatures implements Runnable {
 		
 		this.setTraining(training);
 		
-		
+		this.setNummod(nummod);
+		this.setCompositional(compositional);
+		this.setThreshold(threshold);
 	}
 	
 	public static void main(String[] args) throws JSONException, IOException {
@@ -74,28 +77,36 @@ public class GenerateFeatures implements Runnable {
 	    			for (Sentence s : doc.sentences()) {	//Split the sentences
 	    				
 	    				original = s.text();	    				
-	    				sent = filter(original, training, trans, true, false);	//boolean transform, boolean transformZeroOne
+	    				sent = filter(original, this.isTraining(), trans, true, false);	//boolean transform, boolean transformZeroOne
 	    				
 	    				if (sent != null) {
 	    					
 	    					toPrint.append(generateFeatures(sent, j, numOfTriples, 
-	    							nummod, compositional, threshold).toString());
+	    							this.isNummod(), this.isCompositional(), this.getThreshold()).toString());
 	    				}
 	    				
 	    				j ++;
 	    	        }
 	    	    }
 	    		
-	    		synchronized (this) {
-	    			PrintWriter outfile;
-	    			if (!this.isTraining()) {
-						outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getDirFeature() + "/" + this.getRelName() + "_test_cardinality.data", true)));
-					} else {
-						outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getDirFeature() + "/" + this.getRelName() + "_train_cardinality.data", true)));
-					}
-	    			outfile.print(toPrint.toString());
-	    			outfile.close();
+//	    		synchronized (this) {
+//	    			PrintWriter outfile;
+//	    			if (!this.isTraining()) {
+//						outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getDirFeature() + "/" + this.getRelName() + "_test_cardinality.data", true)));
+//					} else {
+//						outfile = new PrintWriter(new BufferedWriter(new FileWriter(this.getDirFeature() + "/" + this.getRelName() + "_train_cardinality.data", true)));
+//					}
+//	    			outfile.print(toPrint.toString());
+//	    			outfile.close();
+//	    		}
+	    		
+	    		String outFilePath;
+	    		if (!this.isTraining()) {
+	    			outFilePath = this.getDirFeature() + "/" + this.getRelName() + "_test_cardinality.data";
+	    		} else {
+	    			outFilePath = this.getDirFeature() + "/" + this.getRelName() + "_train_cardinality.data";
 	    		}
+	    		this.appendContents(outFilePath, toPrint.toString());
 			}			
 			
 		} catch (JSONException | IOException e) {
@@ -104,6 +115,25 @@ public class GenerateFeatures implements Runnable {
 		}
 		
 	}
+	
+	private synchronized void appendContents(String sFileName, String sContent) {
+        try {
+
+            File oFile = new File(sFileName);
+            if (!oFile.exists()) {
+                oFile.createNewFile();
+            }
+            if (oFile.canWrite()) {
+                BufferedWriter oWriter = new BufferedWriter(new FileWriter(sFileName, true));
+                oWriter.write (sContent);
+                oWriter.close();
+            }
+
+        }
+        catch (IOException oException) {
+            throw new IllegalArgumentException("Error appending/File cannot be written: \n" + sFileName);
+        }
+    }
 	
 	private Sentence filter(String sentence, boolean training, 
 			Transform trans, boolean transform, boolean transformZeroOne) throws IOException {
