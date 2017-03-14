@@ -1,5 +1,7 @@
 package de.mpg.mpiinf.cardinality.autoextraction;
 
+import java.io.File;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -53,7 +55,14 @@ public class PreprocessingConcurrent {
 			
 		} else if (cmd.hasOption("b")) {
 			wiki.mapWikidataWikipediaCurId();
-			wiki.appendCurIdFromDir(cmd.getOptionValue("batch"));
+			File folder = new File(cmd.getOptionValue("batch"));
+			File[] listOfFiles = folder.listFiles();
+			
+			for (File f : listOfFiles) {
+				if (f.isFile()) {
+					wiki.appendCurId(f.getPath());
+				}
+			}
 			wiki.destroyMapping();
 		}
 		

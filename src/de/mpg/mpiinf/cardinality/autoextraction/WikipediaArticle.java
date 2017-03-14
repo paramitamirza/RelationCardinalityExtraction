@@ -69,20 +69,6 @@ public class WikipediaArticle {
 
 		wa.appendCurId("./data/example/wikidata_sample_new.csv");
 		wa.appendCurIdWithoutMap("./data/example/wikidata_sample_new.csv");
-		
-		wa.appendCurIdFromDir("./data/example/sample_dir/");
-	}
-	
-	public void appendCurIdFromDir(String inputCsvDirPath) throws IOException, InterruptedException {
-		
-		File folder = new File(inputCsvDirPath);
-		File[] listOfFiles = folder.listFiles();
-		
-		for (File f : listOfFiles) {
-			if (f.isFile()) {
-				appendCurId(f.getPath());
-			}
-		}
 	}
 	
 	public void appendCurId(String inputCsvFilePath) throws IOException, InterruptedException {	
@@ -112,8 +98,7 @@ public class WikipediaArticle {
         // Wait until all threads are finish
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         
-        destroyMapping();
-		br.close();
+        br.close();
 		
 		// Once everything is complete, delete old file..
 		File oldFile = new File(inputCsvFilePath);
