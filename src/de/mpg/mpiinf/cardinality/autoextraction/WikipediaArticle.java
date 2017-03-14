@@ -88,7 +88,7 @@ public class WikipediaArticle {
 	public void appendCurId(String inputCsvFilePath) throws IOException, InterruptedException {	
 		
 		long startTime = System.currentTimeMillis();
-		System.out.print("Append .csv file with Wikipedia curId... ");
+		System.out.print("Append " + new File(inputCsvFilePath).getName() + " file with Wikipedia curId... ");
 		
 		BufferedReader br = new BufferedReader(new FileReader(inputCsvFilePath));
 		String eid = "", count = "";
