@@ -1,5 +1,6 @@
 package de.mpg.mpiinf.cardinality.autoextraction;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,6 +76,10 @@ public class Pipeline {
 		Classifier cl = new Classifier(relName, dirCRF, dirModels, templateFile);
 		cl.trainModel(trainData);						//train model
 		cl.testModel(evalData);							//test model
+		
+		// Once training is complete, delete data file...
+		File dataFile = new File(trainData);
+		dataFile.delete();
 		
 		//Evaluation
 		String predictionFile = null;
