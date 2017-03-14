@@ -106,7 +106,7 @@ public class GenerateFeatures implements Runnable {
 	    		} else {
 	    			outFilePath = this.getDirFeature() + "/" + this.getRelName() + "_train_cardinality.data";
 	    		}
-	    		this.appendContents(outFilePath, toPrint.toString());
+	    		WriteToFile.getInstance().appendContents(outFilePath, toPrint.toString());
 			}			
 			
 		} catch (JSONException | IOException e) {
@@ -115,25 +115,6 @@ public class GenerateFeatures implements Runnable {
 		}
 		
 	}
-	
-	private synchronized void appendContents(String sFileName, String sContent) {
-        try {
-
-            File oFile = new File(sFileName);
-            if (!oFile.exists()) {
-                oFile.createNewFile();
-            }
-            if (oFile.canWrite()) {
-                BufferedWriter oWriter = new BufferedWriter(new FileWriter(sFileName, true));
-                oWriter.write (sContent);
-                oWriter.close();
-            }
-
-        }
-        catch (IOException oException) {
-            throw new IllegalArgumentException("Error appending/File cannot be written: \n" + sFileName);
-        }
-    }
 	
 	private Sentence filter(String sentence, boolean training, 
 			Transform trans, boolean transform, boolean transformZeroOne) throws IOException {
