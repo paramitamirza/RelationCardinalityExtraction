@@ -98,9 +98,9 @@ public class Pipeline {
 		
 		// Once everything is done, delete data file...
 		File dataFile = new File(trainData);
-		dataFile.delete();
+		dataFile.deleteOnExit();
 		File crfOutFile = new File(crfOutPath);
-		crfOutFile.delete();
+		crfOutFile.deleteOnExit();
 	}
 	
 	public static Options getPreprocessingOptions() {
