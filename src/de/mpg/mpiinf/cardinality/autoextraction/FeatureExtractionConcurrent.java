@@ -68,7 +68,7 @@ public class FeatureExtractionConcurrent {
 	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, int threshold) throws IOException, InterruptedException {
 		
 		long startTime = System.currentTimeMillis();
-		System.out.println("Generate feature file (in column format) for CRF++... ");
+		System.out.print("Generate feature file (in column format) for CRF++... ");
 		
 		removeOldFeatureFiles();
 		

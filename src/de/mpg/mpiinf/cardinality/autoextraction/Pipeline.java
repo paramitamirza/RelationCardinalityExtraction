@@ -16,6 +16,11 @@ public class Pipeline {
 	
 	public static void main(String[] args) throws Exception {
 		
+		// Run configurations' arguments for example
+		// -i ./data/example/wikidata_sample_new.csv -p sample -w /local/home/paramita/D5data-8/RelationCardinalityExtraction_pipeline/enwiki_20170101_pages_articles/ 
+		// -c /local/home/paramita/CRF++-0.58/ -l ./data/example/CRF/template_lemma.txt -f ./data/example/ -m ./data/example/CRF/models/ 
+		// -o ./data/example/predicted_children_count.csv -r ./data/example/performance.txt
+		
 		long startTime = System.currentTimeMillis();
 		System.out.println("Start the Relation Cardinality Extraction pipeline... ");
 		
