@@ -86,7 +86,7 @@ public class WikipediaArticle {
 			eid = line.split(",")[0];
 			count = line.split(",")[1];
 			
-			Runnable worker = new AppendWikipediaCurid(this, eid, count, inputCsvFilePath.replace(".csv", ".tmp"));
+			Runnable worker = new AppendWikipediaCurid(this, eid, count, inputCsvFilePath + ".tmp");
 			executor.execute(worker);
 			
 			line = br.readLine();
@@ -105,7 +105,7 @@ public class WikipediaArticle {
 		oldFile.delete();
 
 		// And rename tmp file's name to old file name
-		File newFile = new File(inputCsvFilePath.replace(".csv", ".tmp"));
+		File newFile = new File(inputCsvFilePath + ".tmp");
 		newFile.renameTo(oldFile);
 		
 		long endTime   = System.currentTimeMillis();
