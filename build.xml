@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="RelationCardinalityExtraction">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="/local/home/paramita/eclipse/jee-mars/eclipse/"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.7"/>
+    <property name="source" value="1.7"/>
+    <path id="Maven Dependencies.libraryclasspath">
+        <pathelement location="/local/home/paramita/.m2/repository/edu/stanford/nlp/stanford-corenlp/3.7.0/stanford-corenlp-3.7.0.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/com/apple/AppleJavaExtensions/1.4/AppleJavaExtensions-1.4.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/de/jollyday/jollyday/0.4.9/jollyday-0.4.9.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/javax/xml/bind/jaxb-api/2.2.7/jaxb-api-2.2.7.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/commons/commons-lang3/3.3.1/commons-lang3-3.3.1.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/lucene/lucene-queryparser/4.10.3/lucene-queryparser-4.10.3.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/lucene/lucene-sandbox/4.10.3/lucene-sandbox-4.10.3.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/lucene/lucene-analyzers-common/4.10.3/lucene-analyzers-common-4.10.3.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/lucene/lucene-queries/4.10.3/lucene-queries-4.10.3.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/lucene/lucene-core/4.10.3/lucene-core-4.10.3.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/javax/servlet/javax.servlet-api/3.0.1/javax.servlet-api-3.0.1.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/com/io7m/xom/xom/1.2.10/xom-1.2.10.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/xml-apis/xml-apis/1.3.03/xml-apis-1.3.03.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/xerces/xercesImpl/2.8.0/xercesImpl-2.8.0.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/xalan/xalan/2.7.0/xalan-2.7.0.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/joda-time/joda-time/2.9/joda-time-2.9.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/com/googlecode/efficient-java-matrix-library/ejml/0.23/ejml-0.23.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/glassfish/javax.json/1.0.4/javax.json-1.0.4.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/slf4j/slf4j-api/1.7.12/slf4j-api-1.7.12.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/com/google/protobuf/protobuf-java/2.6.1/protobuf-java-2.6.1.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/json/json/20160810/json-20160810.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/commons-cli/commons-cli/1.3/commons-cli-1.3.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/jena/jena-arq/3.1.1/jena-arq-3.1.1.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/jena/jena-core/3.1.1/jena-core-3.1.1.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/jena/jena-iri/3.1.1/jena-iri-3.1.1.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/jena/jena-base/3.1.1/jena-base-3.1.1.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/com/github/andrewoma/dexx/collection/0.6/collection-0.6.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/jena/jena-shaded-guava/3.1.1/jena-shaded-guava-3.1.1.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/commons-codec/commons-codec/1.9/commons-codec-1.9.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/com/github/jsonld-java/jsonld-java/0.8.3/jsonld-java-0.8.3.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.7.4/jackson-core-2.7.4.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.7.4/jackson-databind-2.7.4.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/commons-io/commons-io/2.5/commons-io-2.5.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/httpcomponents/httpclient-cache/4.5.2/httpclient-cache-4.5.2.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/thrift/libthrift/0.9.3/libthrift-0.9.3.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.21/jcl-over-slf4j-1.7.21.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/commons/commons-csv/1.3/commons-csv-1.3.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/wikidata/wdtk/wdtk-dumpfiles/0.7.0/wdtk-dumpfiles-0.7.0.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/wikidata/wdtk/wdtk-datamodel/0.7.0/wdtk-datamodel-0.7.0.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.5.0/jackson-annotations-2.5.0.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/wikidata/wdtk/wdtk-util/0.7.0/wdtk-util-0.7.0.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/commons/commons-compress/1.9/commons-compress-1.9.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/wikidata/wdtk/wdtk-storage/0.7.0/wdtk-storage-0.7.0.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/org/apache/logging/log4j/log4j-api/2.8.1/log4j-api-2.8.1.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/log4j/apache-log4j-extras/1.0/apache-log4j-extras-1.0.jar"/>
+        <pathelement location="/local/home/paramita/.m2/repository/log4j/log4j/1.2.9/log4j-1.2.9.jar"/>
+    </path>
+    <path id="RelationCardinalityExtraction.classpath">
+        <pathelement location="target/classes"/>
+        <pathelement location="lib/json-20160810.jar"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+        <pathelement location="lib/commons-cli-1.3.jar"/>
+    </path>
+    <path id="run.Classifier.classpath">
+        <path refid="RelationCardinalityExtraction.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.ConceptNetNumbers.classpath">
+        <path refid="RelationCardinalityExtraction.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.EntityStatisticsProcessor.classpath">
+        <path refid="RelationCardinalityExtraction.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.Evaluation.classpath">
+        <path refid="RelationCardinalityExtraction.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.FeatureExtractionForCRF.classpath">
+        <path refid="RelationCardinalityExtraction.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.FeatureExtractionForCRFTransform.classpath">
+        <path refid="RelationCardinalityExtraction.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.Pipeline.classpath">
+        <path refid="RelationCardinalityExtraction.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.Preprocessing.classpath">
+        <path refid="RelationCardinalityExtraction.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.PreprocessingConcurrent.classpath">
+        <path refid="RelationCardinalityExtraction.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.Transform.classpath">
+        <path refid="RelationCardinalityExtraction.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.WikipediaArticle.classpath">
+        <path refid="RelationCardinalityExtraction.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <target name="init">
+        <mkdir dir="target/classes"/>
+        <copy includeemptydirs="false" todir="target/classes">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="target/classes"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="target/classes" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="RelationCardinalityExtraction.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="Classifier">
+        <java classname="de.mpg.mpiinf.cardinality.autoextraction.Classifier" failonerror="true" fork="yes">
+            <arg line="-c D:/tools/CRF++-0.58 -p sample -l ./data/example/CRF/template_lemma.txt -m ./data/example/CRF/models/ -t ./data/example/sample_train_cardinality.data -e ./data/example/sample_train_cardinality.data"/>
+            <classpath refid="run.Classifier.classpath"/>
+        </java>
+    </target>
+    <target name="ConceptNetNumbers">
+        <java classname="de.mpg.mpiinf.cardinality.autoextraction.ConceptNetNumbers" failonerror="true" fork="yes">
+            <classpath refid="run.ConceptNetNumbers.classpath"/>
+        </java>
+    </target>
+    <target name="EntityStatisticsProcessor">
+        <java classname="de.mpg.mpiinf.cardinality.wikidata.examples.EntityStatisticsProcessor" failonerror="true" fork="yes">
+            <classpath refid="run.EntityStatisticsProcessor.classpath"/>
+        </java>
+    </target>
+    <target name="Evaluation">
+        <java classname="de.mpg.mpiinf.cardinality.autoextraction.Evaluation" failonerror="true" fork="yes">
+            <arg line="-i ./data/example/wikidata_sample_new.csv -f ./data/example/sample_train_cardinality.out -p sample -r ./data/example/performance.txt"/>
+            <classpath refid="run.Evaluation.classpath"/>
+        </java>
+    </target>
+    <target name="FeatureExtractionForCRF">
+        <java classname="de.mpg.mpiinf.cardinality.autoextraction.FeatureExtractionForCRF" failonerror="true" fork="yes">
+            <classpath refid="run.FeatureExtractionForCRF.classpath"/>
+        </java>
+    </target>
+    <target name="FeatureExtractionForCRFTransform">
+        <java classname="de.mpg.mpiinf.cardinality.autoextraction.FeatureExtractionForCRFTransform" failonerror="true" fork="yes">
+            <classpath refid="run.FeatureExtractionForCRFTransform.classpath"/>
+        </java>
+    </target>
+    <target name="Pipeline">
+        <java classname="de.mpg.mpiinf.cardinality.autoextraction.Pipeline" failonerror="true" fork="yes">
+            <classpath refid="run.Pipeline.classpath"/>
+        </java>
+    </target>
+    <target name="Preprocessing">
+        <java classname="de.mpg.mpiinf.cardinality.autoextraction.Preprocessing" failonerror="true" fork="yes">
+            <classpath refid="run.Preprocessing.classpath"/>
+        </java>
+    </target>
+    <target name="PreprocessingConcurrent">
+        <java classname="de.mpg.mpiinf.cardinality.autoextraction.PreprocessingConcurrent" failonerror="true" fork="yes">
+            <classpath refid="run.PreprocessingConcurrent.classpath"/>
+        </java>
+    </target>
+    <target name="Transform">
+        <java classname="de.mpg.mpiinf.cardinality.autoextraction.Transform" failonerror="true" fork="yes">
+            <classpath refid="run.Transform.classpath"/>
+        </java>
+    </target>
+    <target name="WikipediaArticle">
+        <java classname="de.mpg.mpiinf.cardinality.autoextraction.WikipediaArticle" failonerror="true" fork="yes">
+            <classpath refid="run.WikipediaArticle.classpath"/>
+        </java>
+    </target>
+</project>
