@@ -77,10 +77,6 @@ public class Pipeline {
 		cl.trainModel(trainData);						//train model
 		cl.testModel(evalData);							//test model
 		
-		// Once training is complete, delete data file...
-		File dataFile = new File(trainData);
-		dataFile.delete();
-		
 		//Evaluation
 		String predictionFile = null;
 		if (cmd.hasOption("o")) {
@@ -99,6 +95,12 @@ public class Pipeline {
 		long endTime   = System.currentTimeMillis();
 		float totalTime = (endTime - startTime)/(float)1000;
 		System.out.println("done [ " + totalTime + " sec].");
+		
+		// Once everything is done, delete data file...
+		File dataFile = new File(trainData);
+		dataFile.delete();
+		File crfOutFile = new File(crfOutPath);
+		crfOutFile.delete();
 	}
 	
 	public static Options getPreprocessingOptions() {
