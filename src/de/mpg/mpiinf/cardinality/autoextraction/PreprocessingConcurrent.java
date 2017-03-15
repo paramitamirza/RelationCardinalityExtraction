@@ -93,9 +93,11 @@ public class PreprocessingConcurrent {
 			
 			boolean nummod = cmd.hasOption("d");
 			boolean compositional = cmd.hasOption("c");
+			boolean transform = cmd.hasOption("x");
+			boolean transformZeroOne = cmd.hasOption("z");
 			int threshold = 0;
 			if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
-			featExtraction.run(wiki, nummod, compositional, threshold);
+			featExtraction.run(wiki, nummod, compositional, threshold, transform, transformZeroOne);
 		}
 		
 	}
@@ -150,6 +152,14 @@ public class PreprocessingConcurrent {
 		Option threshold = new Option("t", "threshold", true, "Threshold for number of triples to be labelled as positive examples");
 		threshold.setRequired(false);
 		options.addOption(threshold);
+		
+		Option transform = new Option("x", "transform", false, "Transform non-numeric concepts into numbers");
+		transform.setRequired(false);
+		options.addOption(transform);
+		
+		Option transformZeroOne = new Option("z", "transformzeroone", false, "Transform negative sentences into (containing) 0 and articles into 1");
+		transformZeroOne.setRequired(false);
+		options.addOption(transformZeroOne);
 		
 		return options;
 	}

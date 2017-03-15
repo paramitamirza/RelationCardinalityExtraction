@@ -62,10 +62,11 @@ public class FeatureExtractionConcurrent {
 		}
 		
 		WikipediaArticle wiki = new WikipediaArticle();
-		featExtraction.run(wiki, true, false, 0);
+		featExtraction.run(wiki, true, false, 0, false, false);
 	}
 	
-	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, int threshold) throws IOException, InterruptedException {
+	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, int threshold,
+			boolean transform, boolean transformZeroOne) throws IOException, InterruptedException {
 		
 		long startTime = System.currentTimeMillis();
 		System.out.print("Generate feature file (in column format) for CRF++... ");
@@ -98,7 +99,8 @@ public class FeatureExtractionConcurrent {
 		
 		GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
 				wiki, wikidataId, count, curId, training,
-        		nummod, compositional, threshold);
+        		nummod, compositional, threshold,
+        		transform, transformZeroOne);
 		ext.run();
 		//Done. Next WikidataIds...
 		
@@ -118,7 +120,8 @@ public class FeatureExtractionConcurrent {
 	        
 	        Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
 	        		wiki, wikidataId, count, curId, training,
-	        		true, false, 1);
+	        		nummod, compositional, threshold,
+	        		transform, transformZeroOne);
             executor.execute(worker);
              
             line = br.readLine();

@@ -30,9 +30,13 @@ public class GenerateFeatures implements Runnable {
 	private boolean compositional;
 	private int threshold;
 	
+	private boolean transform;
+	private boolean transformZeroOne;
+	
 	public GenerateFeatures(String dirFeature, String relName,
 			WikipediaArticle wiki, String wikidataId, String count, Integer curId, boolean training,
-			boolean nummod, boolean compositional, int threshold) {
+			boolean nummod, boolean compositional, int threshold,
+			boolean transform, boolean transformZeroOne) {
 		this.setDirFeature(dirFeature);
 		this.setRelName(relName);
 		
@@ -47,6 +51,9 @@ public class GenerateFeatures implements Runnable {
 		this.setNummod(nummod);
 		this.setCompositional(compositional);
 		this.setThreshold(threshold);
+		
+		this.setTransform(transform);
+		this.setTransformZeroOne(transformZeroOne);
 	}
 	
 	public static void main(String[] args) throws JSONException, IOException {
@@ -77,7 +84,7 @@ public class GenerateFeatures implements Runnable {
 	    			for (Sentence s : doc.sentences()) {	//Split the sentences
 	    				
 	    				original = s.text();	    				
-	    				sent = filter(original, this.isTraining(), trans, true, false);	//boolean transform, boolean transformZeroOne
+	    				sent = filter(original, this.isTraining(), trans, this.isTransform(), this.isTransformZeroOne());
 	    				
 	    				if (sent != null) {
 	    					
@@ -509,5 +516,21 @@ public class GenerateFeatures implements Runnable {
 
 	public void setCurId(Integer curId) {
 		this.curId = curId;
+	}
+
+	public boolean isTransform() {
+		return transform;
+	}
+
+	public void setTransform(boolean transform) {
+		this.transform = transform;
+	}
+
+	public boolean isTransformZeroOne() {
+		return transformZeroOne;
+	}
+
+	public void setTransformZeroOne(boolean transformZeroOne) {
+		this.transformZeroOne = transformZeroOne;
 	}
 }
