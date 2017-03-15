@@ -76,7 +76,8 @@ public class Classifier {
 		long startTime = System.currentTimeMillis();
 		System.out.print("Training a CRF++ classification model... ");
 		
-		String crfLearn = "crf_learn";
+//		String crfLearn = "crf_learn";
+		String crfLearn = "usr/local/bin/crf_learn";
 		if (OSValidator.isWindows()) crfLearn = "crf_learn.exe";
 		
 		try {
@@ -109,7 +110,8 @@ public class Classifier {
 		long startTime = System.currentTimeMillis();
 		System.out.print("Test a CRF++ classification model... ");
 		
-		String crfTest = "crf_test";
+//		String crfTest = "crf_test";
+		String crfTest = "usr/local/bin/crf_test";
 		if (OSValidator.isWindows()) crfTest = "crf_test.exe";
 		
 		BufferedWriter bw = new BufferedWriter(new FileWriter(testFile.replace(".data", ".out")));
