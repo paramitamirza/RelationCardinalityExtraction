@@ -106,7 +106,7 @@ public class FeatureExtractionConcurrent {
 		
 		line = br.readLine();
 		
-		ExecutorService executor = Executors.newFixedThreadPool(NTHREDS);
+		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		
 		while (line != null) {
 			wikidataId = line.split(",")[0];
