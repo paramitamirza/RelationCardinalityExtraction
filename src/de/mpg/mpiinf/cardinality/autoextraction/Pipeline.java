@@ -103,6 +103,8 @@ public class Pipeline {
 		dataFile.deleteOnExit();
 		File crfOutFile = new File(crfOutPath);
 		crfOutFile.deleteOnExit();
+		File modelFile = new File(dirModels + "/" + relName + ".model");
+		modelFile.deleteOnExit();
 	}
 	
 	public static Options getPreprocessingOptions() {
