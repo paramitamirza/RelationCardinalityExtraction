@@ -54,9 +54,9 @@ public class Pipeline {
 		}
 		FeatureExtractionConcurrent featExtraction;
 		if (cmd.hasOption("e")) {
-			featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
-		} else {
 			featExtraction = new FeatureExtractionConcurrent(inputCsvFile, testCsvFile, relName, dirFeature);
+		} else {
+			featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
 		} 
 		if (cmd.hasOption("n")) FeatureExtractionConcurrent.setNumberOfThreads(Integer.parseInt(cmd.getOptionValue("thread")));
 		
@@ -78,7 +78,12 @@ public class Pipeline {
 		String dirCRF = cmd.getOptionValue("crf");
 		String templateFile = cmd.getOptionValue("template");
 		String trainData = dirFeature + "/" + relName + "_train_cardinality.data";
-		String evalData = trainData;					//evaluation data = training data
+		String evalData;
+		if (cmd.hasOption("e")) {
+			evalData = dirFeature + "/" + relName + "_test_cardinality.data";
+		} else {
+			evalData = trainData;						//evaluation data = training data
+		}
 		
 		Classifier cl = new Classifier(relName, dirCRF, dirModels, templateFile);
 		if (cmd.hasOption("n")) Classifier.setNumberOfThreads(Integer.parseInt(cmd.getOptionValue("thread")));
@@ -106,6 +111,8 @@ public class Pipeline {
 		
 		// Once everything is done, delete data file...
 		File dataFile = new File(trainData);
+		dataFile.deleteOnExit();
+		dataFile = new File(evalData);
 		dataFile.deleteOnExit();
 		File crfOutFile = new File(crfOutPath);
 		crfOutFile.deleteOnExit();
