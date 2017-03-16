@@ -4,13 +4,23 @@ public class AppendWikipediaCurid implements Runnable {
 	
 	private String wikidataId;
 	private String tripleCount;
+	private String label;
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
 	private String outFilePath;
 	private WikipediaArticle wiki;
 	
-	public AppendWikipediaCurid(WikipediaArticle wiki, String wikidataId, String tripleCount, String outFilePath) {
+	public AppendWikipediaCurid(WikipediaArticle wiki, String wikidataId, String tripleCount, String label, String outFilePath) {
 		this.setWiki(wiki);
 		this.setWikidataId(wikidataId);
 		this.setTripleCount(tripleCount);
+		this.setLabel(label);
 		this.setOutFilePath(outFilePath);
 	}
 
@@ -25,7 +35,7 @@ public class AppendWikipediaCurid implements Runnable {
 				if (!article.equals("")) {	
 					
 					WriteToFile.getInstance().appendContents(this.getOutFilePath(), 
-		    				this.getWikidataId() + "," + this.getTripleCount() + "," + curId + "\n");
+		    				this.getWikidataId() + "," + this.getTripleCount() + "," + curId + "\t" + this.getLabel() + "\n");
 					
 					break;
 				}
