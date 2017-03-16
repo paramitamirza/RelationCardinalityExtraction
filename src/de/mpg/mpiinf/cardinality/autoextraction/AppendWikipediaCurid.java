@@ -35,7 +35,7 @@ public class AppendWikipediaCurid implements Runnable {
 				if (!article.equals("")) {	
 					
 					WriteToFile.getInstance().appendContents(this.getOutFilePath(), 
-		    				this.getWikidataId() + "," + this.getTripleCount() + "," + curId + "\t" + this.getLabel() + "\n");
+		    				this.getWikidataId() + "," + this.getTripleCount() + "," + curId + "," + this.getLabel() + "\n");
 					
 					break;
 				}
