@@ -8,6 +8,6 @@
 .classpath
 .gitattributes
 .pydevproject
+.gitignore
 
-/bin/
 /target/

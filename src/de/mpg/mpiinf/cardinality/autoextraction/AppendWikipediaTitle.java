@@ -18,27 +18,27 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.zip.GZIPInputStream;
 
-public class AddWikipediaTitle {
+public class AppendWikipediaTitle {
 	
 	private String inputCsvFile = "./data/auto_extraction/wikidata_sample.csv";
 	private String wikipediaLinkFile = "./data/auto_extraction/english_links.txt.gz";
 	
-	public AddWikipediaTitle() {
+	public AppendWikipediaTitle() {
 		
 	}
 	
-	public AddWikipediaTitle(String inputCsvFilePath, String wikiLinkFilePath) {
+	public AppendWikipediaTitle(String inputCsvFilePath, String wikiLinkFilePath) {
 		this.setInputCsvFile(inputCsvFilePath);
 		this.setWikipediaLinkFile(wikiLinkFilePath);
 	}
 	
 	public static void main(String[] args) throws Exception {
 		
-		AddWikipediaTitle addWikiTitle;
+		AppendWikipediaTitle addWikiTitle;
 		if (args.length < 2) {
-			addWikiTitle = new AddWikipediaTitle();
+			addWikiTitle = new AppendWikipediaTitle();
 		} else {
-			addWikiTitle = new AddWikipediaTitle(args[0], args[1]);
+			addWikiTitle = new AppendWikipediaTitle(args[0], args[1]);
 		}
 		
 		addWikiTitle.append(0);

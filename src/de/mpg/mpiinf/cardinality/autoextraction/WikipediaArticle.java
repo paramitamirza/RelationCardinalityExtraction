@@ -4,13 +4,11 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,13 +17,9 @@ import java.util.zip.GZIPInputStream;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.Stack;
 
 public class WikipediaArticle {
 	
@@ -36,7 +30,11 @@ public class WikipediaArticle {
 	private NavigableMap<Integer, String> wikiIndex;
 	private Map<String, String> wikibaseMap;
 	
-	private static final int NTHREDS = 200;
+	private static int NTHREADS = -999;
+	
+	public static void setNumberOfThreads(int n) {
+		NTHREADS = n;
+	}
 	
 	public WikipediaArticle() throws IOException {
 		
@@ -77,16 +75,22 @@ public class WikipediaArticle {
 		System.out.print("Append " + new File(inputCsvFilePath).getName() + " file with Wikipedia curId... ");
 		
 		BufferedReader br = new BufferedReader(new FileReader(inputCsvFilePath));
-		String eid = "", count = "";
+		String eid = "", count = "", label = "";
 		String line = br.readLine();	
 		
-		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		ExecutorService executor;
+		if (NTHREADS < 0) {
+			executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		} else {
+			executor = Executors.newFixedThreadPool(NTHREADS);
+		}
 		
 		while (line != null) {
 			eid = line.split(",")[0];
 			count = line.split(",")[1];
+			label = line.split(",")[2];
 			
-			Runnable worker = new AppendWikipediaCurid(this, eid, count, inputCsvFilePath + ".tmp");
+			Runnable worker = new AppendWikipediaCurid(this, eid, count, label, inputCsvFilePath + ".tmp");
 			executor.execute(worker);
 			
 			line = br.readLine();
@@ -120,19 +124,20 @@ public class WikipediaArticle {
 		
 		BufferedReader br = new BufferedReader(new FileReader(inputCsvFilePath));
 		BufferedWriter bw = new BufferedWriter(new FileWriter(inputCsvFilePath.replace(".csv", ".tmp")));
-		String eid = "", count = "";
+		String eid = "", count = "", label = "";
 		String line = br.readLine();	
 		
 		while (line != null) {
 			eid = line.split(",")[0];
 			count = line.split(",")[1];
+			label = line.split(",")[2];
 			
 			String curIds = this.fetchCurId(eid);
 			String article = "";
 			for (String curId : curIds.split("\\|")) {
 				article = fetchArticle(Integer.parseInt(curId));
 				if (!article.equals("")) {
-					bw.write(eid + "," + count + "," + curId);
+					bw.write(eid + "," + count + "," + curId + "," + label);
 					bw.newLine();
 					break;
 				}
