@@ -53,7 +53,12 @@ public class Pipeline {
 		if (cmd.hasOption("f")) {
 			dirFeature = cmd.getOptionValue("feature");
 		}
-		FeatureExtractionConcurrent featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
+		FeatureExtractionConcurrent featExtraction;
+		if (cmd.hasOption("e")) {
+			featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
+		} else {
+			featExtraction = new FeatureExtractionConcurrent(inputCsvFile, testCsvFile, relName, dirFeature);
+		} 
 		
 //		wiki.appendCurId(inputCsvFile);				//No need anymore... should be handled by PreprocessingConcurrent with -b option
 		
