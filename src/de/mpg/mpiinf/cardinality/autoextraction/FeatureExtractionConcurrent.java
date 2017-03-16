@@ -3,12 +3,10 @@ package de.mpg.mpiinf.cardinality.autoextraction;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +23,11 @@ public class FeatureExtractionConcurrent {
 	private String relName = "sample";
 	private String dirFeature = "./data/example/";
 	
-	private static final int NTHREDS = 200;
+	private static int NTHREADS = -999;
+	
+	public static void setNumberOfThreads(int n) {
+		NTHREADS = n;
+	}
 	
 	public FeatureExtractionConcurrent() {
 		
@@ -85,8 +87,6 @@ public class FeatureExtractionConcurrent {
 		BufferedReader br = new BufferedReader(new FileReader(getInputCsvFile()));
 		line = br.readLine();
 		
-		List<Thread> threads = new ArrayList<Thread>();
-		
 		//First wikidataId starts...
 		wikidataId = line.split(",")[0];
         count = line.split(",")[1];
@@ -106,7 +106,12 @@ public class FeatureExtractionConcurrent {
 		
 		line = br.readLine();
 		
-		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		ExecutorService executor;
+		if (NTHREADS < 0) {
+			executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		} else {
+			executor = Executors.newFixedThreadPool(NTHREADS);
+		}
 		
 		while (line != null) {
 			wikidataId = line.split(",")[0];
@@ -155,7 +160,6 @@ public class FeatureExtractionConcurrent {
 	}
 	
 	public List<String> readRandomInstances(String inputFile) throws IOException {
-		System.out.println("Read random instances...");
 		List<String> randomInstances = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(inputFile));
 		String line = br.readLine();		

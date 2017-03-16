@@ -177,7 +177,6 @@ public class Evaluation {
 					//When there are more than one in a sentence:
 					
 					//if a number is a total of its following sequence of numbers, choose the total
-					Object[] keys = numbers.keySet().toArray();
 					int totalIdx = findTotalNumberOfComposition(numbers);
 					
 					if (totalIdx > 0) {

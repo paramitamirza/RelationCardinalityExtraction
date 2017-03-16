@@ -1,10 +1,5 @@
 package de.mpg.mpiinf.cardinality.autoextraction;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-
 public class AppendWikipediaCurid implements Runnable {
 	
 	private String wikidataId;

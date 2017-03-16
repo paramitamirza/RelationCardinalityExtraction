@@ -22,6 +22,12 @@ public class Classifier {
 	private String modelDir;
 	private String templateFile;
 	private String relName;
+	
+	private static int NTHREADS = 4;
+	
+	public static void setNumberOfThreads(int n) {
+		NTHREADS = n;
+	}
 
 	public Classifier(String relName, String crfDir, String modelDir, String templateFile) {
 		this.setRelName(relName);
@@ -82,7 +88,7 @@ public class Classifier {
 		
 		try {
 	    	ProcessBuilder builder = new ProcessBuilder(this.getCrfDir() + "/" + crfLearn, 
-	    			"-p", "4", this.getTemplateFile(), 
+	    			"-p", NTHREADS+"", this.getTemplateFile(), 
 	    			trainFile, this.getModelDir() + "/" + this.getRelName() + ".model");
 	        Process process = builder.start();
 	        

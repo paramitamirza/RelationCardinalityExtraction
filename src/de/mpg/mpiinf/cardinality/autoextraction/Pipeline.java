@@ -1,9 +1,6 @@
 package de.mpg.mpiinf.cardinality.autoextraction;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -49,11 +46,14 @@ public class Pipeline {
 		//Preprocessing
 		String wikipediaDir = cmd.getOptionValue("wikipedia");
 		WikipediaArticle wiki = new WikipediaArticle(wikipediaDir, wikipediaDir + "/zindex/", wikipediaDir + "/wikibase_item.txt.gz");
+		if (cmd.hasOption("n")) WikipediaArticle.setNumberOfThreads(Integer.parseInt(cmd.getOptionValue("thread")));
+		
 		String dirFeature = "./feature_data/";
 		if (cmd.hasOption("f")) {
 			dirFeature = cmd.getOptionValue("feature");
 		}
 		FeatureExtractionConcurrent featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
+		if (cmd.hasOption("n")) FeatureExtractionConcurrent.setNumberOfThreads(Integer.parseInt(cmd.getOptionValue("thread")));
 		
 //		wiki.appendCurId(inputCsvFile);				//No need anymore... should be handled by PreprocessingConcurrent with -b option
 		
@@ -76,6 +76,7 @@ public class Pipeline {
 		String evalData = trainData;					//evaluation data = training data
 		
 		Classifier cl = new Classifier(relName, dirCRF, dirModels, templateFile);
+		if (cmd.hasOption("n")) Classifier.setNumberOfThreads(Integer.parseInt(cmd.getOptionValue("thread")));
 		cl.trainModel(trainData);						//train model
 		cl.testModel(evalData);							//test model
 		
@@ -169,6 +170,10 @@ public class Pipeline {
 		Option transformZeroOne = new Option("z", "transformzeroone", false, "Transform negative sentences into (containing) 0 and articles into 1");
 		transformZeroOne.setRequired(false);
 		options.addOption(transformZeroOne);
+		
+		Option nThreads = new Option("n", "thread", true, "Number of threads");
+		nThreads.setRequired(false);
+		options.addOption(nThreads);
 		
 		return options;
 	}
