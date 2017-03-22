@@ -102,7 +102,9 @@ public class Preprocessing {
 			boolean ignoreHigher = cmd.hasOption("h");
 			int threshold = 0;
 			if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
-			featExtraction.run(wiki, nummod, compositional, threshold, transform, transformZeroOne, ignoreHigher);
+			float topPopular = (float)1;
+			if (cmd.hasOption("k")) topPopular = Float.parseFloat(cmd.getOptionValue("popular"));
+			featExtraction.run(wiki, nummod, compositional, threshold, transform, transformZeroOne, ignoreHigher, topPopular);
 		}
 		
 	}
@@ -169,6 +171,10 @@ public class Preprocessing {
 		Option ignoreHigher = new Option("h", "ignorehigher", false, "Ignore numbers > num_of_triples as negative examples");
 		ignoreHigher.setRequired(false);
 		options.addOption(ignoreHigher);
+		
+		Option topPopular = new Option("k", "popular", true, "Cutoff percentage of popular instances as training examples");
+		topPopular.setRequired(false);
+		options.addOption(topPopular);
 		
 		Option nThreads = new Option("n", "thread", true, "Number of threads");
 		nThreads.setRequired(false);

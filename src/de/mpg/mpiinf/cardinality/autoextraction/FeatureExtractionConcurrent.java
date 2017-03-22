@@ -64,12 +64,12 @@ public class FeatureExtractionConcurrent {
 		}
 		
 		WikipediaArticle wiki = new WikipediaArticle();
-		featExtraction.run(wiki, true, false, 0, false, false, false);
+		featExtraction.run(wiki, true, false, 0, false, false, false, (float) 1.0);
 	}
 	
 	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, int threshold,
 			boolean transform, boolean transformZeroOne,
-			boolean ignoreHigher) throws IOException, InterruptedException {
+			boolean ignoreHigher, float topPopular) throws IOException, InterruptedException {
 		
 		long startTime = System.currentTimeMillis();
 		System.out.print("Generate feature file (in column format) for CRF++... ");
@@ -86,6 +86,11 @@ public class FeatureExtractionConcurrent {
 		boolean training;
 		
 		BufferedReader br = new BufferedReader(new FileReader(getInputCsvFile()));
+		
+		int numInstances = ReadFromFile.countLines(getInputCsvFile());
+		int maxNumInstances = Math.round(topPopular * numInstances);
+		int idxInstances = 0;
+		
 		line = br.readLine();
 		
 		//First wikidataId starts...
@@ -104,6 +109,7 @@ public class FeatureExtractionConcurrent {
         		transform, transformZeroOne,
         		ignoreHigher);
 		ext.run();
+		idxInstances ++;
 		//Done. Next WikidataIds...
 		
 		line = br.readLine();
@@ -115,7 +121,9 @@ public class FeatureExtractionConcurrent {
 			executor = Executors.newFixedThreadPool(NTHREADS);
 		}
 		
-		while (line != null) {
+		while (line != null
+				&& idxInstances < maxNumInstances
+				) {
 			wikidataId = line.split(",")[0];
 	        count = line.split(",")[1];
 	        curId = Integer.parseInt(line.split(",")[2]);
@@ -131,6 +139,7 @@ public class FeatureExtractionConcurrent {
 	        		transform, transformZeroOne,
 	        		ignoreHigher);
             executor.execute(worker);
+            idxInstances ++;
              
             line = br.readLine();
 		}
