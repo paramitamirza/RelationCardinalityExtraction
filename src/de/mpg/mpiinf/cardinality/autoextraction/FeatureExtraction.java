@@ -75,15 +75,13 @@ public class FeatureExtraction {
 		
 		BufferedReader br = new BufferedReader(new FileReader(getInputCsvFile()));
 		
-		int numInstances = ReadFromFile.countLines(getInputCsvFile());
-		int maxNumInstances = Math.round(topPopular * numInstances);
-		int idxInstances = 0;
+		int numTrain = ReadFromFile.countLines(this.getInputCsvFile()) - ReadFromFile.countLines(this.getInputRandomCsvFile());
+		int maxNumTrain = Math.round(topPopular * numTrain);
+		int idxTrain = 0;
 		
 		line = br.readLine();
 		
-		while (line != null
-				&& idxInstances < maxNumInstances
-				) {
+		while (line != null) {
 			wikidataId = line.split(",")[0];
 	        count = line.split(",")[1];
 	        curId = Integer.parseInt(line.split(",")[2]);
@@ -92,14 +90,22 @@ public class FeatureExtraction {
 	        if (testInstances.contains(wikidataId)) {
 				training = false;
 			} 
-	        
-	        GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
-	        		wiki, wikidataId, count, curId, training,
-	        		nummod, compositional, threshold,
-	        		transform, transformZeroOne,
-	        		ignoreHigher);
-			ext.run();
-			idxInstances ++;
+	        if (training && (idxTrain < maxNumTrain)) {
+		        GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
+		        		wiki, wikidataId, count, curId, training,
+		        		nummod, compositional, threshold,
+		        		transform, transformZeroOne,
+		        		ignoreHigher);
+				ext.run();
+				idxTrain ++;
+	        } else {
+	        	GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
+		        		wiki, wikidataId, count, curId, training,
+		        		nummod, compositional, threshold,
+		        		transform, transformZeroOne,
+		        		ignoreHigher);
+				ext.run();
+	        }
              
             line = br.readLine();
 		}
