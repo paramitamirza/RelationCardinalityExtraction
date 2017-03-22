@@ -66,9 +66,10 @@ public class Pipeline {
 		boolean compositional = cmd.hasOption("s");
 		boolean transform = cmd.hasOption("x");
 		boolean transformZeroOne = cmd.hasOption("z");
+		boolean ignoreHigher = cmd.hasOption("h");
 		int threshold = 0;
 		if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
-		featExtraction.run(wiki, nummod, compositional, threshold, transform, transformZeroOne);
+		featExtraction.run(wiki, nummod, compositional, threshold, transform, transformZeroOne, ignoreHigher);
 		
 		//Classifier
 		String dirModels = "./models/";
@@ -182,6 +183,10 @@ public class Pipeline {
 		Option transformZeroOne = new Option("z", "transformzeroone", false, "Transform negative sentences into (containing) 0 and articles into 1");
 		transformZeroOne.setRequired(false);
 		options.addOption(transformZeroOne);
+		
+		Option ignoreHigher = new Option("h", "ignorehigher", false, "Ignore numbers > num_of_triples as negative examples");
+		ignoreHigher.setRequired(false);
+		options.addOption(ignoreHigher);
 		
 		Option nThreads = new Option("n", "thread", true, "Number of threads");
 		nThreads.setRequired(false);

@@ -2,7 +2,9 @@ package de.mpg.mpiinf.cardinality.autoextraction;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.*;
 
@@ -29,10 +31,13 @@ public class GenerateFeatures implements Runnable {
 	private boolean transform;
 	private boolean transformZeroOne;
 	
+	private boolean ignoreHigher;
+	
 	public GenerateFeatures(String dirFeature, String relName,
 			WikipediaArticle wiki, String wikidataId, String count, Integer curId, boolean training,
 			boolean nummod, boolean compositional, int threshold,
-			boolean transform, boolean transformZeroOne) {
+			boolean transform, boolean transformZeroOne,
+			boolean ignoreHigher) {
 		this.setDirFeature(dirFeature);
 		this.setRelName(relName);
 		
@@ -50,6 +55,8 @@ public class GenerateFeatures implements Runnable {
 		
 		this.setTransform(transform);
 		this.setTransformZeroOne(transformZeroOne);
+		
+		this.setIgnoreHigher(ignoreHigher);
 	}
 	
 	public static void main(String[] args) throws JSONException, IOException {
@@ -85,7 +92,8 @@ public class GenerateFeatures implements Runnable {
 	    				if (sent != null) {
 	    					
 	    					toPrint.append(generateFeatures(sent, j, numOfTriples, 
-	    							this.isNummod(), this.isCompositional(), this.getThreshold()).toString());
+	    							this.isNummod(), this.isCompositional(), this.getThreshold(),
+	    							this.isIgnoreHigher()).toString());
 	    				}
 	    				
 	    				j ++;
@@ -170,7 +178,8 @@ public class GenerateFeatures implements Runnable {
 	}
 	
 	private StringBuilder generateFeatures(Sentence sent, int j, int numOfTriples, 
-			boolean nummod, boolean compositional, int threshold) {
+			boolean nummod, boolean compositional, int threshold,
+			boolean ignoreHigher) {
 		String word = "", lemma = "", pos = "", ner = "", deprel = "", label = "";
 		StringBuilder sb = new StringBuilder();
 		int k;
@@ -342,6 +351,12 @@ public class GenerateFeatures implements Runnable {
 								&& numOfTriples > threshold
 								) {
 							label = "_YES_";
+						} else if (numInt > numOfTriples
+								&& ((nummod && deprel.startsWith("nummod"))
+										|| !nummod)
+								&& numOfTriples > threshold
+								) {
+							label = "_MAYBE_";
 //							} else if (numInt < numOfTriples) {
 //								label = "_NO_";
 //							} else if (numInt > numOfTriples) {
@@ -416,9 +431,26 @@ public class GenerateFeatures implements Runnable {
 			}
 		}
 		
-		for (int t=0; t<tokenFeatures.size(); t++) {
-			sb.append(tokenFeatures.get(t) + "\t" + labels.get(t));
-			sb.append(System.getProperty("line.separator"));
+		if (ignoreHigher) {		
+			Set<String> sentLabels = new HashSet<String>(labels);
+			if (sentLabels.contains("_YES_")) {		
+				for (int t=0; t<tokenFeatures.size(); t++) {
+					sb.append(tokenFeatures.get(t) + "\t" + labels.get(t).replace("_MAYBE_", "O"));
+					sb.append(System.getProperty("line.separator"));
+				}
+			} else {
+				if (!sentLabels.contains("_MAYBE_")) {
+					for (int t=0; t<tokenFeatures.size(); t++) {
+						sb.append(tokenFeatures.get(t) + "\t" + labels.get(t).replace("_MAYBE_", "O"));
+						sb.append(System.getProperty("line.separator"));
+					}
+				}
+			}
+		} else {
+			for (int t=0; t<tokenFeatures.size(); t++) {
+				sb.append(tokenFeatures.get(t) + "\t" + labels.get(t).replace("_MAYBE_", "O"));
+				sb.append(System.getProperty("line.separator"));
+			}
 		}
 		
 		sb.append(System.getProperty("line.separator"));
@@ -528,5 +560,13 @@ public class GenerateFeatures implements Runnable {
 
 	public void setTransformZeroOne(boolean transformZeroOne) {
 		this.transformZeroOne = transformZeroOne;
+	}
+
+	public boolean isIgnoreHigher() {
+		return ignoreHigher;
+	}
+
+	public void setIgnoreHigher(boolean ignoreHigher) {
+		this.ignoreHigher = ignoreHigher;
 	}
 }
