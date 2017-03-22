@@ -348,9 +348,15 @@ public class GenerateFeatures implements Runnable {
 						if (numInt == numOfTriples
 								&& ((nummod && deprel.startsWith("nummod"))
 										|| !nummod)
-								&& numOfTriples > threshold
+//								&& numOfTriples > threshold
 								) {
-							label = "_YES_";
+							
+							if (numOfTriples > threshold) {
+								label = "_YES_";
+//							} else {
+//								label = "_MAYBE_";
+							}
+							
 						} else if (numInt > numOfTriples
 								&& ((nummod && deprel.startsWith("nummod"))
 										|| !nummod)
@@ -431,21 +437,30 @@ public class GenerateFeatures implements Runnable {
 			}
 		}
 		
-		if (ignoreHigher) {		
-			Set<String> sentLabels = new HashSet<String>(labels);
-			if (sentLabels.contains("_YES_")) {		
-				for (int t=0; t<tokenFeatures.size(); t++) {
-					sb.append(tokenFeatures.get(t) + "\t" + labels.get(t).replace("_MAYBE_", "O"));
-					sb.append(System.getProperty("line.separator"));
-				}
-			} else {
-				if (!sentLabels.contains("_MAYBE_")) {
+		if (this.isTraining()) {
+		
+			if (ignoreHigher) {		
+				Set<String> sentLabels = new HashSet<String>(labels);
+				if (sentLabels.contains("_YES_")) {		
 					for (int t=0; t<tokenFeatures.size(); t++) {
 						sb.append(tokenFeatures.get(t) + "\t" + labels.get(t).replace("_MAYBE_", "O"));
 						sb.append(System.getProperty("line.separator"));
 					}
+				} else {
+					if (!sentLabels.contains("_MAYBE_")) {
+						for (int t=0; t<tokenFeatures.size(); t++) {
+							sb.append(tokenFeatures.get(t) + "\t" + labels.get(t).replace("_MAYBE_", "O"));
+							sb.append(System.getProperty("line.separator"));
+						}
+					}
+				}
+			} else {
+				for (int t=0; t<tokenFeatures.size(); t++) {
+					sb.append(tokenFeatures.get(t) + "\t" + labels.get(t).replace("_MAYBE_", "O"));
+					sb.append(System.getProperty("line.separator"));
 				}
 			}
+			
 		} else {
 			for (int t=0; t<tokenFeatures.size(); t++) {
 				sb.append(tokenFeatures.get(t) + "\t" + labels.get(t).replace("_MAYBE_", "O"));
