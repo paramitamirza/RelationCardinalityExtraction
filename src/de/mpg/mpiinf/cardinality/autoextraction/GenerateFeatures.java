@@ -293,9 +293,13 @@ public class GenerateFeatures implements Runnable {
 							if (numInt == numOfTriples
 									&& ((nummod && deprel.startsWith("nummod"))
 											|| !nummod)
-									&& numOfTriples > threshold
+//									&& numOfTriples > threshold
 									) {
-								label = "_YES_";
+								if (numOfTriples > threshold) {
+									label = "_YES_";
+//								} else {
+//									label = "_MAYBE_";
+								}
 								numToAdd = 0;
 								idxToAdd.clear();
 								
@@ -303,7 +307,7 @@ public class GenerateFeatures implements Runnable {
 								if ((numToAdd+numInt) == numOfTriples
 										&& ((nummod && deprel.startsWith("nummod"))
 												|| !nummod)
-										&& numOfTriples > threshold
+//										&& numOfTriples > threshold
 										) {
 									label = "_YES_";
 									for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
@@ -312,7 +316,7 @@ public class GenerateFeatures implements Runnable {
 								} else if ((numToAdd+numInt) < numOfTriples
 										&& ((nummod && deprel.startsWith("nummod"))
 												|| !nummod)
-										&& numOfTriples > threshold
+//										&& numOfTriples > threshold
 										) {
 									label = "O";
 									numToAdd += numInt;
@@ -328,18 +332,33 @@ public class GenerateFeatures implements Runnable {
 							if (numInt == numOfTriples
 									&& ((nummod && deprel.startsWith("nummod"))
 											|| !nummod)
-									&& numOfTriples > threshold
+//									&& numOfTriples > threshold
 									) {
-								label = "_YES_";
+								if (numOfTriples > threshold) {
+									label = "_YES_";
+//								} else {
+//									label = "_MAYBE_";
+								}
+								
 							} else if (numInt < numOfTriples
 									&& ((nummod && deprel.startsWith("nummod"))
 											|| !nummod)
-									&& numOfTriples > threshold
+//									&& numOfTriples > threshold
 									) {
 								label = "O";
 								numToAdd += numInt;
 								idxToAdd.add(tokenIdx);
-							} else {	//numInt > numOfTriples
+								
+							} else if (numInt > numOfTriples
+									&& ((nummod && deprel.startsWith("nummod"))
+											|| !nummod)
+//									&& numOfTriples > threshold
+									){	
+								if (numOfTriples > threshold) {
+									label = "_MAYBE_";
+								}
+								
+							} else {
 								label = "O";
 							}
 						}
@@ -360,14 +379,14 @@ public class GenerateFeatures implements Runnable {
 						} else if (numInt > numOfTriples
 								&& ((nummod && deprel.startsWith("nummod"))
 										|| !nummod)
-								&& numOfTriples > threshold
+//								&& numOfTriples > threshold
 								) {
-							label = "_MAYBE_";
-//							} else if (numInt < numOfTriples) {
-//								label = "_NO_";
-//							} else if (numInt > numOfTriples) {
-//								label = "_MAYBE_";
-						} else {
+							
+							if (numOfTriples > threshold) {
+								label = "_MAYBE_";
+							}
+
+						} else {	//numInt < numOfTriples
 							label = "O";
 						}
 					}
