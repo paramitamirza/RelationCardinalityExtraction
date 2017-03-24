@@ -297,8 +297,8 @@ public class GenerateFeatures implements Runnable {
 									) {
 								if (numOfTriples > threshold) {
 									label = "_YES_";
-//								} else {
-//									label = "_MAYBE_";
+								} else {					//to comment
+									label = "_MAYBE_";		//to comment
 								}
 								numToAdd = 0;
 								idxToAdd.clear();
@@ -336,8 +336,8 @@ public class GenerateFeatures implements Runnable {
 									) {
 								if (numOfTriples > threshold) {
 									label = "_YES_";
-//								} else {
-//									label = "_MAYBE_";
+								} else {					//to comment
+									label = "_MAYBE_";		//to comment
 								}
 								
 							} else if (numInt < numOfTriples
@@ -372,8 +372,8 @@ public class GenerateFeatures implements Runnable {
 							
 							if (numOfTriples > threshold) {
 								label = "_YES_";
-//							} else {
-//								label = "_MAYBE_";
+							} else {					//to comment
+								label = "_MAYBE_";		//to comment
 							}
 							
 						} else if (numInt > numOfTriples
