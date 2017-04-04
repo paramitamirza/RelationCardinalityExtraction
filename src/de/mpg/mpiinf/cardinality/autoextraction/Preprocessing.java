@@ -70,9 +70,9 @@ public class Preprocessing {
 		
 		//Generate feature file (in column format) for CRF++
 		if (cmd.hasOption("f")) {
-			String inputRandomCsvFile = null;
-			if (cmd.hasOption("r")) {
-				inputRandomCsvFile = cmd.getOptionValue("random");
+			String evalCsvFile = null;
+			if (cmd.hasOption("e")) {
+				evalCsvFile = cmd.getOptionValue("eval");
 			}
 			String relName = cmd.getOptionValue("relname");
 			
@@ -82,10 +82,10 @@ public class Preprocessing {
 			} 
 			
 			FeatureExtractionConcurrent featExtraction;
-			if (inputRandomCsvFile != null)
-				featExtraction = new FeatureExtractionConcurrent(inputCsvFile, inputRandomCsvFile, relName, dirFeature);
+			if (evalCsvFile != null)
+				featExtraction = new FeatureExtractionConcurrent(inputCsvFile, evalCsvFile, relName, dirFeature);
 			else {
-				if (cmd.hasOption("n")) {
+				if (cmd.hasOption("r")) {
 					int nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
 					featExtraction = new FeatureExtractionConcurrent(inputCsvFile, nRandom, relName, dirFeature);
 				} else {
@@ -116,6 +116,10 @@ public class Preprocessing {
 		input.setRequired(true);
 		options.addOption(input);
 		
+		Option eval = new Option("e", "eval", true, "Input evaluation file (.csv) path");
+		eval.setRequired(false);
+		options.addOption(eval);
+		
 		Option relName = new Option("p", "relname", true, "Property/relation name");
 		relName.setRequired(true);
 		options.addOption(relName);
@@ -132,13 +136,9 @@ public class Preprocessing {
 		batch.setRequired(false);
 		options.addOption(batch);
 		
-		Option random = new Option("n", "randomize", true, "Generate n random instances for testing");
+		Option random = new Option("r", "randomize", true, "Generate n random instances for testing");
 		random.setRequired(false);
 		options.addOption(random);
-		
-		Option randomFile = new Option("r", "random", true, "Input random file (.csv) path for testing");
-		randomFile.setRequired(false);
-		options.addOption(randomFile);
 		
 		Option extractFeature = new Option("f", "features", false, "Generate feature file (in column format) for CRF++");
 		extractFeature.setRequired(false);
