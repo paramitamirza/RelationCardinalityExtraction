@@ -80,17 +80,15 @@ public class GenerateDistributions implements Runnable {
 	    	        }
 	    	    }
 	    		
-	    		String distFilePath = this.getDirFeature() + "/" + this.getRelName() + "_dist_cardinality.data";
-	    		String toWrite = this.getWikidataId() + ",";
+	    		String distFilePath = this.getDirFeature() + "/" + this.getRelName() + "_dist_freq_cardinality.data";
+	    		String toWrite = this.getWikidataId() + ",[";
 	    		List<Entry<Long, Integer>> dist = entriesSortedByValues(this.getNumDistributions());
-	    		for (int z=0; z<5; z++) {
-	    			if (z < dist.size()) {
-	    				toWrite += dist.get(z).getKey() + ",";
-	    			} else {
-	    				toWrite += "_,";
-	    			}
+	    		for (Entry<Long, Integer> en : dist) {
+	    			if (en.getValue() >= 10) {
+	    				toWrite += en.getKey() + ";";
+	    			} 
 	    		}
-	    		toWrite = toWrite.substring(0, toWrite.length()-1) + "\n";
+	    		toWrite = toWrite.substring(0, toWrite.length()-1) + "]\n";
 	    		WriteToFile.getInstance().appendContents(distFilePath, toWrite);
 			}			
 			
