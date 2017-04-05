@@ -81,15 +81,15 @@ public class GenerateDistributions implements Runnable {
 	    	    }
 	    		
 	    		String distFilePath = this.getDirFeature() + "/" + this.getRelName() + "_dist_freq_cardinality.data";
-	    		String toWrite = this.getWikidataId() + ",[";
+	    		String toWrite = "";
 	    		List<Entry<Long, Integer>> dist = entriesSortedByValues(this.getNumDistributions());
 	    		for (Entry<Long, Integer> en : dist) {
 	    			if (en.getValue() >= 10) {
 	    				toWrite += en.getKey() + ";";
 	    			} 
 	    		}
-	    		toWrite = toWrite.substring(0, toWrite.length()-1) + "]\n";
-	    		WriteToFile.getInstance().appendContents(distFilePath, toWrite);
+	    		toWrite = "[" + toWrite.substring(0, toWrite.length()-1) + "]\n";
+	    		WriteToFile.getInstance().appendContents(distFilePath, this.getWikidataId() + "," + toWrite);
 			}			
 			
 		} catch (JSONException | IOException e) {
