@@ -88,8 +88,9 @@ public class GenerateDistributions implements Runnable {
 	    				toWrite += en.getKey() + ";";
 	    			} 
 	    		}
-	    		toWrite = "[" + toWrite.substring(0, toWrite.length()-1) + "]\n";
-	    		WriteToFile.getInstance().appendContents(distFilePath, this.getWikidataId() + "," + toWrite);
+	    		if (!toWrite.isEmpty()) toWrite = toWrite.substring(0, toWrite.length()-1);
+	    		toWrite = "[" + toWrite + "]";
+	    		WriteToFile.getInstance().appendContents(distFilePath, this.getWikidataId() + "," + toWrite + "\n");
 			}			
 			
 		} catch (JSONException | IOException e) {
