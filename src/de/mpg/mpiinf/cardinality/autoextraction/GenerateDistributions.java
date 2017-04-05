@@ -84,7 +84,7 @@ public class GenerateDistributions implements Runnable {
 	    		String toWrite = "";
 	    		List<Entry<Long, Integer>> dist = entriesSortedByValues(this.getNumDistributions());
 	    		for (Entry<Long, Integer> en : dist) {
-	    			if (en.getValue() >= 10) {
+	    			if (en.getValue() >= 5) {
 	    				toWrite += en.getKey() + ";";
 	    			} 
 	    		}
