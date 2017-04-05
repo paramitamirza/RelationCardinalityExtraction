@@ -55,11 +55,11 @@ public class FeatureExtraction {
 		}
 		
 		WikipediaArticle wiki = new WikipediaArticle();
-		featExtraction.run(wiki, true, false, 0, false, false, false, false, (float) 1.0);
+		featExtraction.run(wiki, true, false, 0, false, false, false, false, false, (float) 1.0);
 	}
 	
 	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, int threshold,
-			boolean transform, boolean transformZero, boolean transformOne, boolean ignoreHigher,
+			boolean transform, boolean transformZero, boolean transformOne, boolean ignoreHigher, boolean ignoreFreq,
 			float topPopular) throws IOException, InterruptedException {
 		
 		long startTime = System.currentTimeMillis();
@@ -69,7 +69,7 @@ public class FeatureExtraction {
 		
 		List<String> testInstances = readRandomInstances(getInputRandomCsvFile());
 		String line;
-		String wikidataId = "", count = "";
+		String wikidataId = "", count = "", freqNum = "";
 		Integer curId;
 		boolean training;
 		
@@ -85,6 +85,7 @@ public class FeatureExtraction {
 			wikidataId = line.split(",")[0];
 	        count = line.split(",")[1];
 	        curId = Integer.parseInt(line.split(",")[2]);
+	        freqNum = line.split(",")[3];
 	        
 	        training = true;
 	        if (testInstances.contains(wikidataId)) {
@@ -92,18 +93,20 @@ public class FeatureExtraction {
 			} 
 	        if (training && (idxTrain < maxNumTrain)) {
 		        GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
-		        		wiki, wikidataId, count, curId, training,
+		        		wiki, wikidataId, count, curId, freqNum,
+		        		training,
 		        		nummod, compositional, threshold,
 		        		transform, transformZero, transformOne,
-		        		ignoreHigher);
+		        		ignoreHigher, ignoreFreq);
 				ext.run();
 				idxTrain ++;
 	        } else {
 	        	GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
-		        		wiki, wikidataId, count, curId, training,
+		        		wiki, wikidataId, count, curId, freqNum,
+		        		training,
 		        		nummod, compositional, threshold,
 		        		transform, transformZero, transformOne,
-		        		ignoreHigher);
+		        		ignoreHigher, ignoreFreq);
 				ext.run();
 	        }
              

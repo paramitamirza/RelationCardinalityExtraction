@@ -43,14 +43,17 @@ public class GenerateFeatures implements Runnable {
 	private boolean transformOne;
 	
 	private boolean ignoreHigher;
+	private boolean ignoreFreq;
 	
-	private Map<Long, Integer> numDistributions;
+	private List<Long> frequentNumbers;
 	
 	public GenerateFeatures(String dirFeature, String relName,
-			WikipediaArticle wiki, String wikidataId, String count, Integer curId, boolean training,
+			WikipediaArticle wiki, String wikidataId, String count, Integer curId, 
+			String freqNum,
+			boolean training,
 			boolean nummod, boolean compositional, int threshold,
 			boolean transform, boolean transformZero, boolean transformOne,
-			boolean ignoreHigher) {
+			boolean ignoreHigher, boolean ignoreFreq) {
 		this.setDirFeature(dirFeature);
 		this.setRelName(relName);
 		
@@ -71,8 +74,14 @@ public class GenerateFeatures implements Runnable {
 		this.setTransformOne(transformOne);
 		
 		this.setIgnoreHigher(ignoreHigher);
+		this.setIgnoreFreq(ignoreFreq);
 		
-		this.setNumDistributions(new HashMap<Long, Integer>());
+		List<Long> freqNums = new ArrayList<Long>();
+		String freqs = freqNum.substring(1, freqNum.length()-1);
+		if (!freqs.isEmpty()) {
+			for (String f : freqs.split(";")) freqNums.add(Long.parseLong(f));
+		}
+		this.setFrequentNumbers(freqNums);
 	}
 	
 	public static void main(String[] args) throws JSONException, IOException {
@@ -109,7 +118,7 @@ public class GenerateFeatures implements Runnable {
 	    					
 	    					toPrint.append(generateFeatures(sent, j, numOfTriples, 
 	    							this.isNummod(), this.isCompositional(), this.getThreshold(),
-	    							this.isIgnoreHigher()).toString());
+	    							this.isIgnoreHigher(), this.isIgnoreFreq()).toString());
 	    				}
 	    				
 	    				j ++;
@@ -190,7 +199,7 @@ public class GenerateFeatures implements Runnable {
 	
 	private StringBuilder generateFeatures(Sentence sent, int j, int numOfTriples, 
 			boolean nummod, boolean compositional, int threshold,
-			boolean ignoreHigher) {
+			boolean ignoreHigher, boolean ignoreFreq) {
 		String word = "", lemma = "", pos = "", ner = "", deprel = "", label = "";
 		StringBuilder sb = new StringBuilder();
 		int k;
@@ -222,18 +231,36 @@ public class GenerateFeatures implements Runnable {
 				
 				if (compositional) {
 					if (numToAdd > 0) {
-						if (numInt == numOfTriples) {
-							label = "_YES_";
+						if (numInt == numOfTriples
+								&& ((nummod && deprel.startsWith("nummod"))
+										|| !nummod)
+//								&& numOfTriples > threshold
+								) {
+							if (numOfTriples > threshold
+									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+											|| !ignoreFreq)) {
+								label = "_YES_";
+//							} else {					//to comment
+//								label = "_MAYBE_";		//to comment
+							}
 							numToAdd = 0;
 							idxToAdd.clear();
 							
 						} else {
-							if ((numToAdd+numInt) == numOfTriples) {
+							if ((numToAdd+numInt) == numOfTriples
+									&& ((nummod && deprel.startsWith("nummod"))
+											|| !nummod)
+//									&& numOfTriples > threshold
+									) {
 								label = "_YES_";
 								for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
 								numToAdd = 0;
 								idxToAdd.clear();
-							} else if ((numToAdd+numInt) < numOfTriples) {
+							} else if ((numToAdd+numInt) < numOfTriples
+									&& ((nummod && deprel.startsWith("nummod"))
+											|| !nummod)
+//									&& numOfTriples > threshold
+									) {
 								label = "O";
 								numToAdd += numInt;
 								idxToAdd.add(tokenIdx);
@@ -245,25 +272,72 @@ public class GenerateFeatures implements Runnable {
 						}
 						
 					} else {
-						if (numInt == numOfTriples) {
-							label = "_YES_";
-						} else if (numInt < numOfTriples) {
+						if (numInt == numOfTriples
+								&& ((nummod && deprel.startsWith("nummod"))
+										|| !nummod)
+//								&& numOfTriples > threshold
+								) {
+							if (numOfTriples > threshold
+									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+											|| !ignoreFreq)) {
+								label = "_YES_";
+//							} else {					//to comment
+//								label = "_MAYBE_";		//to comment
+							}
+							
+						} else if (numInt < numOfTriples
+								&& ((nummod && deprel.startsWith("nummod"))
+										|| !nummod)
+//								&& numOfTriples > threshold
+								) {
 							label = "O";
 							numToAdd += numInt;
 							idxToAdd.add(tokenIdx);
-						} else {	//numInt > numOfTriples
+							
+						} else if (numInt > numOfTriples
+								&& ((nummod && deprel.startsWith("nummod"))
+										|| !nummod)
+//								&& numOfTriples > threshold
+								){	
+							if (numOfTriples > threshold
+									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+											|| !ignoreFreq)) {
+								label = "_MAYBE_";
+							}
+							
+						} else {
 							label = "O";
 						}
 					}
 					
 				} else {
-					if (numInt == numOfTriples) {
-						label = "_YES_";
-//						} else if (numInt < numOfTriples) {
-//							label = "_NO_";
-//						} else if (numInt > numOfTriples) {
-//							label = "_MAYBE_";
-					} else {
+					if (numInt == numOfTriples
+							&& ((nummod && deprel.startsWith("nummod"))
+									|| !nummod)
+//							&& numOfTriples > threshold
+							) {
+						
+						if (numOfTriples > threshold
+								&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+										|| !ignoreFreq)) {
+							label = "_YES_";
+//						} else {					//to comment
+//							label = "_MAYBE_";		//to comment
+						}
+						
+					} else if (numInt > numOfTriples
+							&& ((nummod && deprel.startsWith("nummod"))
+									|| !nummod)
+//							&& numOfTriples > threshold
+							) {
+						
+						if (numOfTriples > threshold
+								&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+										|| !ignoreFreq)) {
+							label = "_MAYBE_";
+						}
+
+					} else {	//numInt < numOfTriples
 						label = "O";
 					}
 				}
@@ -299,9 +373,6 @@ public class GenerateFeatures implements Runnable {
 				if (numInt > 0) {
 					lemma = "_num_";
 					
-					if (!this.getNumDistributions().containsKey(numInt)) this.getNumDistributions().put(numInt, 0);
-					this.getNumDistributions().put(numInt, this.getNumDistributions().get(numInt) + 1);
-					
 					if (compositional) {
 						if (numToAdd > 0) {
 							if (numInt == numOfTriples
@@ -309,10 +380,12 @@ public class GenerateFeatures implements Runnable {
 											|| !nummod)
 //									&& numOfTriples > threshold
 									) {
-								if (numOfTriples > threshold) {
+								if (numOfTriples > threshold
+										&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+												|| !ignoreFreq)) {
 									label = "_YES_";
-								} else {					//to comment
-									label = "_MAYBE_";		//to comment
+//								} else {					//to comment
+//									label = "_MAYBE_";		//to comment
 								}
 								numToAdd = 0;
 								idxToAdd.clear();
@@ -348,10 +421,12 @@ public class GenerateFeatures implements Runnable {
 											|| !nummod)
 //									&& numOfTriples > threshold
 									) {
-								if (numOfTriples > threshold) {
+								if (numOfTriples > threshold
+										&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+												|| !ignoreFreq)) {
 									label = "_YES_";
-								} else {					//to comment
-									label = "_MAYBE_";		//to comment
+//								} else {					//to comment
+//									label = "_MAYBE_";		//to comment
 								}
 								
 							} else if (numInt < numOfTriples
@@ -368,7 +443,9 @@ public class GenerateFeatures implements Runnable {
 											|| !nummod)
 //									&& numOfTriples > threshold
 									){	
-								if (numOfTriples > threshold) {
+								if (numOfTriples > threshold
+										&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+												|| !ignoreFreq)) {
 									label = "_MAYBE_";
 								}
 								
@@ -384,10 +461,12 @@ public class GenerateFeatures implements Runnable {
 //								&& numOfTriples > threshold
 								) {
 							
-							if (numOfTriples > threshold) {
+							if (numOfTriples > threshold
+									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+											|| !ignoreFreq)) {
 								label = "_YES_";
-							} else {					//to comment
-								label = "_MAYBE_";		//to comment
+//							} else {					//to comment
+//								label = "_MAYBE_";		//to comment
 							}
 							
 						} else if (numInt > numOfTriples
@@ -396,7 +475,9 @@ public class GenerateFeatures implements Runnable {
 //								&& numOfTriples > threshold
 								) {
 							
-							if (numOfTriples > threshold) {
+							if (numOfTriples > threshold
+									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+											|| !ignoreFreq)) {
 								label = "_MAYBE_";
 							}
 
@@ -626,11 +707,19 @@ public class GenerateFeatures implements Runnable {
 		this.transformOne = transformOne;
 	}
 
-	public Map<Long, Integer> getNumDistributions() {
-		return numDistributions;
+	public boolean isIgnoreFreq() {
+		return ignoreFreq;
 	}
 
-	public void setNumDistributions(Map<Long, Integer> numDistributions) {
-		this.numDistributions = numDistributions;
+	public void setIgnoreFreq(boolean ignoreFreq) {
+		this.ignoreFreq = ignoreFreq;
+	}
+
+	public List<Long> getFrequentNumbers() {
+		return frequentNumbers;
+	}
+
+	public void setFrequentNumbers(List<Long> frequentNumbers) {
+		this.frequentNumbers = frequentNumbers;
 	}
 }

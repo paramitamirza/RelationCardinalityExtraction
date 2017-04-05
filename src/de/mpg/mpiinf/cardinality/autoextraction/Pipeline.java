@@ -68,11 +68,14 @@ public class Pipeline {
 		boolean transformOne = cmd.hasOption("y");
 		boolean transformZero = cmd.hasOption("z");
 		boolean ignoreHigher = cmd.hasOption("h");
+		boolean ignoreFreq = cmd.hasOption("q");
 		int threshold = 0;
 		if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
 		float topPopular = (float)1;
 		if (cmd.hasOption("k")) topPopular = Float.parseFloat(cmd.getOptionValue("popular"));
-		featExtraction.run(wiki, nummod, compositional, threshold, transform, transformZero, transformOne, ignoreHigher, topPopular);
+		featExtraction.run(wiki, nummod, compositional, threshold, 
+				transform, transformZero, transformOne, 
+				ignoreHigher, ignoreFreq, topPopular);
 		
 		//Classifier
 		String dirModels = "./models/";
@@ -194,6 +197,10 @@ public class Pipeline {
 		Option ignoreHigher = new Option("h", "ignorehigher", false, "Ignore numbers > num_of_triples as negative examples");
 		ignoreHigher.setRequired(false);
 		options.addOption(ignoreHigher);
+		
+		Option ignoreFreq = new Option("q", "ignorefreq", false, "Ignore frequent numbers in the text (do not label as positive examples)");
+		ignoreFreq.setRequired(false);
+		options.addOption(ignoreFreq);
 		
 		Option topPopular = new Option("k", "popular", true, "Cutoff percentage of popular instances as training examples");
 		topPopular.setRequired(false);
