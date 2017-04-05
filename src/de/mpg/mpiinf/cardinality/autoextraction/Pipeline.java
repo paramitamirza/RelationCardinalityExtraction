@@ -65,13 +65,14 @@ public class Pipeline {
 		boolean nummod = cmd.hasOption("d");
 		boolean compositional = cmd.hasOption("s");
 		boolean transform = cmd.hasOption("x");
-		boolean transformZeroOne = cmd.hasOption("z");
+		boolean transformOne = cmd.hasOption("y");
+		boolean transformZero = cmd.hasOption("z");
 		boolean ignoreHigher = cmd.hasOption("h");
 		int threshold = 0;
 		if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
 		float topPopular = (float)1;
 		if (cmd.hasOption("k")) topPopular = Float.parseFloat(cmd.getOptionValue("popular"));
-		featExtraction.run(wiki, nummod, compositional, threshold, transform, transformZeroOne, ignoreHigher, topPopular);
+		featExtraction.run(wiki, nummod, compositional, threshold, transform, transformZero, transformOne, ignoreHigher, topPopular);
 		
 		//Classifier
 		String dirModels = "./models/";
@@ -182,9 +183,13 @@ public class Pipeline {
 		transform.setRequired(false);
 		options.addOption(transform);
 		
-		Option transformZeroOne = new Option("z", "transformzeroone", false, "Transform negative sentences into (containing) 0 and articles into 1");
-		transformZeroOne.setRequired(false);
-		options.addOption(transformZeroOne);
+		Option transformOne = new Option("y", "transformone", false, "Transform articles into 1");
+		transformOne.setRequired(false);
+		options.addOption(transformOne);
+		
+		Option transformZero = new Option("z", "transformzero", false, "Transform negative sentences into (containing) 0");
+		transformZero.setRequired(false);
+		options.addOption(transformZero);
 		
 		Option ignoreHigher = new Option("h", "ignorehigher", false, "Ignore numbers > num_of_triples as negative examples");
 		ignoreHigher.setRequired(false);

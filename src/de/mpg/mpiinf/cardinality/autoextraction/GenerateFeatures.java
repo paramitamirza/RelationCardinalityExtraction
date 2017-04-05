@@ -2,9 +2,19 @@ package de.mpg.mpiinf.cardinality.autoextraction;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 import org.json.*;
 
@@ -29,14 +39,17 @@ public class GenerateFeatures implements Runnable {
 	private int threshold;
 	
 	private boolean transform;
-	private boolean transformZeroOne;
+	private boolean transformZero;
+	private boolean transformOne;
 	
 	private boolean ignoreHigher;
+	
+	private Map<Long, Integer> numDistributions;
 	
 	public GenerateFeatures(String dirFeature, String relName,
 			WikipediaArticle wiki, String wikidataId, String count, Integer curId, boolean training,
 			boolean nummod, boolean compositional, int threshold,
-			boolean transform, boolean transformZeroOne,
+			boolean transform, boolean transformZero, boolean transformOne,
 			boolean ignoreHigher) {
 		this.setDirFeature(dirFeature);
 		this.setRelName(relName);
@@ -54,9 +67,12 @@ public class GenerateFeatures implements Runnable {
 		this.setThreshold(threshold);
 		
 		this.setTransform(transform);
-		this.setTransformZeroOne(transformZeroOne);
+		this.setTransformZero(transformZero);
+		this.setTransformOne(transformOne);
 		
 		this.setIgnoreHigher(ignoreHigher);
+		
+		this.setNumDistributions(new HashMap<Long, Integer>());
 	}
 	
 	public static void main(String[] args) throws JSONException, IOException {
@@ -87,7 +103,7 @@ public class GenerateFeatures implements Runnable {
 	    			for (Sentence s : doc.sentences()) {	//Split the sentences
 	    				
 	    				original = s.text();	    				
-	    				sent = filter(original, this.isTraining(), trans, this.isTransform(), this.isTransformZeroOne());
+	    				sent = filter(original, this.isTraining(), trans);
 	    				
 	    				if (sent != null) {
 	    					
@@ -124,57 +140,52 @@ public class GenerateFeatures implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
-	private Sentence filter(String sentence, boolean training, 
-			Transform trans, boolean transform, boolean transformZeroOne) throws IOException {
+	private Sentence filter(String sentence, boolean training, Transform trans) throws IOException {
 		
 		Sentence sent;
-		String transformed, transformedZeroOne;
+		String sentStr;
 		
 		if (training) {
-			if (transform || transformZeroOne) {
-				transformed = trans.transform(sentence, false, false, true, true);
-				sent = new Sentence(transformed);
-				if (Numbers.containNumbers(transformed, sent, false, false))
-					return sent;
-				else
-					return null;
-			} else {
-				sent = new Sentence(sentence);
-				if (Numbers.containNumbers(sentence, sent, false, false))
-					return sent;
-				else
-					return null;
+			sentStr = sentence;
+			if (this.isTransform()) {
+				sentStr = trans.transform(sentStr, false, false, this.isTransform(), this.isTransform());
 			}
+			sent = new Sentence(sentStr);
+			if (Numbers.containNumbers(sentStr, sent, false, false))
+				return sent;
+			else
+				return null;
+			
 		} else {
-			if (transform || transformZeroOne) {
-				transformed = trans.transform(sentence, false, false, true, true);
-				
-				if (transformZeroOne) {
-					transformedZeroOne = trans.transform(transformed, true, true, false, false);
-					sent = new Sentence(transformedZeroOne);
-					if (Numbers.containNumbers(transformedZeroOne, sent, false, false))
-						return sent;
-					else
-						return null;
-				} else {
-					transformed = trans.transform(sentence, false, false, true, true);
-					sent = new Sentence(transformed);
-					if (Numbers.containNumbers(transformed, sent, false, false))
-						return sent;
-					else
-						return null;
-				}
-			} else {
-				sent = new Sentence(sentence);
-				if (Numbers.containNumbers(sentence, sent, false, false))
-					return sent;
-				else
-					return null;
+			sentStr = sentence;
+			if (this.isTransform() || this.isTransformZero() || this.isTransformOne()) {
+				sentStr = trans.transform(sentStr, this.isTransformOne(), this.isTransformZero(), this.isTransform(), this.isTransform());
 			}
+			sent = new Sentence(sentStr);
+			if (Numbers.containNumbers(sentStr, sent, false, false))
+				return sent;
+			else
+				return null;
 		}
+	}
+	
+	public static <K,V extends Comparable<? super V>> 
+    	List<Entry<K, V>> entriesSortedByValues(Map<K,V> map) {
+
+		List<Entry<K,V>> sortedEntries = new ArrayList<Entry<K,V>>(map.entrySet());
+		
+		Collections.sort(sortedEntries, 
+		    new Comparator<Entry<K,V>>() {
+		        @Override
+		        public int compare(Entry<K,V> e1, Entry<K,V> e2) {
+		            return e2.getValue().compareTo(e1.getValue());
+		        }
+		    }
+		);
+		
+		return sortedEntries;
 	}
 	
 	private StringBuilder generateFeatures(Sentence sent, int j, int numOfTriples, 
@@ -287,6 +298,9 @@ public class GenerateFeatures implements Runnable {
 				numInt = Numbers.getInteger(word.toLowerCase());
 				if (numInt > 0) {
 					lemma = "_num_";
+					
+					if (!this.getNumDistributions().containsKey(numInt)) this.getNumDistributions().put(numInt, 0);
+					this.getNumDistributions().put(numInt, this.getNumDistributions().get(numInt) + 1);
 					
 					if (compositional) {
 						if (numToAdd > 0) {
@@ -588,12 +602,12 @@ public class GenerateFeatures implements Runnable {
 		this.transform = transform;
 	}
 
-	public boolean isTransformZeroOne() {
-		return transformZeroOne;
+	public boolean isTransformZero() {
+		return transformZero;
 	}
 
-	public void setTransformZeroOne(boolean transformZeroOne) {
-		this.transformZeroOne = transformZeroOne;
+	public void setTransformZero(boolean transformZero) {
+		this.transformZero = transformZero;
 	}
 
 	public boolean isIgnoreHigher() {
@@ -602,5 +616,21 @@ public class GenerateFeatures implements Runnable {
 
 	public void setIgnoreHigher(boolean ignoreHigher) {
 		this.ignoreHigher = ignoreHigher;
+	}
+
+	public boolean isTransformOne() {
+		return transformOne;
+	}
+
+	public void setTransformOne(boolean transformOne) {
+		this.transformOne = transformOne;
+	}
+
+	public Map<Long, Integer> getNumDistributions() {
+		return numDistributions;
+	}
+
+	public void setNumDistributions(Map<Long, Integer> numDistributions) {
+		this.numDistributions = numDistributions;
 	}
 }

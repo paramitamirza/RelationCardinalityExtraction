@@ -64,11 +64,11 @@ public class FeatureExtractionConcurrent {
 		}
 		
 		WikipediaArticle wiki = new WikipediaArticle();
-		featExtraction.run(wiki, true, false, 0, false, false, false, (float) 1.0);
+		featExtraction.run(wiki, true, false, 0, false, false, false, false, (float) 1.0);
 	}
 	
 	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, int threshold,
-			boolean transform, boolean transformZeroOne,
+			boolean transform, boolean transformZero, boolean transformOne,
 			boolean ignoreHigher, float topPopular) throws IOException, InterruptedException {
 		
 		long startTime = System.currentTimeMillis();
@@ -106,7 +106,7 @@ public class FeatureExtractionConcurrent {
 			GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
 					wiki, wikidataId, count, curId, training,
 	        		nummod, compositional, threshold,
-	        		transform, transformZeroOne,
+	        		transform, transformZero, transformOne,
 	        		ignoreHigher);
 			ext.run();
 			idxTrain ++;
@@ -114,7 +114,7 @@ public class FeatureExtractionConcurrent {
         	GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
 					wiki, wikidataId, count, curId, training,
 	        		nummod, compositional, threshold,
-	        		transform, transformZeroOne,
+	        		transform, transformZero, transformOne,
 	        		ignoreHigher);
 			ext.run();
         }
@@ -143,7 +143,7 @@ public class FeatureExtractionConcurrent {
 	        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
 	        		wiki, wikidataId, count, curId, training,
 	        		nummod, compositional, threshold,
-	        		transform, transformZeroOne,
+	        		transform, transformZero, transformOne,
 	        		ignoreHigher);
 		        executor.execute(worker);
 		        idxTrain ++;
@@ -151,7 +151,7 @@ public class FeatureExtractionConcurrent {
 	        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
 		        		wiki, wikidataId, count, curId, training,
 		        		nummod, compositional, threshold,
-		        		transform, transformZeroOne,
+		        		transform, transformZero, transformOne,
 		        		ignoreHigher);
 		        executor.execute(worker);
 	        }
