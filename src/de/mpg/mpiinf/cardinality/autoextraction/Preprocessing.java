@@ -74,8 +74,10 @@ public class Preprocessing {
 			if (cmd.hasOption("o")) {
 				dirFeature = cmd.getOptionValue("output");
 			} 
+			int ignoreFreq = 0;
+			if (cmd.hasOption("q")) ignoreFreq = Integer.parseInt(cmd.getOptionValue("ignorefreq"));
 			
-			DistributionExtractionConcurrent distExtraction = new DistributionExtractionConcurrent(inputCsvFile, relName, dirFeature);
+			DistributionExtractionConcurrent distExtraction = new DistributionExtractionConcurrent(inputCsvFile, relName, dirFeature, ignoreFreq);
 			distExtraction.run(wiki);
 		}
 		
@@ -195,7 +197,7 @@ public class Preprocessing {
 		ignoreHigher.setRequired(false);
 		options.addOption(ignoreHigher);
 		
-		Option ignoreFreq = new Option("q", "ignorefreq", false, "Ignore frequent numbers in the text (do not label as positive examples)");
+		Option ignoreFreq = new Option("q", "ignorefreq", true, "Ignore frequent numbers in the text (do not label as positive examples)");
 		ignoreFreq.setRequired(false);
 		options.addOption(ignoreFreq);
 		

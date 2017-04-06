@@ -32,10 +32,11 @@ public class GenerateDistributions implements Runnable {
 	private String count;
 	private Integer curId;
 	
+	private Integer freq;
 	private Map<Long, Integer> numDistributions;
 	
 	public GenerateDistributions(String dirFeature, String relName,
-			WikipediaArticle wiki, String wikidataId, String count, Integer curId) {
+			WikipediaArticle wiki, String wikidataId, String count, Integer curId, Integer freq) {
 		this.setDirFeature(dirFeature);
 		this.setRelName(relName);
 		
@@ -45,6 +46,7 @@ public class GenerateDistributions implements Runnable {
 		this.setCount(count);
 		this.setCurId(curId);
 		
+		this.setFreq(freq);
 		this.setNumDistributions(new HashMap<Long, Integer>());
 	}
 	
@@ -84,7 +86,7 @@ public class GenerateDistributions implements Runnable {
 	    		String toWrite = "";
 	    		List<Entry<Long, Integer>> dist = entriesSortedByValues(this.getNumDistributions());
 	    		for (Entry<Long, Integer> en : dist) {
-	    			if (en.getValue() >= 5) {
+	    			if (en.getValue() >= this.getFreq()) {
 	    				toWrite += en.getKey() + ";";
 	    			} 
 	    		}
@@ -210,5 +212,13 @@ public class GenerateDistributions implements Runnable {
 
 	public void setNumDistributions(Map<Long, Integer> numDistributions) {
 		this.numDistributions = numDistributions;
+	}
+
+	public int getFreq() {
+		return freq;
+	}
+
+	public void setFreq(int freq) {
+		this.freq = freq;
 	}
 }

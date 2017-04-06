@@ -21,6 +21,7 @@ public class DistributionExtractionConcurrent {
 	private String inputCsvFile = "./data/example/wikidata_sample.csv";
 	private String relName = "sample";
 	private String dirFeature = "./data/example/";
+	private int freq;
 	
 	private static int NTHREADS = -999;
 	
@@ -32,10 +33,11 @@ public class DistributionExtractionConcurrent {
 		
 	}
 	
-	public DistributionExtractionConcurrent(String inputCsvFilePath, String relationName, String dirOutput) {
+	public DistributionExtractionConcurrent(String inputCsvFilePath, String relationName, String dirOutput, int freq) {
 		this.setInputCsvFile(inputCsvFilePath);
 		this.setRelName(relationName);
 		this.setDirFeature(dirOutput);
+		this.setFreq(freq);
 	}
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
@@ -44,7 +46,7 @@ public class DistributionExtractionConcurrent {
 		if (args.length < 4) {
 			featExtraction = new DistributionExtractionConcurrent();
 		} else {
-			featExtraction = new DistributionExtractionConcurrent(args[0], args[1], args[2]);
+			featExtraction = new DistributionExtractionConcurrent(args[0], args[1], args[2], Integer.parseInt(args[3]));
 		}
 		
 		WikipediaArticle wiki = new WikipediaArticle();
@@ -72,7 +74,7 @@ public class DistributionExtractionConcurrent {
         curId = Integer.parseInt(line.split(",")[2]);
         
         GenerateDistributions ext = new GenerateDistributions(getDirFeature(), getRelName(),
-				wiki, wikidataId, count, curId);
+				wiki, wikidataId, count, curId, getFreq());
 		ext.run();
 		//Done. Next WikidataIds...
 		
@@ -91,7 +93,7 @@ public class DistributionExtractionConcurrent {
 	        curId = Integer.parseInt(line.split(",")[2]);
 	        
 	        Runnable worker = new GenerateDistributions(getDirFeature(), getRelName(),
-					wiki, wikidataId, count, curId);
+					wiki, wikidataId, count, curId, getFreq());
 	        executor.execute(worker);
              
             line = br.readLine();
@@ -144,5 +146,13 @@ public class DistributionExtractionConcurrent {
 
 	public void setDirFeature(String dirFeature) {
 		this.dirFeature = dirFeature;
+	}
+
+	public int getFreq() {
+		return freq;
+	}
+
+	public void setFreq(int freq) {
+		this.freq = freq;
 	}
 }

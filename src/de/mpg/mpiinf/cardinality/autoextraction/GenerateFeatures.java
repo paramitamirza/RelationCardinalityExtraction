@@ -237,7 +237,7 @@ public class GenerateFeatures implements Runnable {
 //								&& numOfTriples > threshold
 								) {
 							if (numOfTriples > threshold
-									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 											|| !ignoreFreq)) {
 								label = "_YES_";
 //							} else {					//to comment
@@ -278,7 +278,7 @@ public class GenerateFeatures implements Runnable {
 //								&& numOfTriples > threshold
 								) {
 							if (numOfTriples > threshold
-									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 											|| !ignoreFreq)) {
 								label = "_YES_";
 //							} else {					//to comment
@@ -300,7 +300,7 @@ public class GenerateFeatures implements Runnable {
 //								&& numOfTriples > threshold
 								){	
 							if (numOfTriples > threshold
-									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 											|| !ignoreFreq)) {
 								label = "_MAYBE_";
 							}
@@ -318,7 +318,7 @@ public class GenerateFeatures implements Runnable {
 							) {
 						
 						if (numOfTriples > threshold
-								&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+								&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 										|| !ignoreFreq)) {
 							label = "_YES_";
 //						} else {					//to comment
@@ -332,7 +332,7 @@ public class GenerateFeatures implements Runnable {
 							) {
 						
 						if (numOfTriples > threshold
-								&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+								&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 										|| !ignoreFreq)) {
 							label = "_MAYBE_";
 						}
@@ -381,7 +381,7 @@ public class GenerateFeatures implements Runnable {
 //									&& numOfTriples > threshold
 									) {
 								if (numOfTriples > threshold
-										&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+										&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 												|| !ignoreFreq)) {
 									label = "_YES_";
 //								} else {					//to comment
@@ -422,7 +422,7 @@ public class GenerateFeatures implements Runnable {
 //									&& numOfTriples > threshold
 									) {
 								if (numOfTriples > threshold
-										&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+										&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 												|| !ignoreFreq)) {
 									label = "_YES_";
 //								} else {					//to comment
@@ -444,7 +444,7 @@ public class GenerateFeatures implements Runnable {
 //									&& numOfTriples > threshold
 									){	
 								if (numOfTriples > threshold
-										&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+										&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 												|| !ignoreFreq)) {
 									label = "_MAYBE_";
 								}
@@ -462,7 +462,7 @@ public class GenerateFeatures implements Runnable {
 								) {
 							
 							if (numOfTriples > threshold
-									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 											|| !ignoreFreq)) {
 								label = "_YES_";
 //							} else {					//to comment
@@ -476,7 +476,7 @@ public class GenerateFeatures implements Runnable {
 								) {
 							
 							if (numOfTriples > threshold
-									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numOfTriples))
+									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 											|| !ignoreFreq)) {
 								label = "_MAYBE_";
 							}

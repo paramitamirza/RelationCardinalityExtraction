@@ -136,6 +136,7 @@ public class FeatureExtractionConcurrent {
 			wikidataId = line.split(",")[0];
 	        count = line.split(",")[1];
 	        curId = Integer.parseInt(line.split(",")[2]);
+	        freqNum = line.split(",")[3];
 	        
 	        training = true;
 	        if (testInstances.contains(wikidataId)) {
