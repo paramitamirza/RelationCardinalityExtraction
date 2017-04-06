@@ -307,8 +307,8 @@ public class GenerateFeatures implements Runnable {
 							if (numOfTriples > threshold
 									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 											|| !ignoreFreq)
-									&& ((ignoreHigher && (ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess)))
-											|| ignoreHigher)
+									&& ((ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess))
+											|| (ignoreHigherLess < 0))
 									) {
 								label = "_MAYBE_";
 							}
@@ -342,8 +342,8 @@ public class GenerateFeatures implements Runnable {
 						if (numOfTriples > threshold
 								&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 										|| !ignoreFreq)
-								&& ((ignoreHigher && (ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess)))
-										|| ignoreHigher)
+								&& ((ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess))
+										|| (ignoreHigherLess < 0))
 								) {
 							label = "_MAYBE_";
 						}
@@ -457,8 +457,8 @@ public class GenerateFeatures implements Runnable {
 								if (numOfTriples > threshold
 										&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 												|| !ignoreFreq)
-										&& ((ignoreHigher && (ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess)))
-												|| ignoreHigher)
+										&& ((ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess))
+												|| (ignoreHigherLess < 0))
 										) {
 									label = "_MAYBE_";
 								}
@@ -492,8 +492,8 @@ public class GenerateFeatures implements Runnable {
 							if (numOfTriples > threshold
 									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
 											|| !ignoreFreq)
-									&& ((ignoreHigher && (ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess)))
-											|| ignoreHigher)
+									&& ((ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess))
+											|| (ignoreHigherLess < 0))
 									) {
 								label = "_MAYBE_";
 							}
