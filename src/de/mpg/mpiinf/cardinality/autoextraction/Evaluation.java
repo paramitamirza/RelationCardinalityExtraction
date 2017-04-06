@@ -296,6 +296,30 @@ public class Evaluation {
 			}
 		}
 		
+		//Last entity
+		int numChild = instanceNum.get(entityId);
+		String wikiCurid = instanceCurId.get(entityId);
+		String wikiLabel = instanceLabel.get(entityId);
+		
+		if (bw != null) {
+			bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + java.net.URLDecoder.decode(wikiLabel, "UTF-8") 
+					+ "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
+			bw.newLine();
+//		} else {
+//			System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
+		}
+		if (numChild > 0) {
+			if (numChild == predictedCardinal) tp ++;
+			else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
+		}
+		total ++;
+		entities.add(entityId);
+		
+		predictedCardinal = 0;
+		predictedProb = 0.0;
+		numPredicted = 0;
+		evidence = "";
+		
 		br.close();
 		if (bw != null) bw.close();
 		
