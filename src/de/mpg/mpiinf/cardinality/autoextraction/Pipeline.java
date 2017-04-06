@@ -73,7 +73,7 @@ public class Pipeline {
 		if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
 		float topPopular = (float)1;
 		if (cmd.hasOption("k")) topPopular = Float.parseFloat(cmd.getOptionValue("popular"));
-		int ignoreHigherLess = -99;
+		int ignoreHigherLess = 0;
 		if (cmd.hasOption("h")) ignoreHigherLess = Integer.parseInt(cmd.getOptionValue("ignorehigher"));
 		featExtraction.run(wiki, nummod, compositional, threshold, 
 				transform, transformZero, transformOne, 
