@@ -44,6 +44,7 @@ public class GenerateFeatures implements Runnable {
 	
 	private boolean ignoreHigher;
 	private boolean ignoreFreq;
+	private int ignoreHigherLess;
 	
 	private List<Long> frequentNumbers;
 	
@@ -53,7 +54,8 @@ public class GenerateFeatures implements Runnable {
 			boolean training,
 			boolean nummod, boolean compositional, int threshold,
 			boolean transform, boolean transformZero, boolean transformOne,
-			boolean ignoreHigher, boolean ignoreFreq) {
+			boolean ignoreHigher, int ignoreHigherLess,
+			boolean ignoreFreq) {
 		this.setDirFeature(dirFeature);
 		this.setRelName(relName);
 		
@@ -75,6 +77,7 @@ public class GenerateFeatures implements Runnable {
 		
 		this.setIgnoreHigher(ignoreHigher);
 		this.setIgnoreFreq(ignoreFreq);
+		this.setIgnoreHigherLess(ignoreHigherLess);
 		
 		List<Long> freqNums = new ArrayList<Long>();
 		String freqs = freqNum.substring(1, freqNum.length()-1);
@@ -118,7 +121,8 @@ public class GenerateFeatures implements Runnable {
 	    					
 	    					toPrint.append(generateFeatures(sent, j, numOfTriples, 
 	    							this.isNummod(), this.isCompositional(), this.getThreshold(),
-	    							this.isIgnoreHigher(), this.isIgnoreFreq()).toString());
+	    							this.isIgnoreHigher(), this.getIgnoreHigherLess(),
+	    							this.isIgnoreFreq()).toString());
 	    				}
 	    				
 	    				j ++;
@@ -199,7 +203,8 @@ public class GenerateFeatures implements Runnable {
 	
 	private StringBuilder generateFeatures(Sentence sent, int j, int numOfTriples, 
 			boolean nummod, boolean compositional, int threshold,
-			boolean ignoreHigher, boolean ignoreFreq) {
+			boolean ignoreHigher, int ignoreHigherLess,
+			boolean ignoreFreq) {
 		String word = "", lemma = "", pos = "", ner = "", deprel = "", label = "";
 		StringBuilder sb = new StringBuilder();
 		int k;
@@ -301,7 +306,10 @@ public class GenerateFeatures implements Runnable {
 								){	
 							if (numOfTriples > threshold
 									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
-											|| !ignoreFreq)) {
+											|| !ignoreFreq)
+									&& ((ignoreHigher && (ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess)))
+											|| ignoreHigher)
+									) {
 								label = "_MAYBE_";
 							}
 							
@@ -333,7 +341,10 @@ public class GenerateFeatures implements Runnable {
 						
 						if (numOfTriples > threshold
 								&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
-										|| !ignoreFreq)) {
+										|| !ignoreFreq)
+								&& ((ignoreHigher && (ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess)))
+										|| ignoreHigher)
+								) {
 							label = "_MAYBE_";
 						}
 
@@ -445,7 +456,10 @@ public class GenerateFeatures implements Runnable {
 									){	
 								if (numOfTriples > threshold
 										&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
-												|| !ignoreFreq)) {
+												|| !ignoreFreq)
+										&& ((ignoreHigher && (ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess)))
+												|| ignoreHigher)
+										) {
 									label = "_MAYBE_";
 								}
 								
@@ -477,7 +491,10 @@ public class GenerateFeatures implements Runnable {
 							
 							if (numOfTriples > threshold
 									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
-											|| !ignoreFreq)) {
+											|| !ignoreFreq)
+									&& ((ignoreHigher && (ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess)))
+											|| ignoreHigher)
+									) {
 								label = "_MAYBE_";
 							}
 
@@ -721,5 +738,13 @@ public class GenerateFeatures implements Runnable {
 
 	public void setFrequentNumbers(List<Long> frequentNumbers) {
 		this.frequentNumbers = frequentNumbers;
+	}
+
+	public int getIgnoreHigherLess() {
+		return ignoreHigherLess;
+	}
+
+	public void setIgnoreHigherLess(int ignoreHigherLess) {
+		this.ignoreHigherLess = ignoreHigherLess;
 	}
 }

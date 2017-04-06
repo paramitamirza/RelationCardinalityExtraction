@@ -119,9 +119,11 @@ public class Preprocessing {
 			if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
 			float topPopular = (float)1;
 			if (cmd.hasOption("k")) topPopular = Float.parseFloat(cmd.getOptionValue("popular"));
+			int ignoreHigherLess = -99;
+			if (cmd.hasOption("h")) ignoreHigherLess = Integer.parseInt(cmd.getOptionValue("ignorehigher"));
 			featExtraction.run(wiki, nummod, compositional, threshold, 
 					transform, transformZero, transformOne, 
-					ignoreHigher, ignoreFreq, topPopular);
+					ignoreHigher, ignoreHigherLess, ignoreFreq, topPopular);
 		}
 		
 	}
@@ -193,7 +195,7 @@ public class Preprocessing {
 		transformZero.setRequired(false);
 		options.addOption(transformZero);
 		
-		Option ignoreHigher = new Option("h", "ignorehigher", false, "Ignore numbers > num_of_triples as negative examples");
+		Option ignoreHigher = new Option("h", "ignorehigher", true, "Ignore numbers > num_of_triples, but < (num_of_triples + h), as negative examples");
 		ignoreHigher.setRequired(false);
 		options.addOption(ignoreHigher);
 		

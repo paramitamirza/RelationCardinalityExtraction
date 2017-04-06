@@ -64,12 +64,13 @@ public class FeatureExtractionConcurrent {
 		}
 		
 		WikipediaArticle wiki = new WikipediaArticle();
-		featExtraction.run(wiki, true, false, 0, false, false, false, false, false, (float) 1.0);
+		featExtraction.run(wiki, true, false, 0, false, false, false, false, -99, false, (float) 1.0);
 	}
 	
 	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, int threshold,
 			boolean transform, boolean transformZero, boolean transformOne,
-			boolean ignoreHigher, boolean ignoreFreq, float topPopular) throws IOException, InterruptedException {
+			boolean ignoreHigher, int ignoreHigherLess,
+			boolean ignoreFreq, float topPopular) throws IOException, InterruptedException {
 		
 		long startTime = System.currentTimeMillis();
 		System.out.print("Generate feature file (in column format) for CRF++... ");
@@ -109,7 +110,7 @@ public class FeatureExtractionConcurrent {
 	        		training,
 	        		nummod, compositional, threshold,
 	        		transform, transformZero, transformOne,
-	        		ignoreHigher, ignoreFreq);
+	        		ignoreHigher, ignoreHigherLess, ignoreFreq);
 			ext.run();
 			idxTrain ++;
         } else {
@@ -118,7 +119,7 @@ public class FeatureExtractionConcurrent {
 	        		training,
 	        		nummod, compositional, threshold,
 	        		transform, transformZero, transformOne,
-	        		ignoreHigher, ignoreFreq);
+	        		ignoreHigher, ignoreHigherLess, ignoreFreq);
 			ext.run();
         }
 		//Done. Next WikidataIds...
@@ -149,7 +150,7 @@ public class FeatureExtractionConcurrent {
 		        		training,
 		        		nummod, compositional, threshold,
 		        		transform, transformZero, transformOne,
-		        		ignoreHigher, ignoreFreq);
+		        		ignoreHigher, ignoreHigherLess, ignoreFreq);
 		        executor.execute(worker);
 		        idxTrain ++;
 	        } else {
@@ -158,7 +159,7 @@ public class FeatureExtractionConcurrent {
 		        		training,
 		        		nummod, compositional, threshold,
 		        		transform, transformZero, transformOne,
-		        		ignoreHigher, ignoreFreq);
+		        		ignoreHigher, ignoreHigherLess, ignoreFreq);
 		        executor.execute(worker);
 	        }
              
