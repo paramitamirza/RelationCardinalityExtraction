@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -126,12 +127,14 @@ public class Evaluation {
 		//Read .csv file
 		BufferedReader br; String line;
 		Map<String, Integer> instanceNum = new HashMap<String, Integer>();
+		Map<String, String> instanceCurId = new HashMap<String, String>();
 		Map<String, String> instanceLabel = new HashMap<String, String>();
 		br = new BufferedReader(new FileReader(csvPath));
 		line = br.readLine();
 		while (line != null) {
 			instanceNum.put(line.split(",")[0], Integer.parseInt(line.split(",")[1]));
-			instanceLabel.put(line.split(",")[0], line.split(",")[2]);
+			instanceCurId.put(line.split(",")[0], line.split(",")[2]);
+			instanceLabel.put(line.split(",")[0], line.split(",")[3]);
 			line = br.readLine();
 		}
 		br.close();
@@ -251,10 +254,12 @@ public class Evaluation {
 						&& !entities.contains(entityId)
 						) {	//Entity ends
 					int numChild = instanceNum.get(entityId);
+					String wikiCurid = instanceCurId.get(entityId);
 					String wikiLabel = instanceLabel.get(entityId);
 					
 					if (bw != null) {
-						bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
+						bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + java.net.URLDecoder.decode(wikiLabel, "UTF-8") 
+								+ "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
 						bw.newLine();
 //					} else {
 //						System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
