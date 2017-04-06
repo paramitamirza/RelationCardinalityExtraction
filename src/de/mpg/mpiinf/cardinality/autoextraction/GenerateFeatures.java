@@ -266,11 +266,17 @@ public class GenerateFeatures implements Runnable {
 											|| !nummod)
 //									&& numOfTriples > threshold
 									) {
-								label = "O";
+								label = "_NO_";
 								numToAdd += numInt;
 								idxToAdd.add(tokenIdx);
 							} else {	//(numToAdd+numInt) > numOfTriples
-								label = "O";
+								if (((ignoreHigherLess > 0) && ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
+										|| (ignoreHigherLess == 0))
+								) {
+									label = "_MAYBE_";
+								} else {
+									label = "_NO_";
+								}
 								numToAdd = 0;
 								idxToAdd.clear();
 							}
@@ -295,7 +301,7 @@ public class GenerateFeatures implements Runnable {
 										|| !nummod)
 //								&& numOfTriples > threshold
 								) {
-							label = "O";
+							label = "_NO_";
 							numToAdd += numInt;
 							idxToAdd.add(tokenIdx);
 							
@@ -303,17 +309,18 @@ public class GenerateFeatures implements Runnable {
 								&& ((nummod && deprel.startsWith("nummod"))
 										|| !nummod)
 //								&& numOfTriples > threshold
-								){	
+								){		
+							
 //							if (numOfTriples > threshold
-//									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
-//											|| !ignoreFreq)
-////									&& ((ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess))
-////											|| (ignoreHigherLess < 0))
-//									) {
+//							&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
+//									|| !ignoreFreq)
+							if (((ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess))
+									|| (ignoreHigherLess == 0))
+							) {
 								label = "_MAYBE_";
-//							} else {
-//								label = "O";
-//							}
+							} else {
+								label = "_NO_";
+							}
 							
 						} else {
 							label = "O";
@@ -339,21 +346,21 @@ public class GenerateFeatures implements Runnable {
 							&& ((nummod && deprel.startsWith("nummod"))
 									|| !nummod)
 //							&& numOfTriples > threshold
-							) {
+							) {	
 						
 //						if (numOfTriples > threshold
-//								&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
-//										|| !ignoreFreq)
-////								&& ((ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess))
-////										|| (ignoreHigherLess < 0))
-//								) {
+//						&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
+//								|| !ignoreFreq)
+						if (((ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess))
+								|| (ignoreHigherLess == 0))
+						) {
 							label = "_MAYBE_";
-//						} else {
-//							label = "O";
-//						}
+						} else {
+							label = "_NO_";
+						}
 
 					} else {	//numInt < numOfTriples
-						label = "O";
+						label = "_NO_";
 					}
 				}
 				
@@ -420,11 +427,17 @@ public class GenerateFeatures implements Runnable {
 												|| !nummod)
 //										&& numOfTriples > threshold
 										) {
-									label = "O";
+									label = "_NO_";
 									numToAdd += numInt;
 									idxToAdd.add(tokenIdx);
 								} else {	//(numToAdd+numInt) > numOfTriples
-									label = "O";
+									if (((ignoreHigherLess > 0) && ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
+											|| (ignoreHigherLess == 0))
+									) {
+										label = "_MAYBE_";
+									} else {
+										label = "_NO_";
+									}
 									numToAdd = 0;
 									idxToAdd.clear();
 								}
@@ -449,7 +462,7 @@ public class GenerateFeatures implements Runnable {
 											|| !nummod)
 //									&& numOfTriples > threshold
 									) {
-								label = "O";
+								label = "_NO_";
 								numToAdd += numInt;
 								idxToAdd.add(tokenIdx);
 								
@@ -457,17 +470,18 @@ public class GenerateFeatures implements Runnable {
 									&& ((nummod && deprel.startsWith("nummod"))
 											|| !nummod)
 //									&& numOfTriples > threshold
-									){	
+									){		
+								
 //								if (numOfTriples > threshold
-//										&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
-//												|| !ignoreFreq)
-////										&& ((ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess))
-////												|| (ignoreHigherLess < 0))
-//										) {
+//								&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
+//										|| !ignoreFreq)
+								if (((ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess))
+										|| (ignoreHigherLess == 0))
+								) {
 									label = "_MAYBE_";
-//								} else {
-//									label = "O";
-//								}
+								} else {
+									label = "_NO_";
+								}
 								
 							} else {
 								label = "O";
@@ -493,21 +507,21 @@ public class GenerateFeatures implements Runnable {
 								&& ((nummod && deprel.startsWith("nummod"))
 										|| !nummod)
 //								&& numOfTriples > threshold
-								) {
+								) {	
 							
 //							if (numOfTriples > threshold
-//									&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
-//											|| !ignoreFreq)
-////									&& ((ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess))
-////											|| (ignoreHigherLess < 0))
-//									) {
+//							&& ((ignoreFreq && !this.getFrequentNumbers().contains(numInt))
+//									|| !ignoreFreq)
+							if (((ignoreHigherLess > 0) && (numInt <= (numOfTriples + ignoreHigherLess))
+									|| (ignoreHigherLess == 0))
+							) {
 								label = "_MAYBE_";
-//							} else {
-//								label = "O";
-//							}
+							} else {
+								label = "_NO_";
+							}
 
 						} else {	//numInt < numOfTriples
-							label = "O";
+							label = "_NO_";
 						}
 					}
 				}
@@ -580,31 +594,32 @@ public class GenerateFeatures implements Runnable {
 		
 			if (ignoreHigher) {		
 				Set<String> sentLabels = new HashSet<String>(labels);
-				if (sentLabels.contains("_YES_")) {		
+				if (sentLabels.contains("_YES_") || sentLabels.contains("_NO_")) {		
 					for (int t=0; t<tokenFeatures.size(); t++) {
-//						sb.append(tokenFeatures.get(t) + "\t" + labels.get(t).replace("_MAYBE_", "O"));
-						sb.append(tokenFeatures.get(t) + "\t" + labels.get(t));
+						label = labels.get(t);
+						label = label.replace("_NO_", "O");
+						label = label.replace("_MAYBE_", "O");
+						sb.append(tokenFeatures.get(t) + "\t" + label);
 						sb.append(System.getProperty("line.separator"));
 					}
-				} else {
-					if (!sentLabels.contains("_MAYBE_")) {
-						for (int t=0; t<tokenFeatures.size(); t++) {
-//							sb.append(tokenFeatures.get(t) + "\t" + labels.get(t).replace("_MAYBE_", "O"));
-							sb.append(tokenFeatures.get(t) + "\t" + labels.get(t));
-							sb.append(System.getProperty("line.separator"));
-						}
-					}
-				}
+				} 
+				
 			} else {
 				for (int t=0; t<tokenFeatures.size(); t++) {
-					sb.append(tokenFeatures.get(t) + "\t" + labels.get(t).replace("_MAYBE_", "O"));
+					label = labels.get(t);
+					label = label.replace("_NO_", "O");
+					label = label.replace("_MAYBE_", "O");
+					sb.append(tokenFeatures.get(t) + "\t" + label);
 					sb.append(System.getProperty("line.separator"));
 				}
 			}
 			
 		} else {
 			for (int t=0; t<tokenFeatures.size(); t++) {
-				sb.append(tokenFeatures.get(t) + "\t" + labels.get(t).replace("_MAYBE_", "O"));
+				label = labels.get(t);
+				label = label.replace("_NO_", "O");
+				label = label.replace("_MAYBE_", "O");
+				sb.append(tokenFeatures.get(t) + "\t" + label);
 				sb.append(System.getProperty("line.separator"));
 			}
 		}
