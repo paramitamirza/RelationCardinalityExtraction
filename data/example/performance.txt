@@ -1,15 +1,1 @@
-sample	33	18	68	0.6471	0.4521	0.5323
-sample	36	15	68	0.7059	0.4932	0.5806
-sample	37	12	63	0.7551	0.5068	0.6066
-sample	37	12	63	0.7551	0.5068	0.6066
-sample	17	5	31	0.7727	0.2329	0.3579
-children_vanilla	7	9	17	0.4375	0.3500	0.3889
-children_nummod	7	6	17	0.5385	0.3500	0.4242
-children_top50	7	6	17	0.5385	0.3500	0.4242
-children_noone	7	6	17	0.5385	0.3500	0.4242
-children_transform	10	5	17	0.6667	0.5000	0.5714
-children_transformz	6	12	19	0.3333	0.3000	0.3158
-children_nofreq	6	0	17	1.0000	0.3000	0.4615
-children_transforma	7	10	19	0.4118	0.3500	0.3784
-children_transforma	7	10	19	0.4118	0.3500	0.3784
 children_transforma	8	10	20	0.4444	0.4000	0.4211

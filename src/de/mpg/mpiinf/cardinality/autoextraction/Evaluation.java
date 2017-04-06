@@ -258,7 +258,7 @@ public class Evaluation {
 					String wikiLabel = instanceLabel.get(entityId);
 					
 					if (bw != null) {
-						bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + java.net.URLDecoder.decode(wikiLabel, "UTF-8") 
+						bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + "\"" + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\"" 
 								+ "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
 						bw.newLine();
 //					} else {
