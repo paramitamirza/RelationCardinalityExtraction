@@ -311,6 +311,8 @@ public class GenerateFeatures implements Runnable {
 //											|| (ignoreHigherLess < 0))
 									) {
 								label = "_MAYBE_";
+							} else {
+								label = "O";
 							}
 							
 						} else {
@@ -346,6 +348,8 @@ public class GenerateFeatures implements Runnable {
 //										|| (ignoreHigherLess < 0))
 								) {
 							label = "_MAYBE_";
+						} else {
+							label = "O";
 						}
 
 					} else {	//numInt < numOfTriples
@@ -461,6 +465,8 @@ public class GenerateFeatures implements Runnable {
 //												|| (ignoreHigherLess < 0))
 										) {
 									label = "_MAYBE_";
+								} else {
+									label = "O";
 								}
 								
 							} else {
@@ -496,6 +502,8 @@ public class GenerateFeatures implements Runnable {
 //											|| (ignoreHigherLess < 0))
 									) {
 								label = "_MAYBE_";
+							} else {
+								label = "O";
 							}
 
 						} else {	//numInt < numOfTriples
