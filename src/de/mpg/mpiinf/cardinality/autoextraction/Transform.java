@@ -227,9 +227,11 @@ public class Transform {
 		for (String key : prefixLatinGreek.keySet()) {
 			if (lemma.startsWith(key)) {
 				post = lemma.replace(key, "");
-				if (postPrefixLetinGreek.contains(post) || post.isEmpty()) {
+				if (postPrefixLetinGreek.contains(post)) {
 					return "LatinGreek_" + word + "_" + prefixLatinGreek.get(key) + "_" + post;
-				} 
+				} else if (post.isEmpty()) {
+					return "LatinGreek_" + word + "_" + prefixLatinGreek.get(key) + "_" + "null";
+				}
 			}
 		}
 		return "";
