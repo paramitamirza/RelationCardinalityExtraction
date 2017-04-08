@@ -237,8 +237,8 @@ public class GenerateFeatures implements Runnable {
 				if (compositional) {
 					if (numToAdd > 0) {
 						if (numInt == numOfTriples
-								&& ((nummod && deprel.startsWith("nummod"))
-										|| !nummod)
+//								&& ((nummod && deprel.startsWith("nummod"))
+//										|| !nummod)
 //								&& numOfTriples > threshold
 								) {
 							if (numOfTriples > threshold
@@ -253,8 +253,8 @@ public class GenerateFeatures implements Runnable {
 							
 						} else {
 							if ((numToAdd+numInt) == numOfTriples
-									&& ((nummod && deprel.startsWith("nummod"))
-											|| !nummod)
+//									&& ((nummod && deprel.startsWith("nummod"))
+//											|| !nummod)
 //									&& numOfTriples > threshold
 									) {
 								label = "_YES_";
@@ -262,8 +262,8 @@ public class GenerateFeatures implements Runnable {
 								numToAdd = 0;
 								idxToAdd.clear();
 							} else if ((numToAdd+numInt) < numOfTriples
-									&& ((nummod && deprel.startsWith("nummod"))
-											|| !nummod)
+//									&& ((nummod && deprel.startsWith("nummod"))
+//											|| !nummod)
 //									&& numOfTriples > threshold
 									) {
 								label = "_NO_";
@@ -284,8 +284,8 @@ public class GenerateFeatures implements Runnable {
 						
 					} else {
 						if (numInt == numOfTriples
-								&& ((nummod && deprel.startsWith("nummod"))
-										|| !nummod)
+//								&& ((nummod && deprel.startsWith("nummod"))
+//										|| !nummod)
 //								&& numOfTriples > threshold
 								) {
 							if (numOfTriples > threshold
@@ -297,8 +297,8 @@ public class GenerateFeatures implements Runnable {
 							}
 							
 						} else if (numInt < numOfTriples
-								&& ((nummod && deprel.startsWith("nummod"))
-										|| !nummod)
+//								&& ((nummod && deprel.startsWith("nummod"))
+//										|| !nummod)
 //								&& numOfTriples > threshold
 								) {
 							label = "_NO_";
@@ -306,8 +306,8 @@ public class GenerateFeatures implements Runnable {
 							idxToAdd.add(tokenIdx);
 							
 						} else if (numInt > numOfTriples
-								&& ((nummod && deprel.startsWith("nummod"))
-										|| !nummod)
+//								&& ((nummod && deprel.startsWith("nummod"))
+//										|| !nummod)
 //								&& numOfTriples > threshold
 								){		
 							
@@ -329,8 +329,8 @@ public class GenerateFeatures implements Runnable {
 					
 				} else {
 					if (numInt == numOfTriples
-							&& ((nummod && deprel.startsWith("nummod"))
-									|| !nummod)
+//							&& ((nummod && deprel.startsWith("nummod"))
+//									|| !nummod)
 //							&& numOfTriples > threshold
 							) {
 						
@@ -343,8 +343,8 @@ public class GenerateFeatures implements Runnable {
 						}
 						
 					} else if (numInt > numOfTriples
-							&& ((nummod && deprel.startsWith("nummod"))
-									|| !nummod)
+//							&& ((nummod && deprel.startsWith("nummod"))
+//									|| !nummod)
 //							&& numOfTriples > threshold
 							) {	
 						
