@@ -227,9 +227,9 @@ public class Transform {
 		for (String key : prefixLatinGreek.keySet()) {
 			if (lemma.startsWith(key)) {
 				post = lemma.replace(key, "");
-				if (postPrefixLetinGreek.contains(post)) {
+				if (postPrefixLetinGreek.contains(post) || post.isEmpty()) {
 					return "LatinGreek_" + word + "_" + prefixLatinGreek.get(key) + "_" + post;
-				}
+				} 
 			}
 		}
 		return "";
