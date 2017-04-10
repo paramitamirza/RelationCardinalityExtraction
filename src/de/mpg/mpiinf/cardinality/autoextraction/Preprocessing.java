@@ -199,7 +199,7 @@ public class Preprocessing {
 		ignoreHigher.setRequired(false);
 		options.addOption(ignoreHigher);
 		
-		Option ignoreFreq = new Option("q", "ignorefreq", true, "Ignore frequent numbers in the text (do not label as positive examples)");
+		Option ignoreFreq = new Option("q", "ignorefreq", false, "Ignore frequent numbers in the text (do not label as positive examples)");
 		ignoreFreq.setRequired(false);
 		options.addOption(ignoreFreq);
 		
