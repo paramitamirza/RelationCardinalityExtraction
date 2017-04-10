@@ -74,8 +74,8 @@ public class Preprocessing {
 			if (cmd.hasOption("o")) {
 				dirFeature = cmd.getOptionValue("output");
 			} 
-			int ignoreFreq = 0;
-			if (cmd.hasOption("q")) ignoreFreq = Integer.parseInt(cmd.getOptionValue("ignorefreq"));
+			int ignoreFreq = 5;
+//			if (cmd.hasOption("q")) ignoreFreq = Integer.parseInt(cmd.getOptionValue("ignorefreq"));
 			
 			DistributionExtractionConcurrent distExtraction = new DistributionExtractionConcurrent(inputCsvFile, relName, dirFeature, ignoreFreq);
 			distExtraction.run(wiki);
