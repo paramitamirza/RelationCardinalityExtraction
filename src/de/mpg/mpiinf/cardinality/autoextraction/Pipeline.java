@@ -119,14 +119,14 @@ public class Pipeline {
 		System.out.println("done [ " + totalTime + " sec].");
 		
 		// Once everything is done, delete data file...
-//		File dataFile = new File(trainData);
-//		dataFile.deleteOnExit();
-//		dataFile = new File(evalData);
-//		dataFile.deleteOnExit();
-//		File crfOutFile = new File(crfOutPath);
-//		crfOutFile.deleteOnExit();
-//		File modelFile = new File(dirModels + "/" + relName + ".model");
-//		modelFile.deleteOnExit();
+		File dataFile = new File(trainData);
+		dataFile.deleteOnExit();
+		dataFile = new File(evalData);
+		dataFile.deleteOnExit();
+		File crfOutFile = new File(crfOutPath);
+		crfOutFile.deleteOnExit();
+		File modelFile = new File(dirModels + "/" + relName + ".model");
+		modelFile.deleteOnExit();
 	}
 	
 	public static Options getPreprocessingOptions() {
