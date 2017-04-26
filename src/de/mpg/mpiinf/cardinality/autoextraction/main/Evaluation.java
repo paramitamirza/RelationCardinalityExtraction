@@ -1,4 +1,4 @@
-package de.mpg.mpiinf.cardinality.autoextraction;
+package de.mpg.mpiinf.cardinality.autoextraction.main;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,6 +22,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import de.mpg.mpiinf.cardinality.autoextraction.Numbers;
 import edu.stanford.nlp.util.StringUtils;
 
 public class Evaluation {

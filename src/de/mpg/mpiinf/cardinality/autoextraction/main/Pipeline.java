@@ -1,4 +1,4 @@
-package de.mpg.mpiinf.cardinality.autoextraction;
+package de.mpg.mpiinf.cardinality.autoextraction.main;
 
 import java.io.File;
 
@@ -9,6 +9,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+
+import de.mpg.mpiinf.cardinality.autoextraction.FeatureExtractionConcurrent;
+import de.mpg.mpiinf.cardinality.autoextraction.WikipediaArticle;
 
 public class Pipeline {
 	
