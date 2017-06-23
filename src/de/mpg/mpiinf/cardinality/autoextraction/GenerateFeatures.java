@@ -110,23 +110,30 @@ public class GenerateFeatures implements Runnable {
 	    		Transform trans = new Transform();
 	    		
 	    		for (String l : wikipediaText.split("\\r?\\n")) {	//Split the paragraphs
-	    			Document doc = new Document(l);
 	    			
-	    			for (Sentence s : doc.sentences()) {	//Split the sentences
-	    				
-	    				original = s.text();	    				
-	    				sent = filter(original, this.isTraining(), trans);
-	    				
-	    				if (sent != null) {
-	    					
-	    					toPrint.append(generateFeatures(sent, j, numOfTriples, 
-	    							this.isNummod(), this.isCompositional(), this.getThreshold(),
-	    							this.isIgnoreHigher(), this.getIgnoreHigherLess(),
-	    							this.isIgnoreFreq()).toString());
-	    				}
-	    				
-	    				j ++;
-	    	        }
+	    			if (!l.trim().isEmpty()) {
+		    			Document doc = new Document(l);
+		    			
+		    			System.out.println("-----");
+		    			System.out.println(l);
+		    			System.out.println(doc.coref());
+		    				    			
+		    			for (Sentence s : doc.sentences()) {	//Split the sentences
+		    				
+		    				original = s.text();	    				
+		    				sent = filter(original, this.isTraining(), trans);
+		    				
+		    				if (sent != null) {
+		    					
+		    					toPrint.append(generateFeatures(sent, j, numOfTriples, 
+		    							this.isNummod(), this.isCompositional(), this.getThreshold(),
+		    							this.isIgnoreHigher(), this.getIgnoreHigherLess(),
+		    							this.isIgnoreFreq()).toString());
+		    				}
+		    				
+		    				j ++;
+		    	        }
+	    			}
 	    	    }
 	    		
 //	    		synchronized (this) {
