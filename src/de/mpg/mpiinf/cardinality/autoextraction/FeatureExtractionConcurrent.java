@@ -142,6 +142,7 @@ public class FeatureExtractionConcurrent {
 	        count = line.split(",")[1];
 	        curId = Integer.parseInt(line.split(",")[2]);
 	        freqNum = line.split(",")[3];
+	        quarter = line.split(",")[4];
 	        
 	        training = true;
 	        if (testInstances.contains(wikidataId)) {
