@@ -118,16 +118,18 @@ public class Preprocessing {
 			boolean transformOne = cmd.hasOption("y");
 			boolean transformZero = cmd.hasOption("z");
 			boolean ignoreHigher = cmd.hasOption("h");
-			boolean ignoreFreq = cmd.hasOption("q");
+			boolean ignoreFreq = cmd.hasOption("g");
 			int threshold = 0;
 			if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
 			float topPopular = (float)1;
 			if (cmd.hasOption("k")) topPopular = Float.parseFloat(cmd.getOptionValue("popular"));
+			int quarterPart = 0;
+			if (cmd.hasOption("q")) quarterPart = Integer.parseInt(cmd.getOptionValue("quarter"));
 			int ignoreHigherLess = 0;
 			if (cmd.hasOption("h")) ignoreHigherLess = Integer.parseInt(cmd.getOptionValue("ignorehigher"));
 			featExtraction.run(wiki, nummod, compositional, threshold, 
 					transform, transformZero, transformOne, 
-					ignoreHigher, ignoreHigherLess, ignoreFreq, topPopular);
+					ignoreHigher, ignoreHigherLess, ignoreFreq, topPopular, quarterPart);
 		}
 		
 	}

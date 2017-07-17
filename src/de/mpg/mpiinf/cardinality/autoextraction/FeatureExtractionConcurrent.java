@@ -64,13 +64,13 @@ public class FeatureExtractionConcurrent {
 		}
 		
 		WikipediaArticle wiki = new WikipediaArticle();
-		featExtraction.run(wiki, true, false, 0, false, false, false, false, -99, false, (float) 1.0);
+		featExtraction.run(wiki, true, false, 0, false, false, false, false, -99, false, (float) 1.0, 0);
 	}
 	
 	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, int threshold,
 			boolean transform, boolean transformZero, boolean transformOne,
 			boolean ignoreHigher, int ignoreHigherLess,
-			boolean ignoreFreq, float topPopular) throws IOException, InterruptedException {
+			boolean ignoreFreq, float topPopular, int quarterPart) throws IOException, InterruptedException {
 		
 		long startTime = System.currentTimeMillis();
 		System.out.print("Generate feature file (in column format) for CRF++... ");
@@ -82,7 +82,7 @@ public class FeatureExtractionConcurrent {
 			testInstances = readRandomInstances(getInputRandomCsvFile());
 		}
 		String line;
-		String wikidataId = "", count = "", freqNum = "";
+		String wikidataId = "", count = "", freqNum = "", quarter = "";
 		Integer curId;
 		boolean training;
 		
@@ -99,20 +99,24 @@ public class FeatureExtractionConcurrent {
         count = line.split(",")[1];
         curId = Integer.parseInt(line.split(",")[2]);
         freqNum = line.split(",")[3];
+        quarter = line.split(",")[4];
         
 		training = true;
         if (testInstances.contains(wikidataId)) {
 			training = false;
 		} 
         if (training && (idxTrain < maxNumTrain)) {
-			GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
-					wiki, wikidataId, count, curId, freqNum,
-	        		training,
-	        		nummod, compositional, threshold,
-	        		transform, transformZero, transformOne,
-	        		ignoreHigher, ignoreHigherLess, ignoreFreq);
-			ext.run();
-			idxTrain ++;
+        	if ((quarterPart == 0) 
+        			|| (quarterPart > 0 && quarterPart == Integer.parseInt(quarter))) {
+				GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
+						wiki, wikidataId, count, curId, freqNum,
+		        		training,
+		        		nummod, compositional, threshold,
+		        		transform, transformZero, transformOne,
+		        		ignoreHigher, ignoreHigherLess, ignoreFreq);
+				ext.run();
+				idxTrain ++;
+        	}
         } else {
         	GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
         			wiki, wikidataId, count, curId, freqNum,
@@ -145,14 +149,17 @@ public class FeatureExtractionConcurrent {
 			} 
 	        
 	        if (training && (idxTrain < maxNumTrain)) {
-	        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
-	        			wiki, wikidataId, count, curId, freqNum,
-		        		training,
-		        		nummod, compositional, threshold,
-		        		transform, transformZero, transformOne,
-		        		ignoreHigher, ignoreHigherLess, ignoreFreq);
-		        executor.execute(worker);
-		        idxTrain ++;
+	        	if ((quarterPart == 0) 
+	        			|| (quarterPart > 0 && quarterPart == Integer.parseInt(quarter))) {
+		        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
+		        			wiki, wikidataId, count, curId, freqNum,
+			        		training,
+			        		nummod, compositional, threshold,
+			        		transform, transformZero, transformOne,
+			        		ignoreHigher, ignoreHigherLess, ignoreFreq);
+			        executor.execute(worker);
+			        idxTrain ++;
+	        	}
 	        } else {
 	        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
 	        			wiki, wikidataId, count, curId, freqNum,
