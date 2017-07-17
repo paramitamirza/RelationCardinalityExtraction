@@ -114,9 +114,9 @@ public class GenerateFeatures implements Runnable {
 	    			if (!l.trim().isEmpty()) {
 		    			Document doc = new Document(l);
 		    			
-		    			System.out.println("-----");
-		    			System.out.println(l);
-		    			System.out.println(doc.coref());
+//		    			System.out.println("-----");
+//		    			System.out.println(l);
+//		    			System.out.println(doc.coref());
 		    				    			
 		    			for (Sentence s : doc.sentences()) {	//Split the sentences
 		    				
