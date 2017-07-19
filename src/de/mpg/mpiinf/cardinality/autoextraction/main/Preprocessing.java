@@ -78,7 +78,7 @@ public class Preprocessing {
 			if (cmd.hasOption("o")) {
 				dirFeature = cmd.getOptionValue("output");
 			} 
-			int ignoreFreq = 5;
+			Double ignoreFreq = 0.1;
 //			if (cmd.hasOption("q")) ignoreFreq = Integer.parseInt(cmd.getOptionValue("ignorefreq"));
 			
 			DistributionExtractionConcurrent distExtraction = new DistributionExtractionConcurrent(inputCsvFile, relName, dirFeature, ignoreFreq);
@@ -118,15 +118,22 @@ public class Preprocessing {
 			boolean transformOne = cmd.hasOption("y");
 			boolean transformZero = cmd.hasOption("z");
 			boolean ignoreHigher = cmd.hasOption("h");
-			boolean ignoreFreq = cmd.hasOption("g");
+			
+			int ignoreFreq = -1;
+			if (cmd.hasOption("g")) ignoreFreq = Integer.parseInt(cmd.getOptionValue("ignorefreq"));
+			
 			int threshold = 0;
 			if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
+			
 			float topPopular = (float)1;
 			if (cmd.hasOption("k")) topPopular = Float.parseFloat(cmd.getOptionValue("popular"));
+			
 			int quarterPart = 0;
 			if (cmd.hasOption("q")) quarterPart = Integer.parseInt(cmd.getOptionValue("quarter"));
+			
 			int ignoreHigherLess = 0;
 			if (cmd.hasOption("h")) ignoreHigherLess = Integer.parseInt(cmd.getOptionValue("ignorehigher"));
+			
 			featExtraction.run(wiki, nummod, compositional, threshold, 
 					transform, transformZero, transformOne, 
 					ignoreHigher, ignoreHigherLess, ignoreFreq, topPopular, quarterPart);

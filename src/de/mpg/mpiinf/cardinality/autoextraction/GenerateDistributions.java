@@ -16,6 +16,7 @@ import java.util.TreeMap;
 
 import javax.swing.text.html.HTMLDocument.Iterator;
 
+import org.apache.commons.io.FilenameUtils;
 import org.json.*;
 
 import edu.stanford.nlp.simple.Document;
@@ -23,7 +24,7 @@ import edu.stanford.nlp.simple.Sentence;
 
 public class GenerateDistributions implements Runnable {
 	
-	private String dirFeature;
+	private String outputCsvFile;
 	private String relName;
 	
 	private WikipediaArticle wiki;
@@ -31,13 +32,19 @@ public class GenerateDistributions implements Runnable {
 	private String wikidataId;
 	private String count;
 	private Integer curId;
+	private String wikiLabel;
+	private String popularScore;
+	private Double countOccur;
+	private Integer numQuartile;
 	
-	private Integer freq;
+	private Double freqThreshold;
 	private Map<Long, Integer> numDistributions;
 	
-	public GenerateDistributions(String dirFeature, String relName,
-			WikipediaArticle wiki, String wikidataId, String count, Integer curId, Integer freq) {
-		this.setDirFeature(dirFeature);
+	public GenerateDistributions(String outputCsvFile, String relName,
+			WikipediaArticle wiki, String wikidataId, String count, Integer curId, 
+			String wikiLabel, String popularScore, Double countOccur, Integer numQuartile,
+			Double freqThreshold) {
+		this.setOutputCsvFile(outputCsvFile);
 		this.setRelName(relName);
 		
 		this.setWiki(wiki);
@@ -45,8 +52,12 @@ public class GenerateDistributions implements Runnable {
 		this.setWikidataId(wikidataId);
 		this.setCount(count);
 		this.setCurId(curId);
+		this.setWikiLabel(wikiLabel);
+		this.setPopularScore(popularScore);
+		this.setCountOccur(countOccur);
+		this.setNumQuartile(numQuartile);
 		
-		this.setFreq(freq);
+		this.setFreqThreshold(freqThreshold);
 		this.setNumDistributions(new HashMap<Long, Integer>());
 	}
 	
@@ -82,17 +93,85 @@ public class GenerateDistributions implements Runnable {
 	    	        }
 	    	    }
 	    		
-	    		String distFilePath = this.getDirFeature() + "/" + this.getRelName() + "_dist_freq_cardinality.data";
-	    		String toWrite = "";
 	    		List<Entry<Long, Integer>> dist = entriesSortedByValues(this.getNumDistributions());
+	    		
+	    		//numbers occurring only once
+	    		String toWriteMoreThanOne = "";
 	    		for (Entry<Long, Integer> en : dist) {
-	    			if (en.getValue() >= this.getFreq()) {
-	    				toWrite += en.getKey() + ";";
+	    			if (en.getValue() > 1) {
+	    				toWriteMoreThanOne += en.getKey() + ";";
 	    			} 
 	    		}
-	    		if (!toWrite.isEmpty()) toWrite = toWrite.substring(0, toWrite.length()-1);
-	    		toWrite = "[" + toWrite + "]";
-	    		WriteToFile.getInstance().appendContents(distFilePath, this.getWikidataId() + "," + toWrite + "\n");
+	    		if (!toWriteMoreThanOne.isEmpty()) toWriteMoreThanOne = toWriteMoreThanOne.substring(0, toWriteMoreThanOne.length()-1);
+	    		toWriteMoreThanOne = "[" + toWriteMoreThanOne + "]";
+	    		
+	    		//numbers occurring frequently
+	    		String toWriteFrequent1 = "";	//0.05 frequent threshold
+	    		String toWriteFrequent2 = "";	//0.1 frequent threshold
+	    		String toWriteFrequent3 = "";	//0.2 frequent threshold
+	    		String toWriteFrequent4 = "";	//0.5 frequent threshold
+	    		
+	    		Double numTotalOccurrences = 0.0;
+	    		for (Entry<Long, Integer> en : dist) {
+	    			numTotalOccurrences += en.getValue();		
+	    		}
+	    		
+//	    		for (Entry<Long, Integer> en : dist) {
+//	    			if ((en.getValue() / numTotalOccurrences) >= this.getFreqThreshold()) {
+//	    				toWriteFrequent1 += en.getKey() + ";";
+//	    			} 
+//	    		}
+	    		
+	    		for (Entry<Long, Integer> en : dist) {
+	    			if ((en.getValue() > 1)
+	    					&& (en.getValue() / numTotalOccurrences) >= 0.05) {
+	    				toWriteFrequent1 += en.getKey() + ";";
+	    			} 
+	    		}
+	    		if (!toWriteFrequent1.isEmpty()) toWriteFrequent1 = toWriteFrequent1.substring(0, toWriteFrequent1.length()-1);
+	    		toWriteFrequent1 = "[" + toWriteFrequent1 + "]";
+	    		
+	    		for (Entry<Long, Integer> en : dist) {
+	    			if ((en.getValue() > 1)
+	    					&& (en.getValue() / numTotalOccurrences) >= 0.1) {
+	    				toWriteFrequent2 += en.getKey() + ";";
+	    			} 
+	    		}
+	    		if (!toWriteFrequent2.isEmpty()) toWriteFrequent2 = toWriteFrequent2.substring(0, toWriteFrequent2.length()-1);
+	    		toWriteFrequent2 = "[" + toWriteFrequent2 + "]";
+	    		
+	    		for (Entry<Long, Integer> en : dist) {
+	    			if ((en.getValue() > 1)
+	    					&& (en.getValue() / numTotalOccurrences) >= 0.2) {
+	    				toWriteFrequent3 += en.getKey() + ";";
+	    			} 
+	    		}
+	    		if (!toWriteFrequent3.isEmpty()) toWriteFrequent3 = toWriteFrequent3.substring(0, toWriteFrequent3.length()-1);
+	    		toWriteFrequent3 = "[" + toWriteFrequent3 + "]";
+	    		
+	    		for (Entry<Long, Integer> en : dist) {
+	    			if ((en.getValue() > 1)
+	    					&& (en.getValue() / numTotalOccurrences) >= 0.5) {
+	    				toWriteFrequent4 += en.getKey() + ";";
+	    			} 
+	    		}
+	    		if (!toWriteFrequent4.isEmpty()) toWriteFrequent4 = toWriteFrequent4.substring(0, toWriteFrequent4.length()-1);
+	    		toWriteFrequent4 = "[" + toWriteFrequent4 + "]";
+	    		
+	    		
+	    		WriteToFile.getInstance().appendContents(getOutputCsvFile(), 
+	    				this.getWikidataId() + ","
+	    				+ this.getCount() + ","
+	    				+ this.getCurId() + ","
+	    				+ this.getWikiLabel() + ","
+	    				+ this.getPopularScore() + ","
+	    				+ this.getCountOccur() + ","
+	    				+ this.getNumQuartile() + ","
+	    				+ toWriteMoreThanOne + ","
+	    				+ toWriteFrequent1 + ","
+	    				+ toWriteFrequent2 + ","
+	    				+ toWriteFrequent3 + ","
+	    				+ toWriteFrequent4 + "\n");
 			}			
 			
 		} catch (JSONException | IOException e) {
@@ -174,14 +253,6 @@ public class GenerateDistributions implements Runnable {
 		this.count = count;
 	}
 	
-	public String getDirFeature() {
-		return dirFeature;
-	}
-
-	public void setDirFeature(String dirFeature) {
-		this.dirFeature = dirFeature;
-	}
-	
 	public String getRelName() {
 		return relName;
 	}
@@ -214,11 +285,51 @@ public class GenerateDistributions implements Runnable {
 		this.numDistributions = numDistributions;
 	}
 
-	public int getFreq() {
-		return freq;
+	public Double getFreqThreshold() {
+		return freqThreshold;
 	}
 
-	public void setFreq(int freq) {
-		this.freq = freq;
+	public void setFreqThreshold(Double freqThreshold) {
+		this.freqThreshold = freqThreshold;
+	}
+
+	public String getWikiLabel() {
+		return wikiLabel;
+	}
+
+	public void setWikiLabel(String wikiLabel) {
+		this.wikiLabel = wikiLabel;
+	}
+
+	public String getPopularScore() {
+		return popularScore;
+	}
+
+	public void setPopularScore(String popularScore) {
+		this.popularScore = popularScore;
+	}
+
+	public Double getCountOccur() {
+		return countOccur;
+	}
+
+	public void setCountOccur(Double countOccur) {
+		this.countOccur = countOccur;
+	}
+
+	public String getOutputCsvFile() {
+		return outputCsvFile;
+	}
+
+	public void setOutputCsvFile(String outputCsvFile) {
+		this.outputCsvFile = outputCsvFile;
+	}
+
+	public Integer getNumQuartile() {
+		return numQuartile;
+	}
+
+	public void setNumQuartile(Integer numQuartile) {
+		this.numQuartile = numQuartile;
 	}
 }

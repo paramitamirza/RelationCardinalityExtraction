@@ -55,13 +55,13 @@ public class FeatureExtraction {
 		}
 		
 		WikipediaArticle wiki = new WikipediaArticle();
-		featExtraction.run(wiki, true, false, 0, false, false, false, false, -99, false, (float) 1.0);
+		featExtraction.run(wiki, true, false, 0, false, false, false, false, -99, 0, (float) 1.0);
 	}
 	
 	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, int threshold,
 			boolean transform, boolean transformZero, boolean transformOne, 
 			boolean ignoreHigher, int ignoreHigherLess, 
-			boolean ignoreFreq,float topPopular) throws IOException, InterruptedException {
+			int ignoreFreq,float topPopular) throws IOException, InterruptedException {
 		
 		long startTime = System.currentTimeMillis();
 		System.out.print("Generate feature file (in column format) for CRF++... ");
@@ -70,9 +70,9 @@ public class FeatureExtraction {
 		
 		List<String> testInstances = readRandomInstances(getInputRandomCsvFile());
 		String line;
-		String wikidataId = "", count = "", freqNum = "";
+		String wikidataId = "", count = "", freqNum = "", quarter = "", countDist = "";
 		Integer curId;
-		boolean training;
+		boolean training, isIgnoreFreq;
 		
 		BufferedReader br = new BufferedReader(new FileReader(getInputCsvFile()));
 		
@@ -86,7 +86,24 @@ public class FeatureExtraction {
 			wikidataId = line.split(",")[0];
 	        count = line.split(",")[1];
 	        curId = Integer.parseInt(line.split(",")[2]);
-	        freqNum = line.split(",")[3];
+	        
+	        countDist = line.split(",")[5];
+	        quarter = line.split(",")[6];
+	        
+	        isIgnoreFreq = false;
+	        if (ignoreFreq >= 0) {
+	        	isIgnoreFreq = true;
+	        	if (ignoreFreq == 0) freqNum = line.split(",")[7];
+	            else if (ignoreFreq == 1) freqNum = line.split(",")[8];
+	            else if (ignoreFreq == 2) freqNum = line.split(",")[9];
+	            else if (ignoreFreq == 3) freqNum = line.split(",")[10];
+	            else if (ignoreFreq == 4) freqNum = line.split(",")[11];
+	        }   
+	        
+	        training = true;
+	        if (testInstances.contains(wikidataId)) {
+				training = false;
+			} 
 	        
 	        training = true;
 	        if (testInstances.contains(wikidataId)) {
@@ -96,18 +113,20 @@ public class FeatureExtraction {
 		        GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
 		        		wiki, wikidataId, count, curId, freqNum,
 		        		training,
-		        		nummod, compositional, threshold,
+		        		nummod, compositional, 
+		        		threshold, countDist,
 		        		transform, transformZero, transformOne,
-		        		ignoreHigher, ignoreHigherLess, ignoreFreq);
+		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq);
 				ext.run();
 				idxTrain ++;
 	        } else {
 	        	GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
 		        		wiki, wikidataId, count, curId, freqNum,
 		        		training,
-		        		nummod, compositional, threshold,
+		        		nummod, compositional, 
+		        		threshold, countDist,
 		        		transform, transformZero, transformOne,
-		        		ignoreHigher, ignoreHigherLess, ignoreFreq);
+		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq);
 				ext.run();
 	        }
              

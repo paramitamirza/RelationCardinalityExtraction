@@ -71,15 +71,22 @@ public class Pipeline {
 		boolean transformOne = cmd.hasOption("y");
 		boolean transformZero = cmd.hasOption("z");
 		boolean ignoreHigher = cmd.hasOption("h");
-		boolean ignoreFreq = cmd.hasOption("g");
+		
+		int ignoreFreq = -1;
+		if (cmd.hasOption("g")) ignoreFreq = Integer.parseInt(cmd.getOptionValue("ignorefreq"));
+		
 		int threshold = 0;
 		if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
+		
 		float topPopular = (float)1;
 		if (cmd.hasOption("k")) topPopular = Float.parseFloat(cmd.getOptionValue("popular"));
+		
 		int quarterPart = 0;
 		if (cmd.hasOption("q")) quarterPart = Integer.parseInt(cmd.getOptionValue("quarter"));
+		
 		int ignoreHigherLess = 0;
 		if (cmd.hasOption("h")) ignoreHigherLess = Integer.parseInt(cmd.getOptionValue("ignorehigher"));
+		
 		featExtraction.run(wiki, nummod, compositional, threshold, 
 				transform, transformZero, transformOne, 
 				ignoreHigher, ignoreHigherLess, ignoreFreq, topPopular, quarterPart);
@@ -205,7 +212,7 @@ public class Pipeline {
 		ignoreHigher.setRequired(false);
 		options.addOption(ignoreHigher);
 		
-		Option ignoreFreq = new Option("g", "ignorefreq", false, "Ignore frequent numbers in the text (do not label as positive examples)");
+		Option ignoreFreq = new Option("g", "ignorefreq", true, "Ignore frequent numbers in the text (do not label as positive examples)");
 		ignoreFreq.setRequired(false);
 		options.addOption(ignoreFreq);
 		
