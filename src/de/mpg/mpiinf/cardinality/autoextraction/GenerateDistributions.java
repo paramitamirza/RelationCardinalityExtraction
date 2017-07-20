@@ -106,10 +106,10 @@ public class GenerateDistributions implements Runnable {
 	    		toWriteMoreThanOne = "[" + toWriteMoreThanOne + "]";
 	    		
 	    		//numbers occurring frequently
-	    		String toWriteFrequent1 = "";	//0.05 frequent threshold
-	    		String toWriteFrequent2 = "";	//0.1 frequent threshold
-	    		String toWriteFrequent3 = "";	//0.2 frequent threshold
-	    		String toWriteFrequent4 = "";	//0.5 frequent threshold
+	    		String toWriteFrequent1 = "";	//< 1 information
+	    		String toWriteFrequent2 = "";	//< 1.5 information
+	    		String toWriteFrequent3 = "";	//< 2 information
+	    		String toWriteFrequent4 = "";	//< 2.5 information
 	    		
 	    		Double numTotalOccurrences = 0.0;
 	    		for (Entry<Long, Integer> en : dist) {
@@ -123,38 +123,19 @@ public class GenerateDistributions implements Runnable {
 //	    		}
 	    		
 	    		for (Entry<Long, Integer> en : dist) {
-	    			if ((en.getValue() > 1)
-	    					&& (en.getValue() / numTotalOccurrences) >= 0.05) {
-	    				toWriteFrequent1 += en.getKey() + ";";
-	    			} 
+	    			double information = -Math.log(en.getValue() / numTotalOccurrences);
+	    			
+	    			if (en.getValue() > 1 && information < 1) toWriteFrequent1 += en.getKey() + ";";
+	    			if (en.getValue() > 1 && information < 1.5) toWriteFrequent2 += en.getKey() + ";";
+	    			if (en.getValue() > 1 && information < 2) toWriteFrequent3 += en.getKey() + ";";
+	    			if (en.getValue() > 1 && information < 2.5) toWriteFrequent4 += en.getKey() + ";";
 	    		}
 	    		if (!toWriteFrequent1.isEmpty()) toWriteFrequent1 = toWriteFrequent1.substring(0, toWriteFrequent1.length()-1);
 	    		toWriteFrequent1 = "[" + toWriteFrequent1 + "]";
-	    		
-	    		for (Entry<Long, Integer> en : dist) {
-	    			if ((en.getValue() > 1)
-	    					&& (en.getValue() / numTotalOccurrences) >= 0.1) {
-	    				toWriteFrequent2 += en.getKey() + ";";
-	    			} 
-	    		}
 	    		if (!toWriteFrequent2.isEmpty()) toWriteFrequent2 = toWriteFrequent2.substring(0, toWriteFrequent2.length()-1);
 	    		toWriteFrequent2 = "[" + toWriteFrequent2 + "]";
-	    		
-	    		for (Entry<Long, Integer> en : dist) {
-	    			if ((en.getValue() > 1)
-	    					&& (en.getValue() / numTotalOccurrences) >= 0.2) {
-	    				toWriteFrequent3 += en.getKey() + ";";
-	    			} 
-	    		}
 	    		if (!toWriteFrequent3.isEmpty()) toWriteFrequent3 = toWriteFrequent3.substring(0, toWriteFrequent3.length()-1);
 	    		toWriteFrequent3 = "[" + toWriteFrequent3 + "]";
-	    		
-	    		for (Entry<Long, Integer> en : dist) {
-	    			if ((en.getValue() > 1)
-	    					&& (en.getValue() / numTotalOccurrences) >= 0.5) {
-	    				toWriteFrequent4 += en.getKey() + ";";
-	    			} 
-	    		}
 	    		if (!toWriteFrequent4.isEmpty()) toWriteFrequent4 = toWriteFrequent4.substring(0, toWriteFrequent4.length()-1);
 	    		toWriteFrequent4 = "[" + toWriteFrequent4 + "]";
 	    		

@@ -84,7 +84,7 @@ public class Pipeline {
 		int quarterPart = 0;
 		if (cmd.hasOption("q")) quarterPart = Integer.parseInt(cmd.getOptionValue("quarter"));
 		
-		int ignoreHigherLess = 0;
+		int ignoreHigherLess = -1;
 		if (cmd.hasOption("h")) ignoreHigherLess = Integer.parseInt(cmd.getOptionValue("ignorehigher"));
 		
 		featExtraction.run(wiki, nummod, compositional, threshold, 
