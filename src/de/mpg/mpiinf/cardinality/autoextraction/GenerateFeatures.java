@@ -270,7 +270,7 @@ public class GenerateFeatures implements Runnable {
 								}
 							} else {				
 								if (!this.getFrequentNumbers().contains(numInt)) {
-									label = "_YES_";
+									label = "_MAYBE_";
 								} else {
 									label = "_NO_";	
 								}
@@ -322,7 +322,7 @@ public class GenerateFeatures implements Runnable {
 								}
 							} else {				
 								if (!this.getFrequentNumbers().contains(numInt)) {
-									label = "_YES_";
+									label = "_MAYBE_";
 								} else {
 									label = "_NO_";	
 								}
@@ -352,7 +352,7 @@ public class GenerateFeatures implements Runnable {
 							}
 							
 						} else {
-							label = "O";
+							label = "_NO_";
 						}
 					}
 					
@@ -370,7 +370,7 @@ public class GenerateFeatures implements Runnable {
 							}
 						} else {				
 							if (!this.getFrequentNumbers().contains(numInt)) {
-								label = "_YES_";
+								label = "_MAYBE_";
 							} else {
 								label = "_NO_";	
 							}
@@ -441,7 +441,7 @@ public class GenerateFeatures implements Runnable {
 									}
 								} else {				
 									if (!this.getFrequentNumbers().contains(numInt)) {
-										label = "_YES_";
+										label = "_MAYBE_";
 									} else {
 										label = "_NO_";	
 									}
@@ -493,7 +493,7 @@ public class GenerateFeatures implements Runnable {
 									}
 								} else {				
 									if (!this.getFrequentNumbers().contains(numInt)) {
-										label = "_YES_";
+										label = "_MAYBE_";
 									} else {
 										label = "_NO_";	
 									}
@@ -522,7 +522,7 @@ public class GenerateFeatures implements Runnable {
 								}
 								
 							} else {
-								label = "O";
+								label = "_NO_";
 							}
 						}
 						
@@ -540,7 +540,7 @@ public class GenerateFeatures implements Runnable {
 								}
 							} else {				
 								if (!this.getFrequentNumbers().contains(numInt)) {
-									label = "_YES_";
+									label = "_MAYBE_";
 								} else {
 									label = "_NO_";	
 								}
@@ -632,7 +632,7 @@ public class GenerateFeatures implements Runnable {
 		
 		if (this.isTraining()) {
 		
-			if (threshold > 0 || ignoreFreq || ignoreHigher) {		
+//			if (threshold > 0 || ignoreFreq || ignoreHigher) {		
 				Set<String> sentLabels = new HashSet<String>(labels);
 				if (sentLabels.contains("_YES_") || sentLabels.contains("_NO_")) {		
 					for (int t=0; t<tokenFeatures.size(); t++) {
@@ -644,15 +644,15 @@ public class GenerateFeatures implements Runnable {
 					}
 				} 
 				
-			} else {
-				for (int t=0; t<tokenFeatures.size(); t++) {
-					label = labels.get(t);
-					label = label.replace("_NO_", "O");
-					label = label.replace("_MAYBE_", "O");
-					sb.append(tokenFeatures.get(t) + "\t" + label);
-					sb.append(System.getProperty("line.separator"));
-				}
-			}
+//			} else {
+//				for (int t=0; t<tokenFeatures.size(); t++) {
+//					label = labels.get(t);
+//					label = label.replace("_NO_", "O");
+//					label = label.replace("_MAYBE_", "O");
+//					sb.append(tokenFeatures.get(t) + "\t" + label);
+//					sb.append(System.getProperty("line.separator"));
+//				}
+//			}
 			
 		} else {
 			for (int t=0; t<tokenFeatures.size(); t++) {
