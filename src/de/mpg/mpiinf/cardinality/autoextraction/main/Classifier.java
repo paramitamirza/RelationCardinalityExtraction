@@ -67,7 +67,7 @@ public class Classifier {
 		String templateFile = cmd.getOptionValue("template");
 		
 		Classifier cl = new Classifier(relName, dirCRF, dirModels, templateFile);
-		
+		if (cmd.hasOption("n")) Classifier.setNumberOfThreads(Integer.parseInt(cmd.getOptionValue("thread")));
 		String trainFile = cmd.getOptionValue("train");
 		String evalFile = trainFile;
 		if (cmd.hasOption("e")) evalFile = cmd.getOptionValue("eval");
@@ -186,6 +186,10 @@ public class Classifier {
 		Option models = new Option("m", "models", true, "Output directory of CRF++ model files");
 		models.setRequired(false);
 		options.addOption(models);
+		
+		Option nThreads = new Option("n", "thread", true, "Number of threads");
+		nThreads.setRequired(false);
+		options.addOption(nThreads);
 		
 		return options;
 	}
