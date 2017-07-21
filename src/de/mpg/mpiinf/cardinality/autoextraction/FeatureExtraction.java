@@ -74,6 +74,19 @@ public class FeatureExtraction {
 		Integer curId;
 		boolean training, isIgnoreFreq;
 		
+		//******* Reading maximum triple count in the dataset *******//
+		
+		int maxCount = 0, tripleCount = 0;;
+		BufferedReader brpre = new BufferedReader(new FileReader(getInputCsvFile()));
+		line = brpre.readLine();
+		while (line != null) {
+			tripleCount = Integer.parseInt(line.split(",")[1]);
+			if (tripleCount >= maxCount) maxCount = tripleCount;
+			
+			line = brpre.readLine();
+		}
+		brpre.close();
+		
 		BufferedReader br = new BufferedReader(new FileReader(getInputCsvFile()));
 		
 		int numTrain = ReadFromFile.countLines(this.getInputCsvFile()) - ReadFromFile.countLines(this.getInputRandomCsvFile());
@@ -116,7 +129,7 @@ public class FeatureExtraction {
 		        		nummod, compositional, 
 		        		threshold, countDist,
 		        		transform, transformZero, transformOne,
-		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq);
+		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
 				ext.run();
 				idxTrain ++;
 	        } else {
@@ -126,7 +139,7 @@ public class FeatureExtraction {
 		        		nummod, compositional, 
 		        		threshold, countDist,
 		        		transform, transformZero, transformOne,
-		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq);
+		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
 				ext.run();
 	        }
              

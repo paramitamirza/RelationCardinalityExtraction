@@ -47,6 +47,7 @@ public class GenerateFeatures implements Runnable {
 	private boolean ignoreHigher;
 	private boolean ignoreFreq;
 	private int ignoreHigherLess;
+	private int maxTripleCount;
 	
 	private List<Long> frequentNumbers;
 	
@@ -58,7 +59,7 @@ public class GenerateFeatures implements Runnable {
 			int threshold, String countDist,
 			boolean transform, boolean transformZero, boolean transformOne,
 			boolean ignoreHigher, int ignoreHigherLess,
-			boolean ignoreFreq) {
+			boolean ignoreFreq, int maxCount) {
 		this.setDirFeature(dirFeature);
 		this.setRelName(relName);
 		
@@ -83,6 +84,7 @@ public class GenerateFeatures implements Runnable {
 		this.setIgnoreHigher(ignoreHigher);
 		this.setIgnoreFreq(ignoreFreq);
 		this.setIgnoreHigherLess(ignoreHigherLess);
+		this.setMaxTripleCount(maxCount);
 		
 		List<Long> freqNums = new ArrayList<Long>();
 		String freqs = freqNum.substring(1, freqNum.length()-1);
@@ -134,7 +136,7 @@ public class GenerateFeatures implements Runnable {
 		    							this.isNummod(), this.isCompositional(), 
 		    							this.getThreshold(), this.getCountDist(),
 		    							this.isIgnoreHigher(), this.getIgnoreHigherLess(),
-		    							this.isIgnoreFreq()).toString());
+		    							this.isIgnoreFreq(), this.getMaxTripleCount()).toString());
 		    				}
 		    				
 		    				j ++;
@@ -218,7 +220,7 @@ public class GenerateFeatures implements Runnable {
 			boolean nummod, boolean compositional, 
 			int threshold, double countDist,
 			boolean ignoreHigher, int ignoreHigherLess,
-			boolean ignoreFreq) {
+			boolean ignoreFreq, int maxTripleCount) {
 		String word = "", lemma = "", pos = "", ner = "", deprel = "", label = "";
 		StringBuilder sb = new StringBuilder();
 		int k;
@@ -296,9 +298,12 @@ public class GenerateFeatures implements Runnable {
 								idxToAdd.add(tokenIdx);
 							} else {	//(numToAdd+numInt) > numOfTriples
 								if (((ignoreHigherLess > 0) 
-										//&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess)))
-										&& ((numToAdd+numInt) <= ignoreHigherLess))
-										|| (ignoreHigherLess == 0)
+												&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
+												&& ((numToAdd+numInt) <= maxTripleCount)
+												)
+										|| ((ignoreHigherLess == 0)
+												&& ((numToAdd+numInt) <= maxTripleCount)
+												)
 								) {
 									label = "_MAYBE_";
 								} else {
@@ -342,9 +347,12 @@ public class GenerateFeatures implements Runnable {
 								){		
 							
 							if (((ignoreHigherLess > 0) 
-									//&& (numInt <= (numOfTriples + ignoreHigherLess)))
-									&& (numInt <= ignoreHigherLess))
-									|| (ignoreHigherLess == 0)
+											&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
+											&& ((numToAdd+numInt) <= maxTripleCount)
+											)
+									|| ((ignoreHigherLess == 0)
+											&& ((numToAdd+numInt) <= maxTripleCount)
+											)
 							) {
 								label = "_MAYBE_";
 							} else {
@@ -382,9 +390,12 @@ public class GenerateFeatures implements Runnable {
 							) {	
 						
 						if (((ignoreHigherLess > 0) 
-								//&& (numInt <= (numOfTriples + ignoreHigherLess)))
-								&& (numInt <= ignoreHigherLess))
-								|| (ignoreHigherLess == 0)
+										&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
+										&& ((numToAdd+numInt) <= maxTripleCount)
+										)
+								|| ((ignoreHigherLess == 0)
+										&& ((numToAdd+numInt) <= maxTripleCount)
+										)
 						) {
 							label = "_MAYBE_";
 						} else {
@@ -467,9 +478,12 @@ public class GenerateFeatures implements Runnable {
 									idxToAdd.add(tokenIdx);
 								} else {	//(numToAdd+numInt) > numOfTriples
 									if (((ignoreHigherLess > 0) 
-											//&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess)))
-											&& ((numToAdd+numInt) <= ignoreHigherLess))
-											|| (ignoreHigherLess == 0)
+													&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
+													&& ((numToAdd+numInt) <= maxTripleCount)
+													)
+											|| ((ignoreHigherLess == 0)
+													&& ((numToAdd+numInt) <= maxTripleCount)
+													)
 									) {
 										label = "_MAYBE_";
 									} else {
@@ -512,9 +526,12 @@ public class GenerateFeatures implements Runnable {
 											|| !nummod)
 									){
 								if (((ignoreHigherLess > 0) 
-										//&& (numInt <= (numOfTriples + ignoreHigherLess)))
-										&& (numInt <= ignoreHigherLess))
-										|| (ignoreHigherLess == 0)
+												&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
+												&& ((numToAdd+numInt) <= maxTripleCount)
+												)
+										|| ((ignoreHigherLess == 0)
+												&& ((numToAdd+numInt) <= maxTripleCount)
+												)
 								) {
 									label = "_MAYBE_";
 								} else {
@@ -551,9 +568,12 @@ public class GenerateFeatures implements Runnable {
 										|| !nummod)
 								) {	
 							if (((ignoreHigherLess > 0) 
-									//&& (numInt <= (numOfTriples + ignoreHigherLess)))
-									&& (numInt <= ignoreHigherLess))
-									|| (ignoreHigherLess == 0)
+											&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
+											&& ((numToAdd+numInt) <= maxTripleCount)
+											)
+									|| ((ignoreHigherLess == 0)
+											&& ((numToAdd+numInt) <= maxTripleCount)
+											)
 							) {
 								label = "_MAYBE_";
 							} else {
@@ -819,5 +839,13 @@ public class GenerateFeatures implements Runnable {
 
 	public void setCountDist(double countDist) {
 		this.countDist = countDist;
+	}
+
+	public int getMaxTripleCount() {
+		return maxTripleCount;
+	}
+
+	public void setMaxTripleCount(int maxTripleCount) {
+		this.maxTripleCount = maxTripleCount;
 	}
 }

@@ -10,7 +10,9 @@ import java.io.LineNumberReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -86,10 +88,24 @@ public class FeatureExtractionConcurrent {
 		Integer curId;
 		boolean training, isIgnoreFreq;
 		
+		//******* Reading maximum triple count in the dataset *******//
+		
+		int maxCount = 0, tripleCount = 0;;
+		BufferedReader brpre = new BufferedReader(new FileReader(getInputCsvFile()));
+		line = brpre.readLine();
+		while (line != null) {
+			tripleCount = Integer.parseInt(line.split(",")[1]);
+			if (tripleCount >= maxCount) maxCount = tripleCount;
+			
+			line = brpre.readLine();
+		}
+		brpre.close();
+		
 		BufferedReader br = new BufferedReader(new FileReader(getInputCsvFile()));
 		
 		int numTrain = ReadFromFile.countLines(this.getInputCsvFile()) - ReadFromFile.countLines(this.getInputRandomCsvFile());
-		int maxNumTrain = Math.round(topPopular * numTrain);
+//		int maxNumTrain = Math.round(topPopular * numTrain);
+		int maxNumTrain = Math.round(topPopular * 4);
 		int idxTrain = 0;
 		
 		line = br.readLine();
@@ -119,7 +135,10 @@ public class FeatureExtractionConcurrent {
         if (testInstances.contains(wikidataId)) {
 			training = false;
 		} 
-        if (training && (idxTrain < maxNumTrain)) {
+        if (training 
+//        		&& (idxTrain < maxNumTrain)
+        		&& (Integer.parseInt(quarter) <= maxNumTrain)
+        		) {
         	if ((quarterPart == 0) 
         			|| (quarterPart > 0 && quarterPart == Integer.parseInt(quarter))) {
 				GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
@@ -128,7 +147,7 @@ public class FeatureExtractionConcurrent {
 		        		nummod, compositional, 
 		        		threshold, countDist,
 		        		transform, transformZero, transformOne,
-		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq);
+		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
 				ext.run();
 				idxTrain ++;
         	}
@@ -139,7 +158,7 @@ public class FeatureExtractionConcurrent {
 	        		nummod, compositional, 
 	        		threshold, countDist,
 	        		transform, transformZero, transformOne,
-	        		ignoreHigher, ignoreHigherLess, isIgnoreFreq);
+	        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
 			ext.run();
         }
 		//Done. Next WikidataIds...
@@ -176,7 +195,10 @@ public class FeatureExtractionConcurrent {
 				training = false;
 			} 
 	        
-	        if (training && (idxTrain < maxNumTrain)) {
+	        if (training 
+//	        		&& (idxTrain < maxNumTrain)
+	        		&& (Integer.parseInt(quarter) <= maxNumTrain)
+	        		) {
 	        	if ((quarterPart == 0) 
 	        			|| (quarterPart > 0 && quarterPart == Integer.parseInt(quarter))) {
 		        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
@@ -185,7 +207,7 @@ public class FeatureExtractionConcurrent {
 			        		nummod, compositional, 
 			        		threshold, countDist,
 			        		transform, transformZero, transformOne,
-			        		ignoreHigher, ignoreHigherLess, isIgnoreFreq);
+			        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
 			        executor.execute(worker);
 			        idxTrain ++;
 	        	}
@@ -196,7 +218,7 @@ public class FeatureExtractionConcurrent {
 		        		nummod, compositional, 
 		        		threshold, countDist,
 		        		transform, transformZero, transformOne,
-		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq);
+		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
 		        executor.execute(worker);
 	        }
              
