@@ -297,13 +297,10 @@ public class GenerateFeatures implements Runnable {
 								numToAdd += numInt;
 								idxToAdd.add(tokenIdx);
 							} else {	//(numToAdd+numInt) > numOfTriples
-								if (((ignoreHigherLess > 0) 
-												&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
-												&& ((numToAdd+numInt) <= maxTripleCount)
-												)
-										|| ((ignoreHigherLess == 0)
-												&& ((numToAdd+numInt) <= maxTripleCount)
-												)
+								if (((numToAdd+numInt) <= maxTripleCount)
+										&& (((ignoreHigherLess > 0) 
+												&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess)))
+										|| (ignoreHigherLess == 0))
 								) {
 									label = "_MAYBE_";
 								} else {
@@ -346,13 +343,10 @@ public class GenerateFeatures implements Runnable {
 //										|| !nummod)
 								){		
 							
-							if (((ignoreHigherLess > 0) 
-											&& (numInt <= (numOfTriples + ignoreHigherLess))
-											&& (numInt <= maxTripleCount)
-											)
-									|| ((ignoreHigherLess == 0)
-											&& (numInt <= maxTripleCount)
-											)
+							if ((numInt <= maxTripleCount)
+									&& (((ignoreHigherLess > 0) 
+											&& (numInt <= (numOfTriples + ignoreHigherLess)))
+									|| (ignoreHigherLess == 0))
 							) {
 								label = "_MAYBE_";
 							} else {
@@ -389,13 +383,10 @@ public class GenerateFeatures implements Runnable {
 //									|| !nummod)
 							) {	
 						
-						if (((ignoreHigherLess > 0) 
-										&& (numInt <= (numOfTriples + ignoreHigherLess))
-										&& (numInt <= maxTripleCount)
-										)
-								|| ((ignoreHigherLess == 0)
-										&& (numInt <= maxTripleCount)
-										)
+						if ((numInt <= maxTripleCount)
+								&& (((ignoreHigherLess > 0) 
+										&& (numInt <= (numOfTriples + ignoreHigherLess)))
+								|| (ignoreHigherLess == 0))
 						) {
 							label = "_MAYBE_";
 						} else {
@@ -477,13 +468,10 @@ public class GenerateFeatures implements Runnable {
 									numToAdd += numInt;
 									idxToAdd.add(tokenIdx);
 								} else {	//(numToAdd+numInt) > numOfTriples
-									if (((ignoreHigherLess > 0) 
-													&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
-													&& ((numToAdd+numInt) <= maxTripleCount)
-													)
-											|| ((ignoreHigherLess == 0)
-													&& ((numToAdd+numInt) <= maxTripleCount)
-													)
+									if (((numToAdd+numInt) <= maxTripleCount)
+											&& (((ignoreHigherLess > 0) 
+													&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess)))
+											|| (ignoreHigherLess == 0))
 									) {
 										label = "_MAYBE_";
 									} else {
@@ -525,13 +513,10 @@ public class GenerateFeatures implements Runnable {
 									&& ((nummod && deprel.startsWith("nummod"))
 											|| !nummod)
 									){
-								if (((ignoreHigherLess > 0) 
-												&& (numInt <= (numOfTriples + ignoreHigherLess))
-												&& (numInt <= maxTripleCount)
-												)
-										|| ((ignoreHigherLess == 0)
-												&& (numInt <= maxTripleCount)
-												)
+								if ((numInt <= maxTripleCount)
+										&& (((ignoreHigherLess > 0) 
+												&& (numInt <= (numOfTriples + ignoreHigherLess)))
+										|| (ignoreHigherLess == 0))
 								) {
 									label = "_MAYBE_";
 								} else {
@@ -567,13 +552,10 @@ public class GenerateFeatures implements Runnable {
 								&& ((nummod && deprel.startsWith("nummod"))
 										|| !nummod)
 								) {	
-							if (((ignoreHigherLess > 0) 
-											&& (numInt <= (numOfTriples + ignoreHigherLess))
-											&& (numInt <= maxTripleCount)
-											)
-									|| ((ignoreHigherLess == 0)
-											&& (numInt <= maxTripleCount)
-											)
+							if ((numInt <= maxTripleCount)
+									&& (((ignoreHigherLess > 0) 
+											&& (numInt <= (numOfTriples + ignoreHigherLess)))
+									|| (ignoreHigherLess == 0))
 							) {
 								label = "_MAYBE_";
 							} else {
