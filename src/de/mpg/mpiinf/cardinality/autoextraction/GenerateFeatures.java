@@ -347,11 +347,11 @@ public class GenerateFeatures implements Runnable {
 								){		
 							
 							if (((ignoreHigherLess > 0) 
-											&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
-											&& ((numToAdd+numInt) <= maxTripleCount)
+											&& (numInt <= (numOfTriples + ignoreHigherLess))
+											&& (numInt <= maxTripleCount)
 											)
 									|| ((ignoreHigherLess == 0)
-											&& ((numToAdd+numInt) <= maxTripleCount)
+											&& (numInt <= maxTripleCount)
 											)
 							) {
 								label = "_MAYBE_";
@@ -390,11 +390,11 @@ public class GenerateFeatures implements Runnable {
 							) {	
 						
 						if (((ignoreHigherLess > 0) 
-										&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
-										&& ((numToAdd+numInt) <= maxTripleCount)
+										&& (numInt <= (numOfTriples + ignoreHigherLess))
+										&& (numInt <= maxTripleCount)
 										)
 								|| ((ignoreHigherLess == 0)
-										&& ((numToAdd+numInt) <= maxTripleCount)
+										&& (numInt <= maxTripleCount)
 										)
 						) {
 							label = "_MAYBE_";
@@ -526,11 +526,11 @@ public class GenerateFeatures implements Runnable {
 											|| !nummod)
 									){
 								if (((ignoreHigherLess > 0) 
-												&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
-												&& ((numToAdd+numInt) <= maxTripleCount)
+												&& (numInt <= (numOfTriples + ignoreHigherLess))
+												&& (numInt <= maxTripleCount)
 												)
 										|| ((ignoreHigherLess == 0)
-												&& ((numToAdd+numInt) <= maxTripleCount)
+												&& (numInt <= maxTripleCount)
 												)
 								) {
 									label = "_MAYBE_";
@@ -568,11 +568,11 @@ public class GenerateFeatures implements Runnable {
 										|| !nummod)
 								) {	
 							if (((ignoreHigherLess > 0) 
-											&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess))
-											&& ((numToAdd+numInt) <= maxTripleCount)
+											&& (numInt <= (numOfTriples + ignoreHigherLess))
+											&& (numInt <= maxTripleCount)
 											)
 									|| ((ignoreHigherLess == 0)
-											&& ((numToAdd+numInt) <= maxTripleCount)
+											&& (numInt <= maxTripleCount)
 											)
 							) {
 								label = "_MAYBE_";
