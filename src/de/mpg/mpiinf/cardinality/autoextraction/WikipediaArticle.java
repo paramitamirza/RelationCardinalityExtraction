@@ -75,7 +75,7 @@ public class WikipediaArticle {
 		System.out.print("Append " + new File(inputCsvFilePath).getName() + " file with Wikipedia curId... ");
 		
 		BufferedReader br = new BufferedReader(new FileReader(inputCsvFilePath));
-		String eid = "", count = "", label = "";
+		String eid = "", count = "", label = "", score = "";
 		String line = br.readLine();	
 		
 		ExecutorService executor;
@@ -89,8 +89,9 @@ public class WikipediaArticle {
 			eid = line.split(",")[0];
 			count = line.split(",")[1];
 			label = line.split(",")[2];
+			score = line.split(",")[3];
 			
-			Runnable worker = new AppendWikipediaCurid(this, eid, count, label, inputCsvFilePath + ".tmp");
+			Runnable worker = new AppendWikipediaCurid(this, eid, count, label, score, inputCsvFilePath + ".tmp");
 			executor.execute(worker);
 			
 			line = br.readLine();
