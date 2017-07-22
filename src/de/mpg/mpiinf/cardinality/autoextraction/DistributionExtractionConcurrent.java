@@ -69,9 +69,10 @@ public class DistributionExtractionConcurrent {
 		Integer curId;
 		Double countOccur;
 		
-		String basename = FilenameUtils.getBaseName(getInputCsvFile());
-		String extension = FilenameUtils.getExtension(getInputCsvFile());
-		String outputCsvFile = FilenameUtils.getFullPath(getInputCsvFile()) + basename + "_dist_freq" + "." + extension;
+//		String basename = FilenameUtils.getBaseName(getInputCsvFile());
+//		String extension = FilenameUtils.getExtension(getInputCsvFile());
+//		String outputCsvFile = FilenameUtils.getFullPath(getInputCsvFile()) + basename + "_dist_freq" + "." + extension;
+		String outputCsvFile = getInputCsvFile() + ".tmp";
 		
 		//******* Reading number distribution in the corpus per entity *******//
 		
@@ -155,12 +156,20 @@ public class DistributionExtractionConcurrent {
         executor.shutdown();
         // Wait until all threads are finish
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-        
-        long endTime   = System.currentTimeMillis();
-		float totalTime = (endTime - startTime)/(float)1000;
-		System.out.println("done [ " + totalTime + " sec].");
 		
 		br.close();
+		
+		// Once everything is complete, delete old file..
+		File oldFile = new File(getInputCsvFile());
+		oldFile.delete();
+
+		// And rename tmp file's name to old file name
+		File newFile = new File(getInputCsvFile() + ".tmp");
+		newFile.renameTo(oldFile);
+		
+		long endTime   = System.currentTimeMillis();
+		float totalTime = (endTime - startTime)/(float)1000;
+		System.out.println("done [ " + totalTime + " sec].");
 	}
 	
 	public void ensureDirectory(File dir) {
