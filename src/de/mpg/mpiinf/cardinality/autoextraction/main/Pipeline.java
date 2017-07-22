@@ -121,10 +121,13 @@ public class Pipeline {
 			resultFile = cmd.getOptionValue("result");
 		}
 		
+		float minConfScore = (float)0.1;
+		if (cmd.hasOption("v")) minConfScore = Float.parseFloat(cmd.getOptionValue("confidence"));
+		
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
 		String crfOutPath = evalData.replace(".data", ".out");
-		eval.evaluate(relName, testCsvFile, crfOutPath, labels, predictionFile, resultFile, compositional, false);
+		eval.evaluate(relName, testCsvFile, crfOutPath, labels, predictionFile, resultFile, compositional, false, minConfScore);
 		
 		long endTime   = System.currentTimeMillis();
 		float totalTime = (endTime - startTime)/(float)1000;
@@ -227,6 +230,10 @@ public class Pipeline {
 		Option nThreads = new Option("n", "thread", true, "Number of threads");
 		nThreads.setRequired(false);
 		options.addOption(nThreads);
+		
+		Option minConfScore = new Option("v", "confidence", true, "Minimum confidence score");
+		minConfScore.setRequired(false);
+		options.addOption(minConfScore);
 		
 		return options;
 	}

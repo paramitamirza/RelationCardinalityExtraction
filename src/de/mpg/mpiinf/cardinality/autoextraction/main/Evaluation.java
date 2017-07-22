@@ -61,7 +61,11 @@ public class Evaluation {
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
 		boolean compositional = cmd.hasOption("c");
-		eval.evaluate(relName, csvPath, crfOutPath, labels, outputPath, resultPath, compositional, false);
+		
+		float minConfScore = (float)0.1;
+		if (cmd.hasOption("v")) minConfScore = Float.parseFloat(cmd.getOptionValue("confidence"));
+		
+		eval.evaluate(relName, csvPath, crfOutPath, labels, outputPath, resultPath, compositional, false, minConfScore);
 	}
 	
 	public static Options getEvalOptions() {
@@ -90,6 +94,10 @@ public class Evaluation {
 		Option compositional = new Option("c", "compositional", false, "Label compositional numbers as true examples");
 		compositional.setRequired(false);
 		options.addOption(compositional);
+		
+		Option minConfScore = new Option("v", "confidence", true, "Minimum confidence score");
+		minConfScore.setRequired(false);
+		options.addOption(minConfScore);
         
 		return options;
 	}
@@ -120,7 +128,8 @@ public class Evaluation {
 	
 	public void evaluate(String relName, String csvPath, String crfOutPath, 
 			String[] labels, String outPath, String resultPath,
-			boolean addSameSentence, boolean addDiffSentence) throws IOException {
+			boolean addSameSentence, boolean addDiffSentence,
+			float minConfScore) throws IOException {
 		
 		long startTime = System.currentTimeMillis();
 		System.out.print("Evaluate CRF++ output file... ");
@@ -154,7 +163,7 @@ public class Evaluation {
 		int tp = 0;
 		int fp = 0;
 		int total = 0;
-		double threshold = 0.1;
+		double threshold = minConfScore;
 		
 		String[] cols;
 		List<String> sentence = new ArrayList<String>();
