@@ -366,7 +366,7 @@ public class Evaluation {
 					numTriple.put(i, Numbers.getInteger(number) + "#" + prob);
 				
 				} else if (number.equals("a") || number.equals("an")) {
-					numTriple.put(i, 1 + "#" + prob);
+					numTriple.put(i, "1" + "#" + prob);
 				}
 			}
 		}
