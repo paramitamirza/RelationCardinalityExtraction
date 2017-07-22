@@ -256,7 +256,19 @@ public class GenerateFeatures implements Runnable {
 			}
 			label = "O";
 			
-			if (sent.word(k).startsWith("LatinGreek_")) {
+			if (!this.isTraining()
+					&& this.isTransformOne()
+					&& (sent.word(k).equals("a") || sent.word(k).equals("an"))
+					&& pos.equals("DT")
+					&& deprel.equals("det")
+					) {
+				word = sent.word(k);
+				lemma = "_num_";
+				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
+				labels.add(label);
+				tokenIdx ++;
+				
+			} else if (sent.word(k).startsWith("LatinGreek_")) {
 				word = sent.word(k).split("_")[0] + "_" + sent.word(k).split("_")[1] + "_" + sent.word(k).split("_")[2];
 				lemma = "_" + sent.word(k).split("_")[3] + "_";
 				
@@ -665,26 +677,7 @@ public class GenerateFeatures implements Runnable {
 				label = labels.get(t);
 				label = label.replace("_NO_", "O");
 				label = label.replace("_MAYBE_", "O");
-				if (this.isTransformOne()) {
-					String[] featCols = tokenFeatures.get(t).split("\t");
-					if ((featCols[4].equals("a") || featCols[4].equals("an"))
-							&& featCols[5].equals("DT")
-							&& featCols[7].equals("det")) {
-						sb.append(featCols[0] + "\t"
-								+ featCols[1] + "\t" 
-								+ featCols[2] + "\t" 
-								+ featCols[3] + "\t" 
-								+ "_num" + "\t"
-								+ "CD" + "\t"
-								+ "NUMBER" + "\t"
-								+ "nummod_" + "\t"
-								+ label);
-					} else {
-						sb.append(tokenFeatures.get(t) + "\t" + label);
-					}
-				} else {
-					sb.append(tokenFeatures.get(t) + "\t" + label);
-				}
+				sb.append(tokenFeatures.get(t) + "\t" + label);
 				sb.append(System.getProperty("line.separator"));
 			}
 		}
