@@ -146,6 +146,7 @@ public class GenerateDistributions implements Runnable {
 	    				+ this.getCurId() + ","
 	    				+ this.getWikiLabel() + ","
 	    				+ this.getPopularScore() + ","
+	    				// Extra information
 	    				+ this.getCountOccur() + ","
 	    				+ this.getNumQuartile() + ","
 	    				+ toWriteMoreThanOne + ","
