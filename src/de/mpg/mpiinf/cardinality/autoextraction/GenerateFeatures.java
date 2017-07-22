@@ -192,7 +192,8 @@ public class GenerateFeatures implements Runnable {
 //					|| this.isTransformZero() 
 //					|| this.isTransformOne()
 					) {
-				sentStr = trans.transform(sentStr, this.isTransformOne(), this.isTransformZero(), this.isTransform(), this.isTransform());
+//				sentStr = trans.transform(sentStr, this.isTransformOne(), this.isTransformZero(), this.isTransform(), this.isTransform());
+				sentStr = trans.transform(sentStr, false, false, this.isTransform(), this.isTransform());
 			}
 			sent = new Sentence(sentStr);
 			if (Numbers.containNumbers(sentStr, sent, false, false))
@@ -666,7 +667,7 @@ public class GenerateFeatures implements Runnable {
 				label = label.replace("_MAYBE_", "O");
 				if (this.isTransformOne()) {
 					String[] featCols = tokenFeatures.get(t).split("\t");
-					if (featCols[4].equals("a")
+					if ((featCols[4].equals("a") || featCols[4].equals("an"))
 							&& featCols[5].equals("DT")
 							&& featCols[7].equals("det")) {
 						sb.append(featCols[0] + "\t"
