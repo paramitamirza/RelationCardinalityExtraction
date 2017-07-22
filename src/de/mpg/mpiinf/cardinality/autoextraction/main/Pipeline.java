@@ -134,14 +134,16 @@ public class Pipeline {
 		System.out.println("done [ " + totalTime + " sec].");
 		
 		// Once everything is done, delete data file...
-//		File dataFile = new File(trainData);
-//		dataFile.deleteOnExit();
-//		dataFile = new File(evalData);
-//		dataFile.deleteOnExit();
-//		File crfOutFile = new File(crfOutPath);
-//		crfOutFile.deleteOnExit();
-//		File modelFile = new File(dirModels + "/" + relName + ".model");
-//		modelFile.deleteOnExit();
+		if (cmd.hasOption("del")) {
+			File dataFile = new File(trainData);
+			dataFile.deleteOnExit();
+			dataFile = new File(evalData);
+			dataFile.deleteOnExit();
+			File crfOutFile = new File(crfOutPath);
+			crfOutFile.deleteOnExit();
+			File modelFile = new File(dirModels + "/" + relName + ".model");
+			modelFile.deleteOnExit();
+		}
 	}
 	
 	public static Options getPreprocessingOptions() {
@@ -186,6 +188,10 @@ public class Pipeline {
 		Option result = new Option("r", "result", true, "Performance result file path");
 		result.setRequired(false);
 		options.addOption(result);
+		
+		Option delete = new Option("del", "delete", false, "Delete feature and model files");
+		delete.setRequired(false);
+		options.addOption(delete);
 		
 		Option nummod = new Option("d", "nummod", false, "Only if dependency label is 'nummod' to be labelled as positive examples");
 		nummod.setRequired(false);
