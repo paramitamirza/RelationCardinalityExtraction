@@ -188,7 +188,10 @@ public class GenerateFeatures implements Runnable {
 			
 		} else {
 			sentStr = sentence;
-			if (this.isTransform() || this.isTransformZero() || this.isTransformOne()) {
+			if (this.isTransform() 
+//					|| this.isTransformZero() 
+//					|| this.isTransformOne()
+					) {
 				sentStr = trans.transform(sentStr, this.isTransformOne(), this.isTransformZero(), this.isTransform(), this.isTransform());
 			}
 			sent = new Sentence(sentStr);
@@ -661,7 +664,26 @@ public class GenerateFeatures implements Runnable {
 				label = labels.get(t);
 				label = label.replace("_NO_", "O");
 				label = label.replace("_MAYBE_", "O");
-				sb.append(tokenFeatures.get(t) + "\t" + label);
+				if (this.isTransformOne()) {
+					String[] featCols = tokenFeatures.get(t).split("\t");
+					if (featCols[4].equals("a")
+							&& featCols[5].equals("DT")
+							&& featCols[7].equals("det")) {
+						sb.append(featCols[0] + "\t"
+								+ featCols[1] + "\t" 
+								+ featCols[2] + "\t" 
+								+ featCols[3] + "\t" 
+								+ "_num" + "\t"
+								+ "CD" + "\t"
+								+ "NUMBER" + "\t"
+								+ "nummod_" + "\t"
+								+ label);
+					} else {
+						sb.append(tokenFeatures.get(t) + "\t" + label);
+					}
+				} else {
+					sb.append(tokenFeatures.get(t) + "\t" + label);
+				}
 				sb.append(System.getProperty("line.separator"));
 			}
 		}
