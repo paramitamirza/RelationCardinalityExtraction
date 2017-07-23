@@ -163,7 +163,7 @@ public class Evaluation {
 		int tp = 0;
 		int fp = 0;
 		int total = 0;
-		double threshold = minConfScore;
+		double threshold = 0.1;
 		
 		String[] cols;
 		List<String> sentence = new ArrayList<String>();
@@ -206,12 +206,13 @@ public class Evaluation {
 							pp = Double.parseDouble(numbers.get(key).split("#")[1]);
 							mm = key;
 							if (pp > threshold) {
-								p += pp;
+								if (pp > p) p = pp;
+//								p += pp;
 								n += Long.parseLong(numbers.get(key).split("#")[0]);
 								mlist.add(mm);
 							}
 						}
-						p = p/numbers.size();
+//						p = p/numbers.size();
 					}
 					
 				} else {	
@@ -268,8 +269,13 @@ public class Evaluation {
 					String wikiLabel = instanceLabel.get(entityId);
 					
 					if (bw != null) {
-						bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + "\"" + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\"" 
-								+ "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
+						if (predictedProb >= minConfScore) {
+							bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + "\"" + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\"" 
+									+ "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
+						} else {
+							bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + "\"" + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\"" 
+									+ "," + numChild + "," + 0 + "," + 0 + ",\"" + "" + "\"");
+						}
 						bw.newLine();
 //					} else {
 //						System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
@@ -312,8 +318,13 @@ public class Evaluation {
 		String wikiLabel = instanceLabel.get(entityId);
 		
 		if (bw != null) {
-			bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + "\"" + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\""
-					+ "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
+			if (predictedProb >= minConfScore) {
+				bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + "\"" + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\"" 
+						+ "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
+			} else {
+				bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + "\"" + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\"" 
+						+ "," + numChild + "," + 0 + "," + 0 + ",\"" + "" + "\"");
+			}
 			bw.newLine();
 //		} else {
 //			System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
