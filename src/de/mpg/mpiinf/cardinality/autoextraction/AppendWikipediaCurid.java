@@ -46,8 +46,8 @@ public class AppendWikipediaCurid implements Runnable {
 					break;
 				}
 			}
-		} else {
-			System.err.println("No Wikipedia curid found for " + this.getWikidataId() + ".");
+//		} else {
+//			System.err.println("No Wikipedia curid found for " + this.getWikidataId() + ".");
 		}
 	}
 
