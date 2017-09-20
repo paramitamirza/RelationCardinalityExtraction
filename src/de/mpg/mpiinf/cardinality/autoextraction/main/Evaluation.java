@@ -65,7 +65,7 @@ public class Evaluation {
 		float minConfScore = (float)0.1;
 		if (cmd.hasOption("v")) minConfScore = Float.parseFloat(cmd.getOptionValue("confidence"));
 		
-		eval.evaluate(relName, csvPath, crfOutPath, labels, outputPath, resultPath, compositional, false, minConfScore);
+		eval.evaluate(relName, csvPath, crfOutPath, labels, outputPath, resultPath, compositional, false, minConfScore, 0);
 	}
 	
 	public static Options getEvalOptions() {
@@ -129,7 +129,7 @@ public class Evaluation {
 	public void evaluate(String relName, String csvPath, String crfOutPath, 
 			String[] labels, String outPath, String resultPath,
 			boolean addSameSentence, boolean addDiffSentence,
-			float minConfScore) throws IOException {
+			float minConfScore, long trainSize) throws IOException {
 		
 		long startTime = System.currentTimeMillis();
 		System.out.print("Evaluate CRF++ output file... ");
@@ -264,6 +264,8 @@ public class Evaluation {
 				if (entityId != null && !cols[0].equals(entityId)
 						&& !entities.contains(entityId)
 						) {	//Entity ends
+					System.out.println(entityId);
+					System.out.println(instanceNum);
 					int numChild = instanceNum.get(entityId);
 					String wikiCurid = instanceCurId.get(entityId);
 					String wikiLabel = instanceLabel.get(entityId);

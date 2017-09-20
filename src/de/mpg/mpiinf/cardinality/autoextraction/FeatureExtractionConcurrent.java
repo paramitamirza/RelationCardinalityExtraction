@@ -154,7 +154,9 @@ public class FeatureExtractionConcurrent {
         }
         
 		training = true;
-        if (testInstances.contains(wikidataId) || !trainInstances.contains(wikidataId)) {
+        if (testInstances.contains(wikidataId) 
+//        		|| !trainInstances.contains(wikidataId)
+        	) {
 			training = false;
 		} 
         if (training 

@@ -11,6 +11,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import de.mpg.mpiinf.cardinality.autoextraction.FeatureExtractionConcurrent;
+import de.mpg.mpiinf.cardinality.autoextraction.ReadFromFile;
 import de.mpg.mpiinf.cardinality.autoextraction.WikipediaArticle;
 
 public class Pipeline {
@@ -45,6 +46,7 @@ public class Pipeline {
 		String testCsvFile = inputCsvFile;				//evaluation data = training data
 		if (cmd.hasOption("e")) testCsvFile = cmd.getOptionValue("eval");
 		String relName = cmd.getOptionValue("relname");
+		long trainSize = ReadFromFile.countLines(inputCsvFile);
 		
 		//Preprocessing
 		String wikipediaDir = cmd.getOptionValue("wikipedia");
@@ -127,7 +129,7 @@ public class Pipeline {
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
 		String crfOutPath = evalData.replace(".data", ".out");
-		eval.evaluate(relName, testCsvFile, crfOutPath, labels, predictionFile, resultFile, compositional, false, minConfScore);
+		eval.evaluate(relName, testCsvFile, crfOutPath, labels, predictionFile, resultFile, compositional, false, minConfScore, trainSize);
 		
 		long endTime   = System.currentTimeMillis();
 		float totalTime = (endTime - startTime)/(float)1000;
