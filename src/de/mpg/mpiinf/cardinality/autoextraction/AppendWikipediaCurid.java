@@ -6,6 +6,7 @@ public class AppendWikipediaCurid implements Runnable {
 	private String tripleCount;
 	private String label;
 	private String score;
+//	private volatile boolean shutdown = false;
 	
 	public String getLabel() {
 		return label;
@@ -46,10 +47,14 @@ public class AppendWikipediaCurid implements Runnable {
 					break;
 				}
 			}
-//		} else {
-//			System.err.println("No Wikipedia curid found for " + this.getWikidataId() + ".");
-		}
+		} else {
+			System.err.println("No Wikipedia curid found for " + this.getWikidataId() + ".");
+		}		
 	}
+	
+//	public void shutdown() {
+//        shutdown = true;
+//    }
 
 	public WikipediaArticle getWiki() {
 		return wiki;

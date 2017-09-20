@@ -22,6 +22,7 @@ public class FeatureExtractionConcurrent {
 	
 	private String inputCsvFile = "./data/example/wikidata_sample.csv";
 	private String inputRandomCsvFile = "./data/example/wikidata_sample_random10.csv";
+	private String inputTrainCsvFile = "./data/example/wikidata_sample_train.csv";
 	private String relName = "sample";
 	private String dirFeature = "./data/example/";
 	
@@ -38,12 +39,15 @@ public class FeatureExtractionConcurrent {
 	public FeatureExtractionConcurrent(String inputCsvFilePath, String relationName, String dirOutput) {
 		this.setInputCsvFile(inputCsvFilePath);
 		this.setInputRandomCsvFile("");
+		this.setInputTrainCsvFile("");
 		this.setRelName(relationName);
 		this.setDirFeature(dirOutput);
 	}
 	
 	public FeatureExtractionConcurrent(String inputCsvFilePath, int nRandom, String relationName, String dirOutput) throws IOException {
 		this.setInputCsvFile(inputCsvFilePath);
+		this.setInputRandomCsvFile("");
+		this.setInputTrainCsvFile("");
 		this.generateRandomInstances(nRandom);
 		this.setRelName(relationName);
 		this.setDirFeature(dirOutput);
@@ -52,6 +56,15 @@ public class FeatureExtractionConcurrent {
 	public FeatureExtractionConcurrent(String inputCsvFilePath, String inputRandomCsvFilePath, String relationName, String dirOutput) {
 		this.setInputCsvFile(inputCsvFilePath);
 		this.setInputRandomCsvFile(inputRandomCsvFilePath);
+		this.setInputTrainCsvFile("");
+		this.setRelName(relationName);
+		this.setDirFeature(dirOutput);
+	}
+	
+	public FeatureExtractionConcurrent(String inputCsvFilePath, String inputRandomCsvFilePath, String inputTrainCsvFilePath, String relationName, String dirOutput) {
+		this.setInputCsvFile(inputCsvFilePath);
+		this.setInputRandomCsvFile("");
+		this.setInputTrainCsvFile(inputTrainCsvFilePath);
 		this.setRelName(relationName);
 		this.setDirFeature(dirOutput);
 	}
@@ -80,8 +93,12 @@ public class FeatureExtractionConcurrent {
 		removeOldFeatureFiles();
 		
 		List<String> testInstances = new ArrayList<String>();
-		if (!getInputRandomCsvFile().equals("")) {
-			testInstances = readRandomInstances(getInputRandomCsvFile());
+		List<String> trainInstances = new ArrayList<String>();
+		if (!this.getInputTrainCsvFile().equals("")) {
+			trainInstances = readRandomInstances(this.getInputTrainCsvFile());
+		}
+		if (!this.getInputRandomCsvFile().equals("")) {
+			testInstances = readRandomInstances(this.getInputRandomCsvFile());
 		}
 		String line;
 		String wikidataId = "", count = "", freqNum = "", quarter = "", countDist = "";
@@ -103,7 +120,12 @@ public class FeatureExtractionConcurrent {
 		
 		BufferedReader br = new BufferedReader(new FileReader(getInputCsvFile()));
 		
-		int numTrain = ReadFromFile.countLines(this.getInputCsvFile()) - ReadFromFile.countLines(this.getInputRandomCsvFile());
+		int numTrain = ReadFromFile.countLines(this.getInputCsvFile());
+		if (this.getInputRandomCsvFile().equals("")) {
+			numTrain = ReadFromFile.countLines(this.getInputTrainCsvFile());
+		} else {
+			numTrain = numTrain - ReadFromFile.countLines(this.getInputRandomCsvFile());
+		}
 //		int maxNumTrain = Math.round(topPopular * numTrain);
 		int maxNumTrain = Math.round(topPopular * 4);
 		int idxTrain = 0;
@@ -132,7 +154,7 @@ public class FeatureExtractionConcurrent {
         }
         
 		training = true;
-        if (testInstances.contains(wikidataId)) {
+        if (testInstances.contains(wikidataId) || !trainInstances.contains(wikidataId)) {
 			training = false;
 		} 
         if (training 
@@ -331,5 +353,13 @@ public class FeatureExtractionConcurrent {
 
 	public void setDirFeature(String dirFeature) {
 		this.dirFeature = dirFeature;
+	}
+
+	public String getInputTrainCsvFile() {
+		return inputTrainCsvFile;
+	}
+
+	public void setInputTrainCsvFile(String inputTrainCsvFile) {
+		this.inputTrainCsvFile = inputTrainCsvFile;
 	}
 }

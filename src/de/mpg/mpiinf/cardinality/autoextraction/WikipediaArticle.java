@@ -23,9 +23,9 @@ import java.util.NavigableMap;
 
 public class WikipediaArticle {
 	
-	private String wikiDir = "/home/paramita/D5data-8/RelationCardinalityExtraction_pipeline/enwiki_20170101_pages_articles/";
-	private String zindexDir = "/home/paramita/D5data-8/RelationCardinalityExtraction_pipeline/enwiki_20170101_pages_articles/zindex/";
-	private String wikibaseMapFile = "/home/paramita/D5data-8/RelationCardinalityExtraction_pipeline/enwiki_20170101_pages_articles/wikibase_item.txt.gz";
+	private String wikiDir = "/home/paramita/D5data-8/RCE_pipeline/enwiki_20170320_pages_articles/";
+	private String zindexDir = "/home/paramita/D5data-8/RCE_pipeline/enwiki_20170320_pages_articles/zindex/";
+	private String wikibaseMapFile = "/home/paramita/D5data-8/RCE_pipeline/enwiki_20170320_pages_articles/wikibase_item.txt.gz";
 	
 	private NavigableMap<Integer, String> wikiIndex;
 	private Map<String, String> wikibaseMap;
@@ -62,11 +62,11 @@ public class WikipediaArticle {
 //		System.out.println(wa.fetchArticle(7256246));
 		
 //		System.out.println("Load Wikidata Id to Wikipedia article mapping...");
-//		wa.mapWikidataWikipediaCurId();
+		wa.mapWikidataWikipediaCurId();
 //		System.out.println(wa.fetchArticleFromWikidataId("Q7721753"));
 
-		wa.appendCurId("./data/example/wikidata_sample_new.csv");
-		wa.appendCurIdWithoutMap("./data/example/wikidata_sample_new.csv");
+		wa.appendCurId("./data/example/children2.csv");
+//		wa.appendCurIdWithoutMap("./data/example/children2.csv");
 	}
 	
 	public void appendCurId(String inputCsvFilePath) throws IOException, InterruptedException {	
