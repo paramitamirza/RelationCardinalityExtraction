@@ -264,8 +264,6 @@ public class Evaluation {
 				if (entityId != null && !cols[0].equals(entityId)
 						&& !entities.contains(entityId)
 						) {	//Entity ends
-					System.out.println(entityId);
-					System.out.println(instanceNum);
 					int numChild = instanceNum.get(entityId);
 					String wikiCurid = instanceCurId.get(entityId);
 					String wikiLabel = instanceLabel.get(entityId);
@@ -356,15 +354,15 @@ public class Evaluation {
 		
 		if (resultPath != null) {
 			bw = new BufferedWriter(new FileWriter(resultPath, true));
-			bw.write(relName + "\t" + tp + "\t" + fp + "\t" + total  
+			bw.write(relName + "\t" + trainSize + "\t" + tp + "\t" + fp + "\t" + total  
 					+ "\t" + String.format("%.4f", precision)
 					+ "\t" + String.format("%.4f", recall)
 					+ "\t" + String.format("%.4f", fscore));
 			bw.newLine();
 			bw.close();
 		} else {
-			System.out.println("tp\tfp\ttotal\tprec\trecall\tf1-score");
-			System.out.println(tp + "\t" + fp + "\t" + total  
+			System.out.println("train\ttp\tfp\ttotal\tprec\trecall\tf1-score");
+			System.out.println(trainSize + "\t" + tp + "\t" + fp + "\t" + total  
 					+ "\t" + String.format("%.4f", precision)
 					+ "\t" + String.format("%.4f", recall)
 					+ "\t" + String.format("%.4f", fscore));

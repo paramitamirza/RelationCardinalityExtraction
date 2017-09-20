@@ -136,7 +136,7 @@ public class Pipeline {
 		System.out.println("done [ " + totalTime + " sec].");
 		
 		// Once everything is done, delete data file...
-		if (cmd.hasOption("del")) {
+		if (cmd.hasOption("delete")) {
 			File dataFile = new File(trainData);
 			dataFile.deleteOnExit();
 			dataFile = new File(evalData);
