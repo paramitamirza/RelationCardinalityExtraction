@@ -189,8 +189,8 @@ public class Evaluation {
 		
 		int tp = 0;
 		int fp = 0;
-		int incomplete = 0;
-		int missing = 0;
+		int complete, incomplete = 0;
+		int available = 0, missing = 0;
 		int total = 0;
 		double threshold = minConfScore;
 		
@@ -335,6 +335,7 @@ public class Evaluation {
 //						System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
 					}
 					if (numChild > 0) {
+						available += numChild;
 						if (relaxedMatch) {
 							if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
 							else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
@@ -394,6 +395,7 @@ public class Evaluation {
 //			System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
 		}
 		if (numChild > 0) {
+			available += numChild;
 			if (relaxedMatch) {
 				if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
 				else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
@@ -426,12 +428,15 @@ public class Evaluation {
 		double recall = (double)tp / instanceNum.size();
 		double fscore = (2 * precision * recall) / (precision + recall);
 		
+		complete = tp;
+		
 		if (resultPath != null) {
 			bw = new BufferedWriter(new FileWriter(resultPath, true));
 			bw.write(relName + "\t" + trainSize + "\t" + tp + "\t" + fp + "\t" + total  
 					+ "\t" + String.format("%.4f", precision)
 					+ "\t" + String.format("%.4f", recall)
 					+ "\t" + String.format("%.4f", fscore)
+					+ "\t" + complete + "\t" + available
 					+ "\t" + incomplete + "\t" + missing);
 			bw.newLine();
 			bw.close();
@@ -441,6 +446,7 @@ public class Evaluation {
 					+ "\t" + String.format("%.4f", precision)
 					+ "\t" + String.format("%.4f", recall)
 					+ "\t" + String.format("%.4f", fscore)
+					+ "\t" + complete + "\t" + available
 					+ "\t" + incomplete + "\t" + missing);
 		}
 	}
