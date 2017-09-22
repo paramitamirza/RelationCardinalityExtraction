@@ -189,6 +189,8 @@ public class Evaluation {
 		
 		int tp = 0;
 		int fp = 0;
+		int incomplete = 0;
+		int missing = 0;
 		int total = 0;
 		double threshold = minConfScore;
 		
@@ -341,6 +343,10 @@ public class Evaluation {
 							if (numChild == predictedCardinal) tp ++;
 							else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
 						}
+						if (predictedCardinal > numChild) {
+							incomplete ++;
+							missing += predictedCardinal - numChild;
+						}
 					}
 					total ++;
 					entities.add(entityId);
@@ -388,8 +394,18 @@ public class Evaluation {
 //			System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
 		}
 		if (numChild > 0) {
-			if (numChild == predictedCardinal) tp ++;
-			else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
+			if (relaxedMatch) {
+				if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
+				else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
+				
+			} else {
+				if (numChild == predictedCardinal) tp ++;
+				else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
+			}
+			if (predictedCardinal > numChild) {
+				incomplete ++;
+				missing += predictedCardinal - numChild;
+			}
 		}
 		total ++;
 		entities.add(entityId);
@@ -415,7 +431,8 @@ public class Evaluation {
 			bw.write(relName + "\t" + trainSize + "\t" + tp + "\t" + fp + "\t" + total  
 					+ "\t" + String.format("%.4f", precision)
 					+ "\t" + String.format("%.4f", recall)
-					+ "\t" + String.format("%.4f", fscore));
+					+ "\t" + String.format("%.4f", fscore)
+					+ "\t" + incomplete + "\t" + missing);
 			bw.newLine();
 			bw.close();
 		} else {
@@ -423,7 +440,8 @@ public class Evaluation {
 			System.out.println(trainSize + "\t" + tp + "\t" + fp + "\t" + total  
 					+ "\t" + String.format("%.4f", precision)
 					+ "\t" + String.format("%.4f", recall)
-					+ "\t" + String.format("%.4f", fscore));
+					+ "\t" + String.format("%.4f", fscore)
+					+ "\t" + incomplete + "\t" + missing);
 		}
 	}
 	
