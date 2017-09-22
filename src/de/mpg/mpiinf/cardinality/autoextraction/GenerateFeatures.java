@@ -37,7 +37,7 @@ public class GenerateFeatures implements Runnable {
 	private boolean nummod;
 	private boolean compositional;
 	
-	private int threshold;
+	private double countInfThreshold;
 	private double countDist;
 	
 	private boolean transform;
@@ -56,7 +56,7 @@ public class GenerateFeatures implements Runnable {
 			String freqNum,
 			boolean training,
 			boolean nummod, boolean compositional, 
-			int threshold, String countDist,
+			float countInfThreshold, String countDist,
 			boolean transform, boolean transformZero, boolean transformOne,
 			boolean ignoreHigher, int ignoreHigherLess,
 			boolean ignoreFreq, int maxCount) {
@@ -74,7 +74,7 @@ public class GenerateFeatures implements Runnable {
 		this.setNummod(nummod);
 		this.setCompositional(compositional);
 		
-		this.setThreshold(threshold);
+		this.setCountInfThreshold(countInfThreshold);
 		this.setCountDist(Double.parseDouble(countDist));
 		
 		this.setTransform(transform);
@@ -134,7 +134,7 @@ public class GenerateFeatures implements Runnable {
 		    					
 		    					toPrint.append(generateFeatures(sent, j, numOfTriples, 
 		    							this.isNummod(), this.isCompositional(), 
-		    							this.getThreshold(), this.getCountDist(),
+		    							this.getCountInfThreshold(), this.getCountDist(),
 		    							this.isIgnoreHigher(), this.getIgnoreHigherLess(),
 		    							this.isIgnoreFreq(), this.getMaxTripleCount()).toString());
 		    				}
@@ -222,7 +222,7 @@ public class GenerateFeatures implements Runnable {
 	
 	private StringBuilder generateFeatures(Sentence sent, int j, int numOfTriples, 
 			boolean nummod, boolean compositional, 
-			int threshold, double countDist,
+			double countInfThreshold, double countDist,
 			boolean ignoreHigher, int ignoreHigherLess,
 			boolean ignoreFreq, int maxTripleCount) {
 		String word = "", lemma = "", pos = "", ner = "", deprel = "", label = "";
@@ -238,19 +238,6 @@ public class GenerateFeatures implements Runnable {
 		int tokenIdx = 0;
 		
 		long numInt;
-		
-		double countInfThreshold = 0.0;
-		if (threshold > 0) {
-//			if (threshold == 1) countInfThreshold = 0.75;
-//			if (threshold == 2) countInfThreshold = 1;
-//			if (threshold == 3) countInfThreshold = 1.25;
-//			if (threshold == 4) countInfThreshold = 1.5;
-			
-			if (threshold == 1) countInfThreshold = 1.0;
-			if (threshold == 2) countInfThreshold = 2.0;
-			if (threshold == 3) countInfThreshold = 3.0;
-			if (threshold == 4) countInfThreshold = 4.0;
-		}
 		
 		for (k=0; k<sent.words().size(); k++) {
 			pos = sent.posTag(k);
@@ -756,14 +743,6 @@ public class GenerateFeatures implements Runnable {
 	public void setCompositional(boolean compositional) {
 		this.compositional = compositional;
 	}
-	
-	public int getThreshold() {
-		return threshold;
-	}
-
-	public void setThreshold(int threshold) {
-		this.threshold = threshold;
-	}
 
 	public WikipediaArticle getWiki() {
 		return wiki;
@@ -851,5 +830,13 @@ public class GenerateFeatures implements Runnable {
 
 	public void setMaxTripleCount(int maxTripleCount) {
 		this.maxTripleCount = maxTripleCount;
+	}
+
+	public double getCountInfThreshold() {
+		return countInfThreshold;
+	}
+
+	public void setCountInfThreshold(double countInfThreshold) {
+		this.countInfThreshold = countInfThreshold;
 	}
 }

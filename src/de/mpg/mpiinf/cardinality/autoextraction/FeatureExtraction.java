@@ -58,7 +58,7 @@ public class FeatureExtraction {
 		featExtraction.run(wiki, true, false, 0, false, false, false, false, -99, 0, (float) 1.0);
 	}
 	
-	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, int threshold,
+	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, float threshold,
 			boolean transform, boolean transformZero, boolean transformOne, 
 			boolean ignoreHigher, int ignoreHigherLess, 
 			int ignoreFreq,float topPopular) throws IOException, InterruptedException {

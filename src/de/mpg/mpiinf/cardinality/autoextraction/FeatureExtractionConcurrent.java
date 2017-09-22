@@ -82,7 +82,7 @@ public class FeatureExtractionConcurrent {
 		featExtraction.run(wiki, true, false, 0, false, false, false, false, -99, 0, (float) 1.0, 0);
 	}
 	
-	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, int threshold,
+	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, float infThreshold,
 			boolean transform, boolean transformZero, boolean transformOne,
 			boolean ignoreHigher, int ignoreHigherLess,
 			int ignoreFreq, float topPopular, int quarterPart) throws IOException, InterruptedException {
@@ -121,13 +121,13 @@ public class FeatureExtractionConcurrent {
 		BufferedReader br = new BufferedReader(new FileReader(getInputCsvFile()));
 		
 		int numTrain = ReadFromFile.countLines(this.getInputCsvFile());
-		if (this.getInputRandomCsvFile().equals("")) {
-			numTrain = ReadFromFile.countLines(this.getInputTrainCsvFile());
-		} else {
+//		if (this.getInputRandomCsvFile().equals("")) {
+//			numTrain = ReadFromFile.countLines(this.getInputTrainCsvFile());
+//		} else {
 			numTrain = numTrain - ReadFromFile.countLines(this.getInputRandomCsvFile());
-		}
-//		int maxNumTrain = Math.round(topPopular * numTrain);
-		int maxNumTrain = Math.round(topPopular * 4);
+//		}
+		int maxNumTrain = Math.round(topPopular * numTrain);
+//		int maxNumTrain = Math.round(topPopular * 4);
 		int idxTrain = 0;
 		
 		line = br.readLine();
@@ -160,8 +160,8 @@ public class FeatureExtractionConcurrent {
 			training = false;
 		} 
         if (training 
-//        		&& (idxTrain < maxNumTrain)
-        		&& (Integer.parseInt(quarter) <= maxNumTrain)
+        		&& (idxTrain < maxNumTrain)
+//        		&& (Integer.parseInt(quarter) <= maxNumTrain)
         		) {
         	if ((quarterPart == 0) 
         			|| (quarterPart > 0 && quarterPart == Integer.parseInt(quarter))) {
@@ -169,7 +169,7 @@ public class FeatureExtractionConcurrent {
 						wiki, wikidataId, count, curId, freqNum,
 		        		training,
 		        		nummod, compositional, 
-		        		threshold, countDist,
+		        		infThreshold, countDist,
 		        		transform, transformZero, transformOne,
 		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
 				ext.run();
@@ -180,7 +180,7 @@ public class FeatureExtractionConcurrent {
         			wiki, wikidataId, count, curId, freqNum,
 	        		training,
 	        		nummod, compositional, 
-	        		threshold, countDist,
+	        		infThreshold, countDist,
 	        		transform, transformZero, transformOne,
 	        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
 			ext.run();
@@ -220,8 +220,8 @@ public class FeatureExtractionConcurrent {
 			} 
 	        
 	        if (training 
-//	        		&& (idxTrain < maxNumTrain)
-	        		&& (Integer.parseInt(quarter) <= maxNumTrain)
+	        		&& (idxTrain < maxNumTrain)
+//	        		&& (Integer.parseInt(quarter) <= maxNumTrain)
 	        		) {
 	        	if ((quarterPart == 0) 
 	        			|| (quarterPart > 0 && quarterPart == Integer.parseInt(quarter))) {
@@ -229,7 +229,7 @@ public class FeatureExtractionConcurrent {
 		        			wiki, wikidataId, count, curId, freqNum,
 			        		training,
 			        		nummod, compositional, 
-			        		threshold, countDist,
+			        		infThreshold, countDist,
 			        		transform, transformZero, transformOne,
 			        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
 			        executor.execute(worker);
@@ -240,7 +240,7 @@ public class FeatureExtractionConcurrent {
 	        			wiki, wikidataId, count, curId, freqNum,
 		        		training,
 		        		nummod, compositional, 
-		        		threshold, countDist,
+		        		infThreshold, countDist,
 		        		transform, transformZero, transformOne,
 		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
 		        executor.execute(worker);

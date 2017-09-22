@@ -122,8 +122,8 @@ public class Preprocessing {
 			int ignoreFreq = -1;
 			if (cmd.hasOption("g")) ignoreFreq = Integer.parseInt(cmd.getOptionValue("ignorefreq"));
 			
-			int threshold = 0;
-			if (cmd.hasOption("t")) threshold = Integer.parseInt(cmd.getOptionValue("threshold"));
+			float threshold = (float)0;
+			if (cmd.hasOption("t")) threshold = Float.parseFloat(cmd.getOptionValue("threshold"));
 			
 			float topPopular = (float)1;
 			if (cmd.hasOption("k")) topPopular = Float.parseFloat(cmd.getOptionValue("popular"));
@@ -192,7 +192,7 @@ public class Preprocessing {
 		compositional.setRequired(false);
 		options.addOption(compositional);
 		
-		Option threshold = new Option("t", "threshold", true, "Threshold for number of triples to be labelled as positive examples");
+		Option threshold = new Option("t", "threshold", true, "Informativeness threshold for number of triples to be labelled as positive examples");
 		threshold.setRequired(false);
 		options.addOption(threshold);
 		
