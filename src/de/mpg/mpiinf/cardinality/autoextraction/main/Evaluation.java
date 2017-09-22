@@ -343,10 +343,10 @@ public class Evaluation {
 							if (numChild == predictedCardinal) tp ++;
 							else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
 						}
-						if (predictedCardinal > numChild) {
-							incomplete ++;
-							missing += predictedCardinal - numChild;
-						}
+					}
+					if (predictedCardinal > numChild) {
+						incomplete ++;
+						missing += predictedCardinal - numChild;
 					}
 					total ++;
 					entities.add(entityId);
@@ -402,10 +402,10 @@ public class Evaluation {
 				if (numChild == predictedCardinal) tp ++;
 				else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
 			}
-			if (predictedCardinal > numChild) {
-				incomplete ++;
-				missing += predictedCardinal - numChild;
-			}
+		}
+		if (predictedCardinal > numChild) {
+			incomplete ++;
+			missing += predictedCardinal - numChild;
 		}
 		total ++;
 		entities.add(entityId);
