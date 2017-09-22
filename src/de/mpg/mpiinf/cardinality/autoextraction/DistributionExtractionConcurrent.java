@@ -26,6 +26,7 @@ public class DistributionExtractionConcurrent {
 	private String relName = "sample";
 	private String dirFeature = "./data/example/";
 	private Double freqThreshold;
+	private String delimiter;
 	
 	private static int NTHREADS = -999;
 	
@@ -37,11 +38,12 @@ public class DistributionExtractionConcurrent {
 		
 	}
 	
-	public DistributionExtractionConcurrent(String inputCsvFilePath, String relationName, String dirOutput, Double freqThreshold) {
+	public DistributionExtractionConcurrent(String inputCsvFilePath, String delimiter, String relationName, String dirOutput, Double freqThreshold) {
 		this.setInputCsvFile(inputCsvFilePath);
 		this.setRelName(relationName);
 		this.setDirFeature(dirOutput);
 		this.setFreqThreshold(freqThreshold);
+		this.setDelimiter(delimiter);
 	}
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
@@ -50,7 +52,7 @@ public class DistributionExtractionConcurrent {
 		if (args.length < 4) {
 			featExtraction = new DistributionExtractionConcurrent();
 		} else {
-			featExtraction = new DistributionExtractionConcurrent(args[0], args[1], args[2], Double.parseDouble(args[3]));
+			featExtraction = new DistributionExtractionConcurrent(args[0], ",", args[1], args[2], Double.parseDouble(args[3]));
 		}
 		
 		WikipediaArticle wiki = new WikipediaArticle();
@@ -81,7 +83,7 @@ public class DistributionExtractionConcurrent {
 		BufferedReader brpre = new BufferedReader(new FileReader(getInputCsvFile()));
 		line = brpre.readLine();
 		while (line != null) {
-			count = line.split(",")[1];
+			count = line.split(delimiter)[1];
 			
 			if (!histogram.containsKey(count)) histogram.put(count, 0.0);
 			histogram.put(count, histogram.get(count) + 1.0);
@@ -107,15 +109,15 @@ public class DistributionExtractionConcurrent {
 		line = br.readLine();
 		
 		//First wikidataId starts...
-		wikidataId = line.split(",")[0];
-        count = line.split(",")[1];
-        curId = Integer.parseInt(line.split(",")[2]);
-        wikiLabel = line.split(",")[3];
-        popularScore = line.split(",")[4];
+		wikidataId = line.split(delimiter)[0];
+        count = line.split(delimiter)[1];
+        curId = Integer.parseInt(line.split(delimiter)[2]);
+        wikiLabel = line.split(delimiter)[3];
+        popularScore = line.split(delimiter)[4];
         countOccur = histogram.get(count);
         
         GenerateDistributions ext = new GenerateDistributions(outputCsvFile, getRelName(),
-				wiki, wikidataId, count, curId, wikiLabel, popularScore, countOccur, numQuartile, getFreqThreshold());
+				wiki, wikidataId, count, curId, wikiLabel, popularScore, countOccur, numQuartile, getFreqThreshold(), delimiter);
 		ext.run();
 		//Done. Next WikidataIds...
 		
@@ -131,15 +133,15 @@ public class DistributionExtractionConcurrent {
 		}
 		
 		while (line != null) {
-			wikidataId = line.split(",")[0];
-	        count = line.split(",")[1];
-	        curId = Integer.parseInt(line.split(",")[2]);
-	        wikiLabel = line.split(",")[3];
-	        popularScore = line.split(",")[4];
+			wikidataId = line.split(delimiter)[0];
+	        count = line.split(delimiter)[1];
+	        curId = Integer.parseInt(line.split(delimiter)[2]);
+	        wikiLabel = line.split(delimiter)[3];
+	        popularScore = line.split(delimiter)[4];
 	        countOccur = histogram.get(count);
 	        
 	        Runnable worker = new GenerateDistributions(outputCsvFile, getRelName(),
-					wiki, wikidataId, count, curId, wikiLabel, popularScore, countOccur, numQuartile, getFreqThreshold());
+					wiki, wikidataId, count, curId, wikiLabel, popularScore, countOccur, numQuartile, getFreqThreshold(), delimiter);
 	        executor.execute(worker);
 	        
 	        numQuartLine++;
@@ -214,5 +216,13 @@ public class DistributionExtractionConcurrent {
 
 	public void setFreqThreshold(Double freqThreshold) {
 		this.freqThreshold = freqThreshold;
+	}
+
+	public String getDelimiter() {
+		return delimiter;
+	}
+
+	public void setDelimiter(String delimiter) {
+		this.delimiter = delimiter;
 	}
 }

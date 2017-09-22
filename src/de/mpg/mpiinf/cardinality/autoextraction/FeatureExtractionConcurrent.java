@@ -25,6 +25,7 @@ public class FeatureExtractionConcurrent {
 	private String inputTrainCsvFile = "./data/example/wikidata_sample_train.csv";
 	private String relName = "sample";
 	private String dirFeature = "./data/example/";
+	private String delimiter;
 	
 	private static int NTHREADS = -999;
 	
@@ -36,37 +37,41 @@ public class FeatureExtractionConcurrent {
 		
 	}
 	
-	public FeatureExtractionConcurrent(String inputCsvFilePath, String relationName, String dirOutput) {
+	public FeatureExtractionConcurrent(String inputCsvFilePath, String delimiter, String relationName, String dirOutput) {
 		this.setInputCsvFile(inputCsvFilePath);
 		this.setInputRandomCsvFile("");
 		this.setInputTrainCsvFile("");
 		this.setRelName(relationName);
 		this.setDirFeature(dirOutput);
+		this.setDelimiter(delimiter);
 	}
 	
-	public FeatureExtractionConcurrent(String inputCsvFilePath, int nRandom, String relationName, String dirOutput) throws IOException {
+	public FeatureExtractionConcurrent(String inputCsvFilePath, String delimiter, int nRandom, String relationName, String dirOutput) throws IOException {
 		this.setInputCsvFile(inputCsvFilePath);
 		this.setInputRandomCsvFile("");
 		this.setInputTrainCsvFile("");
 		this.generateRandomInstances(nRandom);
 		this.setRelName(relationName);
 		this.setDirFeature(dirOutput);
+		this.setDelimiter(delimiter);
 	}
 	
-	public FeatureExtractionConcurrent(String inputCsvFilePath, String inputRandomCsvFilePath, String relationName, String dirOutput) {
+	public FeatureExtractionConcurrent(String inputCsvFilePath, String inputRandomCsvFilePath, String delimiter, String relationName, String dirOutput) {
 		this.setInputCsvFile(inputCsvFilePath);
 		this.setInputRandomCsvFile(inputRandomCsvFilePath);
 		this.setInputTrainCsvFile("");
 		this.setRelName(relationName);
 		this.setDirFeature(dirOutput);
+		this.setDelimiter(delimiter);
 	}
 	
-	public FeatureExtractionConcurrent(String inputCsvFilePath, String inputRandomCsvFilePath, String inputTrainCsvFilePath, String relationName, String dirOutput) {
+	public FeatureExtractionConcurrent(String inputCsvFilePath, String inputRandomCsvFilePath, String inputTrainCsvFilePath, String delimiter, String relationName, String dirOutput) {
 		this.setInputCsvFile(inputCsvFilePath);
 		this.setInputRandomCsvFile("");
 		this.setInputTrainCsvFile(inputTrainCsvFilePath);
 		this.setRelName(relationName);
 		this.setDirFeature(dirOutput);
+		this.setDelimiter(delimiter);
 	}
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
@@ -111,7 +116,7 @@ public class FeatureExtractionConcurrent {
 		BufferedReader brpre = new BufferedReader(new FileReader(getInputCsvFile()));
 		line = brpre.readLine();
 		while (line != null) {
-			tripleCount = Integer.parseInt(line.split(",")[1]);
+			tripleCount = Integer.parseInt(line.split(delimiter)[1]);
 			if (tripleCount >= maxCount) maxCount = tripleCount;
 			
 			line = brpre.readLine();
@@ -133,21 +138,21 @@ public class FeatureExtractionConcurrent {
 		line = br.readLine();
 		
 		//First wikidataId starts...
-		wikidataId = line.split(",")[0];
-        count = line.split(",")[1];
-        curId = Integer.parseInt(line.split(",")[2]);
+		wikidataId = line.split(delimiter)[0];
+        count = line.split(delimiter)[1];
+        curId = Integer.parseInt(line.split(delimiter)[2]);
         
-        countDist = line.split(",")[5];
-        quarter = line.split(",")[6];
+        countDist = line.split(delimiter)[5];
+        quarter = line.split(delimiter)[6];
         
         isIgnoreFreq = false;
         if (ignoreFreq >= 0) {
         	isIgnoreFreq = true;
-        	if (ignoreFreq == 0) freqNum = line.split(",")[7];
-            else if (ignoreFreq == 1) freqNum = line.split(",")[8];
-            else if (ignoreFreq == 2) freqNum = line.split(",")[9];
-            else if (ignoreFreq == 3) freqNum = line.split(",")[10];
-            else if (ignoreFreq == 4) freqNum = line.split(",")[11];
+        	if (ignoreFreq == 0) freqNum = line.split(delimiter)[7];
+            else if (ignoreFreq == 1) freqNum = line.split(delimiter)[8];
+            else if (ignoreFreq == 2) freqNum = line.split(delimiter)[9];
+            else if (ignoreFreq == 3) freqNum = line.split(delimiter)[10];
+            else if (ignoreFreq == 4) freqNum = line.split(delimiter)[11];
             else freqNum = "[]";
         } else {
         	freqNum = "[]";
@@ -197,21 +202,21 @@ public class FeatureExtractionConcurrent {
 		}
 		
 		while (line != null) {
-			wikidataId = line.split(",")[0];
-	        count = line.split(",")[1];
-	        curId = Integer.parseInt(line.split(",")[2]);
+			wikidataId = line.split(delimiter)[0];
+	        count = line.split(delimiter)[1];
+	        curId = Integer.parseInt(line.split(delimiter)[2]);
 	        
-	        countDist = line.split(",")[5];
-	        quarter = line.split(",")[6];
+	        countDist = line.split(delimiter)[5];
+	        quarter = line.split(delimiter)[6];
 	        
 	        isIgnoreFreq = false;
 	        if (ignoreFreq >= 0) {
 	        	isIgnoreFreq = true;
-	        	if (ignoreFreq == 0) freqNum = line.split(",")[7];
-	            else if (ignoreFreq == 1) freqNum = line.split(",")[8];
-	            else if (ignoreFreq == 2) freqNum = line.split(",")[9];
-	            else if (ignoreFreq == 3) freqNum = line.split(",")[10];
-	            else if (ignoreFreq == 4) freqNum = line.split(",")[11];
+	        	if (ignoreFreq == 0) freqNum = line.split(delimiter)[7];
+	            else if (ignoreFreq == 1) freqNum = line.split(delimiter)[8];
+	            else if (ignoreFreq == 2) freqNum = line.split(delimiter)[9];
+	            else if (ignoreFreq == 3) freqNum = line.split(delimiter)[10];
+	            else if (ignoreFreq == 4) freqNum = line.split(delimiter)[11];
 	        }   
 	        
 	        training = true;
@@ -281,7 +286,7 @@ public class FeatureExtractionConcurrent {
 		BufferedReader br = new BufferedReader(new FileReader(inputFile));
 		String line = br.readLine();		
 		while (line != null) {
-			randomInstances.add(line.split(",")[0]);
+			randomInstances.add(line.split(delimiter)[0]);
 			line = br.readLine();
 		}
 		br.close();
@@ -310,11 +315,11 @@ public class FeatureExtractionConcurrent {
 		String line = br.readLine();	
 		int n = 0;
 		while (line != null) {
-			eid = line.split(",")[0];
-			count = line.split(",")[1];
+			eid = line.split(delimiter)[0];
+			count = line.split(delimiter)[1];
 				
 			if (randomList.contains(n)) {
-				bwr.write(eid + "," + count);
+				bwr.write(eid + delimiter + count);
 				bwr.newLine();
 			}
 			
@@ -363,5 +368,13 @@ public class FeatureExtractionConcurrent {
 
 	public void setInputTrainCsvFile(String inputTrainCsvFile) {
 		this.inputTrainCsvFile = inputTrainCsvFile;
+	}
+
+	public String getDelimiter() {
+		return delimiter;
+	}
+
+	public void setDelimiter(String delimiter) {
+		this.delimiter = delimiter;
 	}
 }

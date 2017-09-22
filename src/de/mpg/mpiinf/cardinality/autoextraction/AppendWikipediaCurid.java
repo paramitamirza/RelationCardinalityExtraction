@@ -7,6 +7,7 @@ public class AppendWikipediaCurid implements Runnable {
 	private String label;
 	private String score;
 //	private volatile boolean shutdown = false;
+	private String delimiter;
 	
 	public String getLabel() {
 		return label;
@@ -19,13 +20,14 @@ public class AppendWikipediaCurid implements Runnable {
 	private String outFilePath;
 	private WikipediaArticle wiki;
 	
-	public AppendWikipediaCurid(WikipediaArticle wiki, String wikidataId, String tripleCount, String label, String score, String outFilePath) {
+	public AppendWikipediaCurid(WikipediaArticle wiki, String wikidataId, String tripleCount, String label, String score, String outFilePath, String delimiter) {
 		this.setWiki(wiki);
 		this.setWikidataId(wikidataId);
 		this.setTripleCount(tripleCount);
 		this.setLabel(label);
 		this.setScore(score);
 		this.setOutFilePath(outFilePath);
+		this.setDelimiter(delimiter);
 	}
 
 	@Override
@@ -39,9 +41,10 @@ public class AppendWikipediaCurid implements Runnable {
 				if (!article.equals("")) {	
 					
 					WriteToFile.getInstance().appendContents(this.getOutFilePath(), 
-		    				this.getWikidataId() + "," + this.getTripleCount() + "," 
-		    						+ curId + "," 
-		    						+ this.getLabel() + "," 
+		    				this.getWikidataId() + delimiter 
+		    						+ this.getTripleCount() + delimiter 
+		    						+ curId + delimiter 
+		    						+ this.getLabel() + delimiter 
 		    						+ this.getScore() + "\n");
 					
 					break;
@@ -94,6 +97,14 @@ public class AppendWikipediaCurid implements Runnable {
 
 	public void setScore(String score) {
 		this.score = score;
+	}
+
+	public String getDelimiter() {
+		return delimiter;
+	}
+
+	public void setDelimiter(String delimiter) {
+		this.delimiter = delimiter;
 	}
 
 }

@@ -65,11 +65,11 @@ public class WikipediaArticle {
 		wa.mapWikidataWikipediaCurId();
 //		System.out.println(wa.fetchArticleFromWikidataId("Q7721753"));
 
-		wa.appendCurId("./data/example/children2.csv");
+		wa.appendCurId("./data/example/children2.csv", ",");
 //		wa.appendCurIdWithoutMap("./data/example/children2.csv");
 	}
 	
-	public void appendCurId(String inputCsvFilePath) throws IOException, InterruptedException {	
+	public void appendCurId(String inputCsvFilePath, String delimiter) throws IOException, InterruptedException {	
 		
 		long startTime = System.currentTimeMillis();
 		System.out.print("Append " + new File(inputCsvFilePath).getName() + " file with Wikipedia curId... ");
@@ -86,12 +86,12 @@ public class WikipediaArticle {
 		}
 		
 		while (line != null) {
-			eid = line.split(",")[0];
-			count = line.split(",")[1];
-			label = line.split(",")[2];
-			score = line.split(",")[3];
+			eid = line.split(delimiter)[0];
+			count = line.split(delimiter)[1];
+			label = line.split(delimiter)[2];
+			score = line.split(delimiter)[3];
 			
-			Runnable worker = new AppendWikipediaCurid(this, eid, count, label, score, inputCsvFilePath + ".tmp");
+			Runnable worker = new AppendWikipediaCurid(this, eid, count, label, score, inputCsvFilePath + ".tmp", delimiter);
 			executor.execute(worker);
 			
 			line = br.readLine();

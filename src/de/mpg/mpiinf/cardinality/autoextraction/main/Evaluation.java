@@ -47,6 +47,10 @@ public class Evaluation {
 		}
 		
 		String csvPath = cmd.getOptionValue("input");
+		
+		String delimiter = ",";
+		if (cmd.hasOption("tab")) delimiter = "\t";
+		
 		String crfOutPath = cmd.getOptionValue("crfout");
 		String relName = cmd.getOptionValue("relname");
 		String outputPath = null;
@@ -65,7 +69,10 @@ public class Evaluation {
 		float minConfScore = (float)0.1;
 		if (cmd.hasOption("v")) minConfScore = Float.parseFloat(cmd.getOptionValue("confidence"));
 		
-		eval.evaluate(relName, csvPath, crfOutPath, labels, outputPath, resultPath, compositional, false, minConfScore, 0);
+		boolean relaxed = false;
+		if (cmd.hasOption("x")) relaxed = true;
+		
+		eval.evaluate(relName, csvPath, delimiter, crfOutPath, labels, outputPath, resultPath, compositional, false, minConfScore, 0, relaxed);
 	}
 	
 	public static Options getEvalOptions() {
@@ -74,6 +81,10 @@ public class Evaluation {
 		Option input = new Option("i", "input", true, "Input evaluation file (.csv) path");
 		input.setRequired(true);
 		options.addOption(input);
+		
+		Option tab = new Option("tab", "tab", false, "Tab separated input files");
+		tab.setRequired(false);
+		options.addOption(tab);
 		
 		Option relName = new Option("p", "relname", true, "Property/relation name");
 		relName.setRequired(true);
@@ -98,6 +109,10 @@ public class Evaluation {
 		Option minConfScore = new Option("v", "confidence", true, "Minimum confidence score");
 		minConfScore.setRequired(false);
 		options.addOption(minConfScore);
+		
+		Option relaxedMatch = new Option("x", "relaxed", false, "Relaxed match to the triple count (less than count is considered correct)");
+		relaxedMatch.setRequired(false);
+		options.addOption(relaxedMatch);
         
 		return options;
 	}
@@ -126,10 +141,22 @@ public class Evaluation {
 		return -999;
 	}
 	
-	public void evaluate(String relName, String csvPath, String crfOutPath, 
+	private boolean conjExist(List<String> sentence, int startIdx, int endIdx) {
+		for (int i=startIdx; i<endIdx; i++) {
+			if (sentence.get(i).toLowerCase().equals(",")
+					|| sentence.get(i).toLowerCase().equals(";")
+					|| sentence.get(i).toLowerCase().equals("and")
+					) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void evaluate(String relName, String csvPath, String delimiter, String crfOutPath, 
 			String[] labels, String outPath, String resultPath,
 			boolean addSameSentence, boolean addDiffSentence,
-			float minConfScore, long trainSize) throws IOException {
+			float minConfScore, long trainSize, boolean relaxedMatch) throws IOException {
 		
 		long startTime = System.currentTimeMillis();
 		System.out.print("Evaluate CRF++ output file... ");
@@ -142,9 +169,9 @@ public class Evaluation {
 		br = new BufferedReader(new FileReader(csvPath));
 		line = br.readLine();
 		while (line != null) {
-			instanceNum.put(line.split(",")[0], Integer.parseInt(line.split(",")[1]));
-			instanceCurId.put(line.split(",")[0], line.split(",")[2]);
-			instanceLabel.put(line.split(",")[0], line.split(",")[3]);
+			instanceNum.put(line.split(delimiter)[0], Integer.parseInt(line.split(delimiter)[1]));
+			instanceCurId.put(line.split(delimiter)[0], line.split(delimiter)[2]);
+			instanceLabel.put(line.split(delimiter)[0], line.split(delimiter)[3]);
 			line = br.readLine();
 		}
 		br.close();
@@ -163,7 +190,7 @@ public class Evaluation {
 		int tp = 0;
 		int fp = 0;
 		int total = 0;
-		double threshold = 0.1;
+		double threshold = minConfScore;
 		
 		String[] cols;
 		List<String> sentence = new ArrayList<String>();
@@ -201,17 +228,39 @@ public class Evaluation {
 						}
 					
 					} else {
-						//else, add them up
-						for (Integer key : numbers.keySet()) {
-							pp = Double.parseDouble(numbers.get(key).split("#")[1]);
-							mm = key;
-							if (pp > threshold) {
-								if (pp > p) p = pp;
-//								p += pp;
-								n += Long.parseLong(numbers.get(key).split("#")[0]);
-								mlist.add(mm);
-							}
+						//else, add them up if there exists conjunction (comma, semicolon or 'and') in between
+						
+						Object[] keys = numbers.keySet().toArray();
+						pp = Double.parseDouble(numbers.get(keys[0]).split("#")[1]);
+						mm = (Integer)keys[0];
+						if (pp > threshold) {	
+							n = Long.parseLong(numbers.get(keys[0]).split("#")[0]);
+							mlist.add(mm);
+							p = pp;
 						}
+						
+						if (keys.length > 1) {						
+							for (int k = 1; k < keys.length; k++) {
+								pp = Double.parseDouble(numbers.get(keys[k]).split("#")[1]);
+								mm = (Integer)keys[k];	
+								
+								if (pp > threshold) {
+									if (mlist.isEmpty()) {
+										n = Long.parseLong(numbers.get(keys[0]).split("#")[0]);
+										mlist.add(mm);
+										p = pp;
+										
+									} else {
+										if (conjExist(sentence, mlist.get(mlist.size()-1), mm)) {
+											if (pp > p) p = pp;
+//											p += pp;
+											n += Long.parseLong(numbers.get(keys[k]).split("#")[0]);
+											mlist.add(mm);
+										}
+									}									
+								}
+							}							
+						} 
 //						p = p/numbers.size();
 					}
 					
@@ -281,8 +330,14 @@ public class Evaluation {
 //						System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
 					}
 					if (numChild > 0) {
-						if (numChild == predictedCardinal) tp ++;
-						else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
+						if (relaxedMatch) {
+							if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
+							else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
+							
+						} else {
+							if (numChild == predictedCardinal) tp ++;
+							else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
+						}
 					}
 					total ++;
 					entities.add(entityId);

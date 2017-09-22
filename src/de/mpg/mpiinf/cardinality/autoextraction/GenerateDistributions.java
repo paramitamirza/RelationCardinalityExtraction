@@ -36,6 +36,7 @@ public class GenerateDistributions implements Runnable {
 	private String popularScore;
 	private Double countOccur;
 	private Integer numQuartile;
+	private String delimiter;
 	
 	private Double freqThreshold;
 	private Map<Long, Integer> numDistributions;
@@ -43,7 +44,7 @@ public class GenerateDistributions implements Runnable {
 	public GenerateDistributions(String outputCsvFile, String relName,
 			WikipediaArticle wiki, String wikidataId, String count, Integer curId, 
 			String wikiLabel, String popularScore, Double countOccur, Integer numQuartile,
-			Double freqThreshold) {
+			Double freqThreshold, String delimiter) {
 		this.setOutputCsvFile(outputCsvFile);
 		this.setRelName(relName);
 		
@@ -56,6 +57,7 @@ public class GenerateDistributions implements Runnable {
 		this.setPopularScore(popularScore);
 		this.setCountOccur(countOccur);
 		this.setNumQuartile(numQuartile);
+		this.setDelimiter(delimiter);
 		
 		this.setFreqThreshold(freqThreshold);
 		this.setNumDistributions(new HashMap<Long, Integer>());
@@ -141,18 +143,18 @@ public class GenerateDistributions implements Runnable {
 	    		
 	    		
 	    		WriteToFile.getInstance().appendContents(getOutputCsvFile(), 
-	    				this.getWikidataId() + ","
-	    				+ this.getCount() + ","
-	    				+ this.getCurId() + ","
-	    				+ this.getWikiLabel() + ","
-	    				+ this.getPopularScore() + ","
+	    				this.getWikidataId() + delimiter
+	    				+ this.getCount() + delimiter
+	    				+ this.getCurId() + delimiter
+	    				+ this.getWikiLabel() + delimiter
+	    				+ this.getPopularScore() + delimiter
 	    				// Extra information
-	    				+ this.getCountOccur() + ","
-	    				+ this.getNumQuartile() + ","
-	    				+ toWriteMoreThanOne + ","
-	    				+ toWriteFrequent1 + ","
-	    				+ toWriteFrequent2 + ","
-	    				+ toWriteFrequent3 + ","
+	    				+ this.getCountOccur() + delimiter
+	    				+ this.getNumQuartile() + delimiter
+	    				+ toWriteMoreThanOne + delimiter
+	    				+ toWriteFrequent1 + delimiter
+	    				+ toWriteFrequent2 + delimiter
+	    				+ toWriteFrequent3 + delimiter
 	    				+ toWriteFrequent4 + "\n");
 			}			
 			
@@ -313,5 +315,13 @@ public class GenerateDistributions implements Runnable {
 
 	public void setNumQuartile(Integer numQuartile) {
 		this.numQuartile = numQuartile;
+	}
+
+	public String getDelimiter() {
+		return delimiter;
+	}
+
+	public void setDelimiter(String delimiter) {
+		this.delimiter = delimiter;
 	}
 }

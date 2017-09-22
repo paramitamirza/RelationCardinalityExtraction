@@ -239,6 +239,10 @@ public class GenerateFeatures implements Runnable {
 		
 		long numInt;
 		
+		//Conditions for compositionality
+		boolean conjExist = false;
+		int lastCompIdx = 0;
+		
 		for (k=0; k<sent.words().size(); k++) {
 			pos = sent.posTag(k);
 			ner = sent.nerTag(k);
@@ -287,23 +291,36 @@ public class GenerateFeatures implements Runnable {
 							}
 							numToAdd = 0;
 							idxToAdd.clear();
+							conjExist = false;
 							
 						} else {
 							if ((numToAdd+numInt) == numOfTriples
 //									&& ((nummod && deprel.startsWith("nummod"))
 //											|| !nummod)
 									) {
-								label = "_YES_";
-								for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
+								if (conjExist && (tokenIdx-lastCompIdx) <= 5) {
+									label = "_YES_";
+									for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
+								}
 								numToAdd = 0;
 								idxToAdd.clear();
+								conjExist = false;
+								
 							} else if ((numToAdd+numInt) < numOfTriples
 //									&& ((nummod && deprel.startsWith("nummod"))
 //											|| !nummod)
 									) {
 								label = "_NO_";
-								numToAdd += numInt;
-								idxToAdd.add(tokenIdx);
+								if (conjExist && (tokenIdx-lastCompIdx) <= 5) {
+									numToAdd += numInt;
+									idxToAdd.add(tokenIdx);
+									lastCompIdx = tokenIdx;
+								} else {
+									numToAdd = 0;
+									idxToAdd.clear();
+								}								
+								conjExist = false;
+								
 							} else {	//(numToAdd+numInt) > numOfTriples
 								if (((numToAdd+numInt) <= maxTripleCount)
 										&& (((ignoreHigherLess > 0) 
@@ -316,6 +333,7 @@ public class GenerateFeatures implements Runnable {
 								}
 								numToAdd = 0;
 								idxToAdd.clear();
+								conjExist = false;
 							}
 						}
 						
@@ -345,6 +363,8 @@ public class GenerateFeatures implements Runnable {
 							label = "_NO_";
 							numToAdd += numInt;
 							idxToAdd.add(tokenIdx);
+							lastCompIdx = tokenIdx;
+							conjExist = false;
 							
 						} else if (numInt > numOfTriples
 //								&& ((nummod && deprel.startsWith("nummod"))
@@ -360,6 +380,7 @@ public class GenerateFeatures implements Runnable {
 							} else {
 								label = "_NO_";
 							}
+							conjExist = false;
 							
 						} else {
 							label = "_NO_";
@@ -458,23 +479,36 @@ public class GenerateFeatures implements Runnable {
 								}
 								numToAdd = 0;
 								idxToAdd.clear();
+								conjExist = false;
 								
 							} else {
 								if ((numToAdd+numInt) == numOfTriples
 										&& ((nummod && deprel.startsWith("nummod"))
 												|| !nummod)
 										) {
-									label = "_YES_";
-									for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
+									if (conjExist && (tokenIdx-lastCompIdx) <= 5) {
+										label = "_YES_";
+										for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
+									}
 									numToAdd = 0;
 									idxToAdd.clear();
+									conjExist = false;
+									
 								} else if ((numToAdd+numInt) < numOfTriples
 										&& ((nummod && deprel.startsWith("nummod"))
 												|| !nummod)
 										) {
 									label = "_NO_";
-									numToAdd += numInt;
-									idxToAdd.add(tokenIdx);
+									if (conjExist && (tokenIdx-lastCompIdx) <= 5) {
+										numToAdd += numInt;
+										idxToAdd.add(tokenIdx);
+										lastCompIdx = tokenIdx;
+									} else {
+										numToAdd = 0;
+										idxToAdd.clear();
+									}								
+									conjExist = false;
+									
 								} else {	//(numToAdd+numInt) > numOfTriples
 									if (((numToAdd+numInt) <= maxTripleCount)
 											&& (((ignoreHigherLess > 0) 
@@ -487,6 +521,7 @@ public class GenerateFeatures implements Runnable {
 									}
 									numToAdd = 0;
 									idxToAdd.clear();
+									conjExist = false;
 								}
 							}
 							
@@ -516,6 +551,8 @@ public class GenerateFeatures implements Runnable {
 								label = "_NO_";
 								numToAdd += numInt;
 								idxToAdd.add(tokenIdx);
+								lastCompIdx = tokenIdx;
+								conjExist = false;
 								
 							} else if (numInt > numOfTriples
 									&& ((nummod && deprel.startsWith("nummod"))
@@ -530,6 +567,7 @@ public class GenerateFeatures implements Runnable {
 								} else {
 									label = "_NO_";
 								}
+								conjExist = false;
 								
 							} else {
 								label = "_NO_";
@@ -629,9 +667,15 @@ public class GenerateFeatures implements Runnable {
 				
 				word = ""; lemma = ""; deprel = "";
 				
-			} else {							
+			} else {
 				word = sent.word(k);
 				lemma = sent.lemma(k);
+				
+				if (lemma.equals("and")
+						|| lemma.equals(",")) {	//comma or 'and'
+					conjExist = true;
+				}
+				
 //					sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
 //					sb.append(System.getProperty("line.separator"));
 				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));

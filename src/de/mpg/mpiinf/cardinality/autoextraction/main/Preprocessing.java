@@ -54,9 +54,12 @@ public class Preprocessing {
 		
 		if (cmd.hasOption("n")) WikipediaArticle.setNumberOfThreads(Integer.parseInt(cmd.getOptionValue("thread")));
 		
+		String delimiter = ",";
+		if (cmd.hasOption("tab")) delimiter = "\t";
+		
 		if (cmd.hasOption("a")) {
 			wiki.mapWikidataWikipediaCurId();
-			wiki.appendCurId(inputCsvFile);
+			wiki.appendCurId(inputCsvFile, delimiter);
 			wiki.destroyMapping();
 			
 		} else if (cmd.hasOption("b")) {
@@ -66,7 +69,7 @@ public class Preprocessing {
 			
 			for (File f : listOfFiles) {
 				if (f.isFile()) {
-					wiki.appendCurId(f.getPath());
+					wiki.appendCurId(f.getPath(), delimiter);
 				}
 			}
 			wiki.destroyMapping();
@@ -81,7 +84,7 @@ public class Preprocessing {
 			Double ignoreFreq = 0.1;
 //			if (cmd.hasOption("q")) ignoreFreq = Integer.parseInt(cmd.getOptionValue("ignorefreq"));
 			
-			DistributionExtractionConcurrent distExtraction = new DistributionExtractionConcurrent(inputCsvFile, relName, dirFeature, ignoreFreq);
+			DistributionExtractionConcurrent distExtraction = new DistributionExtractionConcurrent(inputCsvFile, delimiter, relName, dirFeature, ignoreFreq);
 			distExtraction.run(wiki);
 		}
 		
@@ -104,9 +107,9 @@ public class Preprocessing {
 			else {
 				if (cmd.hasOption("r")) {
 					int nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
-					featExtraction = new FeatureExtractionConcurrent(inputCsvFile, nRandom, relName, dirFeature);
+					featExtraction = new FeatureExtractionConcurrent(inputCsvFile, delimiter, nRandom, relName, dirFeature);
 				} else {
-					featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
+					featExtraction = new FeatureExtractionConcurrent(inputCsvFile, delimiter, relName, dirFeature);
 				}
 			}
 			
@@ -151,6 +154,10 @@ public class Preprocessing {
 		Option eval = new Option("e", "eval", true, "Input evaluation file (.csv) path");
 		eval.setRequired(false);
 		options.addOption(eval);
+		
+		Option tab = new Option("tab", "tab", false, "Tab separated input files");
+		tab.setRequired(false);
+		options.addOption(tab);
 		
 		Option relName = new Option("p", "relname", true, "Property/relation name");
 		relName.setRequired(true);

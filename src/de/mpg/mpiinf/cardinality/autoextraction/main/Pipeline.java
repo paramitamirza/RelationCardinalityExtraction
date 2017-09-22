@@ -48,6 +48,9 @@ public class Pipeline {
 		String relName = cmd.getOptionValue("relname");
 		long trainSize = ReadFromFile.countLines(inputCsvFile);
 		
+		String delimiter = ",";
+		if (cmd.hasOption("tab")) delimiter = "\t";
+		
 		//Preprocessing
 		String wikipediaDir = cmd.getOptionValue("wikipedia");
 		WikipediaArticle wiki = new WikipediaArticle(wikipediaDir, wikipediaDir + "/zindex/", wikipediaDir + "/wikibase_item.txt.gz");
@@ -59,9 +62,9 @@ public class Pipeline {
 		}
 		FeatureExtractionConcurrent featExtraction;
 		if (cmd.hasOption("e")) {
-			featExtraction = new FeatureExtractionConcurrent(inputCsvFile, testCsvFile, relName, dirFeature);
+			featExtraction = new FeatureExtractionConcurrent(inputCsvFile, testCsvFile, delimiter, relName, dirFeature);
 		} else {
-			featExtraction = new FeatureExtractionConcurrent(inputCsvFile, relName, dirFeature);
+			featExtraction = new FeatureExtractionConcurrent(inputCsvFile, delimiter, relName, dirFeature);
 		} 
 		if (cmd.hasOption("n")) FeatureExtractionConcurrent.setNumberOfThreads(Integer.parseInt(cmd.getOptionValue("thread")));
 		
@@ -129,7 +132,7 @@ public class Pipeline {
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
 		String crfOutPath = evalData.replace(".data", ".out");
-		eval.evaluate(relName, testCsvFile, crfOutPath, labels, predictionFile, resultFile, compositional, false, minConfScore, trainSize);
+		eval.evaluate(relName, testCsvFile, delimiter, crfOutPath, labels, predictionFile, resultFile, compositional, false, minConfScore, trainSize, false);
 		
 		long endTime   = System.currentTimeMillis();
 		float totalTime = (endTime - startTime)/(float)1000;
@@ -158,6 +161,10 @@ public class Pipeline {
 		Option eval = new Option("e", "eval", true, "Input evaluation file (.csv) path");
 		eval.setRequired(false);
 		options.addOption(eval);
+		
+		Option tab = new Option("tab", "tab", false, "Tab separated input files");
+		tab.setRequired(false);
+		options.addOption(tab);
 		
 		Option relName = new Option("p", "relname", true, "Property/relation name");
 		relName.setRequired(true);
