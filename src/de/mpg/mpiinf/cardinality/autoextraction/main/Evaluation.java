@@ -213,70 +213,73 @@ public class Evaluation {
 				int m = 0, mm;
 				List<Integer> mlist = new ArrayList<Integer>();
 				
-				if (addSameSentence) {	
-					//When there are more than one in a sentence:
-					
-					//if a number is a total of its following sequence of numbers, choose the total
-					int totalIdx = findTotalNumberOfComposition(numbers);
-					
-					if (totalIdx > 0) {
-						pp = Double.parseDouble(numbers.get(totalIdx).split("#")[1]);
-						if (pp > threshold) {
-							p = pp;
-							n = Integer.parseInt(numbers.get(totalIdx).split("#")[0]);
-							mlist.add(totalIdx);
-						}
-					
-					} else {
-						//else, add them up if there exists conjunction (comma, semicolon or 'and') in between
+				if (!numbers.isEmpty()) {
+				
+					if (addSameSentence) {	
+						//When there are more than one in a sentence:
 						
-						Object[] keys = numbers.keySet().toArray();
-						pp = Double.parseDouble(numbers.get(keys[0]).split("#")[1]);
-						mm = (Integer)keys[0];
-						if (pp > threshold) {	
-							n = Long.parseLong(numbers.get(keys[0]).split("#")[0]);
-							mlist.add(mm);
-							p = pp;
-						}
+						//if a number is a total of its following sequence of numbers, choose the total
+						int totalIdx = findTotalNumberOfComposition(numbers);
 						
-						if (keys.length > 1) {						
-							for (int k = 1; k < keys.length; k++) {
-								pp = Double.parseDouble(numbers.get(keys[k]).split("#")[1]);
-								mm = (Integer)keys[k];	
-								
-								if (pp > threshold) {
-									if (mlist.isEmpty()) {
-										n = Long.parseLong(numbers.get(keys[0]).split("#")[0]);
-										mlist.add(mm);
-										p = pp;
-										
-									} else {
-										if (conjExist(sentence, mlist.get(mlist.size()-1), mm)) {
-											if (pp > p) p = pp;
-//											p += pp;
-											n += Long.parseLong(numbers.get(keys[k]).split("#")[0]);
+						if (totalIdx > 0) {
+							pp = Double.parseDouble(numbers.get(totalIdx).split("#")[1]);
+							if (pp > threshold) {
+								p = pp;
+								n = Integer.parseInt(numbers.get(totalIdx).split("#")[0]);
+								mlist.add(totalIdx);
+							}
+						
+						} else {
+							//else, add them up if there exists conjunction (comma, semicolon or 'and') in between
+							
+							Object[] keys = numbers.keySet().toArray();
+							pp = Double.parseDouble(numbers.get(keys[0]).split("#")[1]);
+							mm = (Integer)keys[0];
+							if (pp > threshold) {	
+								n = Long.parseLong(numbers.get(keys[0]).split("#")[0]);
+								mlist.add(mm);
+								p = pp;
+							}
+							
+							if (keys.length > 1) {						
+								for (int k = 1; k < keys.length; k++) {
+									pp = Double.parseDouble(numbers.get(keys[k]).split("#")[1]);
+									mm = (Integer)keys[k];	
+									
+									if (pp > threshold) {
+										if (mlist.isEmpty()) {
+											n = Long.parseLong(numbers.get(keys[0]).split("#")[0]);
 											mlist.add(mm);
-										}
-									}									
-								}
-							}							
-						} 
-//						p = p/numbers.size();
-					}
-					
-				} else {	
-					//When there are more than one in a sentence, choose the most probable
-					for (Integer key : numbers.keySet()) {
-						pp = Double.parseDouble(numbers.get(key).split("#")[1]);
-						mm = key;
-						if (pp > p
-								&& pp > threshold) {
-							n = Long.parseLong(numbers.get(key).split("#")[0]);
-							p = pp;
-							m = mm;
+											p = pp;
+											
+										} else {
+											if (conjExist(sentence, mlist.get(mlist.size()-1), mm)) {
+												if (pp > p) p = pp;
+	//											p += pp;
+												n += Long.parseLong(numbers.get(keys[k]).split("#")[0]);
+												mlist.add(mm);
+											}
+										}									
+									}
+								}							
+							} 
+	//						p = p/numbers.size();
 						}
+						
+					} else {	
+						//When there are more than one in a sentence, choose the most probable
+						for (Integer key : numbers.keySet()) {
+							pp = Double.parseDouble(numbers.get(key).split("#")[1]);
+							mm = key;
+							if (pp > p
+									&& pp > threshold) {
+								n = Long.parseLong(numbers.get(key).split("#")[0]);
+								p = pp;
+								m = mm;
+							}
+						}
+						mlist.add(m);
 					}
-					mlist.add(m);
 				}
 				
 				if (addDiffSentence) {	
