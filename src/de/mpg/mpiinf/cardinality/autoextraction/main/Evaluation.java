@@ -189,7 +189,7 @@ public class Evaluation {
 		
 		int tp = 0;
 		int fp = 0;
-		int complete, incomplete = 0;
+		int complete, incomplete = 0, less = 0;
 		int available = 0, missing = 0;
 		int total = 0;
 		double threshold = minConfScore;
@@ -396,6 +396,7 @@ public class Evaluation {
 		}
 		if (numChild > 0) {
 			available += numChild;
+			if (predictedCardinal < numChild) less ++;
 			if (relaxedMatch) {
 				if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
 				else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
@@ -437,18 +438,18 @@ public class Evaluation {
 					+ "\t" + String.format("%.4f", precision)
 					+ "\t" + String.format("%.4f", recall)
 					+ "\t" + String.format("%.4f", fscore)
-					+ "\t" + complete + "\t" + available
-					+ "\t" + incomplete + "\t" + missing);
+					+ "\t" + complete + "\t" + incomplete + "\t" + less
+					+ "\t" + available + "\t" + missing + "\t" + String.format("%.2f", ((float)missing / (float)available * 100)) + "%");
 			bw.newLine();
 			bw.close();
 		} else {
-			System.out.println("train\ttp\tfp\ttotal\tprec\trecall\tf1-score");
+			System.out.println("train\ttp\tfp\ttotal\tprec\trecall\tf1-score\tpred=num\tpred>num\tpred<num\tnum\tmissing\tincrease");
 			System.out.println(trainSize + "\t" + tp + "\t" + fp + "\t" + total  
 					+ "\t" + String.format("%.4f", precision)
 					+ "\t" + String.format("%.4f", recall)
 					+ "\t" + String.format("%.4f", fscore)
-					+ "\t" + complete + "\t" + available
-					+ "\t" + incomplete + "\t" + missing);
+					+ "\t" + complete + "\t" + incomplete + "\t" + less
+					+ "\t" + available + "\t" + missing + "\t" + String.format("%.2f", ((float)missing / (float)available * 100)) + "%");
 		}
 	}
 	
