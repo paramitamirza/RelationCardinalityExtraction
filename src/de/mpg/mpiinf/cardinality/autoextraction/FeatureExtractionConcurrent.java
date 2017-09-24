@@ -126,11 +126,9 @@ public class FeatureExtractionConcurrent {
 		BufferedReader br = new BufferedReader(new FileReader(getInputCsvFile()));
 		
 		int numTrain = ReadFromFile.countLines(this.getInputCsvFile());
-//		if (this.getInputRandomCsvFile().equals("")) {
-//			numTrain = ReadFromFile.countLines(this.getInputTrainCsvFile());
-//		} else {
+		if (!this.getInputRandomCsvFile().equals("")) {
 			numTrain = numTrain - ReadFromFile.countLines(this.getInputRandomCsvFile());
-//		}
+		}
 		int maxNumTrain = Math.round(topPopular * numTrain);
 //		int maxNumTrain = Math.round(topPopular * 4);
 		int idxTrain = 0;

@@ -424,8 +424,9 @@ public class Evaluation {
 		float totalTime = (endTime - startTime)/(float)1000;
 		System.out.println("done [ " + totalTime + " sec].");
 		
-		double precision = (double)tp / (tp + fp);
-		double recall = (double)tp / instanceNum.size();
+		double precision = (double)tp / (double)(tp + fp);
+//		double recall = (double)tp / instanceNum.size();
+		double recall = (double)tp / (double)total;
 		double fscore = (2 * precision * recall) / (precision + recall);
 		
 		complete = tp;

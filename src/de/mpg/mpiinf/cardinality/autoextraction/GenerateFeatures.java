@@ -276,7 +276,7 @@ public class GenerateFeatures implements Runnable {
 //								&& ((nummod && deprel.startsWith("nummod"))
 //										|| !nummod)
 								) {
-							if (-(Math.log(countDist)/Math.log(2)) >= countInfThreshold) { //numOfTriples > threshold
+							if (-(Math.log(countDist)/Math.log(10)) >= countInfThreshold) { //numOfTriples > threshold
 								if (!this.getFrequentNumbers().contains(numInt)) {
 									label = "_YES_";
 								} else {
@@ -342,7 +342,7 @@ public class GenerateFeatures implements Runnable {
 //								&& ((nummod && deprel.startsWith("nummod"))
 //										|| !nummod)
 								) {
-							if (-(Math.log(countDist)/Math.log(2)) >= countInfThreshold) { //numOfTriples > threshold
+							if (-(Math.log(countDist)/Math.log(10)) >= countInfThreshold) { //numOfTriples > threshold
 								if (!this.getFrequentNumbers().contains(numInt)) {
 									label = "_YES_";
 								} else {
@@ -393,7 +393,7 @@ public class GenerateFeatures implements Runnable {
 //									|| !nummod)
 							) {
 						
-						if (-(Math.log(countDist)/Math.log(2)) >= countInfThreshold) { //numOfTriples > threshold
+						if (-(Math.log(countDist)/Math.log(10)) >= countInfThreshold) { //numOfTriples > threshold
 							if (!this.getFrequentNumbers().contains(numInt)) {
 								label = "_YES_";
 							} else {
@@ -464,7 +464,7 @@ public class GenerateFeatures implements Runnable {
 									&& ((nummod && deprel.startsWith("nummod"))
 											|| !nummod)
 									) {
-								if (-(Math.log(countDist)/Math.log(2)) >= countInfThreshold) { //numOfTriples > threshold
+								if (-(Math.log(countDist)/Math.log(10)) >= countInfThreshold) { //numOfTriples > threshold
 									if (!this.getFrequentNumbers().contains(numInt)) {
 										label = "_YES_";
 									} else {
@@ -530,7 +530,7 @@ public class GenerateFeatures implements Runnable {
 									&& ((nummod && deprel.startsWith("nummod"))
 											|| !nummod)
 									) {
-								if (-(Math.log(countDist)/Math.log(2)) >= countInfThreshold) { //numOfTriples > threshold
+								if (-(Math.log(countDist)/Math.log(10)) >= countInfThreshold) { //numOfTriples > threshold
 									if (!this.getFrequentNumbers().contains(numInt)) {
 										label = "_YES_";
 									} else {
@@ -580,7 +580,7 @@ public class GenerateFeatures implements Runnable {
 										|| !nummod)
 								) {
 							
-							if (-(Math.log(countDist)/Math.log(2)) >= countInfThreshold) { //numOfTriples > threshold
+							if (-(Math.log(countDist)/Math.log(10)) >= countInfThreshold) { //numOfTriples > threshold
 								if (!this.getFrequentNumbers().contains(numInt)) {
 									label = "_YES_";
 								} else {
