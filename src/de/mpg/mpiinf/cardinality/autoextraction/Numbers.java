@@ -128,6 +128,14 @@ public class Numbers {
 		}
 	}
 	
+	public static boolean properNoun(String pos, String ner) {
+		if (pos.equals("NNP")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public static boolean containNumbers(String transformed, Sentence sent, 
 			boolean ordinal, boolean namedEntity) {
 		

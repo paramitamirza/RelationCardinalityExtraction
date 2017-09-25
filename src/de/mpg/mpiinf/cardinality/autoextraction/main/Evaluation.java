@@ -2,6 +2,7 @@ package de.mpg.mpiinf.cardinality.autoextraction.main;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -153,12 +154,73 @@ public class Evaluation {
 		return false;
 	}
 	
+	private double getHighestCRFScore(String crfOutPath, String[] labels) throws IOException {
+		BufferedReader br; String line;
+		
+		//Read result (.out) file
+		br = new BufferedReader(new FileReader(crfOutPath));
+		
+		Double prob = 0.0, highestProb = 0.0;
+		List<String> nums = new ArrayList<String>();
+		List<Double> probs = new ArrayList<Double>();
+		String[] cols;
+		String entityId = null;
+		Set<String> entities = new HashSet<String>();
+		
+		line = br.readLine();
+		while (line != null) {
+			
+			if(!StringUtils.join(nums, "").equals("")) {
+				Map<Integer, String> numbers = extractNumber(nums, probs);
+				
+				for (Integer key : numbers.keySet()) {
+					prob = Double.parseDouble(numbers.get(key).split("#")[1]);
+					if (prob > highestProb) highestProb = prob;
+				}
+			}
+				
+			//Sentence starts			
+			
+			nums = new ArrayList<String>();
+			probs = new ArrayList<Double>();
+			
+			line = br.readLine();
+			line = br.readLine();
+			
+			while (line != null && !line.trim().equals("")) {
+				cols = line.split("\t");
+				
+				if (entityId != null && !cols[0].equals(entityId)
+						&& !entities.contains(entityId)
+						) {	//Entity ends
+					
+					entities.add(entityId);
+				}
+				
+				entityId = cols[0];
+				for (int l=0; l<labels.length; l++) {
+					if (labels[l].equals("_YES_")) {
+						prob = Double.valueOf(cols[cols.length-labels.length+l].split("/")[1]);
+					}
+				}
+				nums.add(cols[3]);
+				probs.add(prob);
+				
+				line = br.readLine();
+			}
+		}
+		br.close();
+		return highestProb;
+	}
+	
 	public void evaluate(String relName, String csvPath, String delimiter, String crfOutPath, 
 			String[] labels, String outPath, String resultPath,
 			boolean addSameSentence, boolean addDiffSentence,
 			float minConfScore, long trainSize, boolean relaxedMatch) throws IOException {
 		
 		long startTime = System.currentTimeMillis();
+		double highestCRFScore = getHighestCRFScore(crfOutPath, labels);
+		System.out.println("Highest CRF score: " + highestCRFScore);
 		System.out.print("Evaluate CRF++ output file... ");
 		
 		//Read .csv file
@@ -197,7 +259,7 @@ public class Evaluation {
 		String[] cols;
 		List<String> sentence = new ArrayList<String>();
 		String entityId = null;
-		line = br.readLine();
+		line = "";
 		
 		long predictedCardinal = 0;
 		double predictedProb = 0.0;
@@ -290,7 +352,7 @@ public class Evaluation {
 					predictedProb += p;
 					evidence += wordsToSentence(sentence, mlist) + "|";
 					numPredicted++;
-					predictedProb = predictedProb/numPredicted;
+					predictedProb = predictedProb / numPredicted;
 					
 				} else {
 					//When there are more than one sentences, choose the most probable
@@ -312,7 +374,7 @@ public class Evaluation {
 			line = br.readLine();
 			line = br.readLine();
 			
-			while (line != null && !line.equals("")) {
+			while (line != null && !line.trim().equals("")) {
 				cols = line.split("\t");
 				
 				if (entityId != null && !cols[0].equals(entityId)
@@ -324,11 +386,18 @@ public class Evaluation {
 					
 					if (bw != null) {
 						if (predictedProb >= minConfScore) {
-							bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + "\"" + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\"" 
-									+ "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
+							bw.write(entityId + "\t"
+									+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t"
+									+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
+									+ numChild + "\t" 
+									+ predictedCardinal + "\t" 
+									+ predictedProb + "\t" 
+									+ evidence);
 						} else {
-							bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + "\"" + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\"" 
-									+ "," + numChild + "," + 0 + "," + 0 + ",\"" + "" + "\"");
+							bw.write(entityId + "\t" 
+									+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t" 
+									+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
+									+ numChild + "\t" + 0 + "\t" + 0 + "\t" + "");
 						}
 						bw.newLine();
 //					} else {
@@ -365,6 +434,7 @@ public class Evaluation {
 						prob = Double.valueOf(cols[cols.length-labels.length+l].split("/")[1]);
 					}
 				}
+				prob = prob / highestCRFScore;
 				if (prob > threshold) {
 					nums.add(cols[3]);
 					probs.add(prob);
@@ -384,11 +454,18 @@ public class Evaluation {
 		
 		if (bw != null) {
 			if (predictedProb >= minConfScore) {
-				bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + "\"" + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\"" 
-						+ "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
+				bw.write(entityId + "\t"
+						+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t"
+						+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
+						+ numChild + "\t" 
+						+ predictedCardinal + "\t" 
+						+ predictedProb + "\t" 
+						+ evidence);
 			} else {
-				bw.write(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiCurid + "," + "\"" + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\"" 
-						+ "," + numChild + "," + 0 + "," + 0 + ",\"" + "" + "\"");
+				bw.write(entityId + "\t" 
+						+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t" 
+						+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
+						+ numChild + "\t" + 0 + "\t" + 0 + "\t" + "");
 			}
 			bw.newLine();
 //		} else {

@@ -225,7 +225,7 @@ public class GenerateFeatures implements Runnable {
 			double countInfThreshold, double countDist,
 			boolean ignoreHigher, int ignoreHigherLess,
 			boolean ignoreFreq, int maxTripleCount) {
-		String word = "", lemma = "", pos = "", ner = "", deprel = "", label = "";
+		String word = "", lemma = "", pos = "", ner = "", deprel = "", dependent = "", label = "";
 		StringBuilder sb = new StringBuilder();
 		int k;
 		boolean lrb = false;
@@ -250,6 +250,10 @@ public class GenerateFeatures implements Runnable {
 			if (sent.incomingDependencyLabel(k).isPresent()) {
 				deprel = sent.incomingDependencyLabel(k).get();
 			}
+			dependent = "O";
+			if (sent.governor(k).isPresent() && !deprel.equals("root")) {
+				dependent = sent.lemma(sent.governor(k).get());
+			}
 			label = "O";
 						
 			if (!this.isTraining()
@@ -260,13 +264,14 @@ public class GenerateFeatures implements Runnable {
 					) {
 				word = sent.word(k);
 				lemma = "_num_";
-				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
+				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
 				labels.add(label);
 				tokenIdx ++;
 				
 			} else if (sent.word(k).startsWith("LatinGreek_")) {
 				word = sent.word(k).split("_")[0] + "_" + sent.word(k).split("_")[1] + "_" + sent.word(k).split("_")[2];
 				lemma = "_" + sent.word(k).split("_")[3] + "_";
+				dependent = "O";
 				
 				numInt = Long.parseLong(sent.word(k).split("_")[2]);
 				
@@ -276,7 +281,7 @@ public class GenerateFeatures implements Runnable {
 //								&& ((nummod && deprel.startsWith("nummod"))
 //										|| !nummod)
 								) {
-							if (-(Math.log(countDist)/Math.log(10)) >= countInfThreshold) { //numOfTriples > threshold
+							if (-Math.log(countDist) >= countInfThreshold) { //numOfTriples > threshold
 								if (!this.getFrequentNumbers().contains(numInt)) {
 									label = "_YES_";
 								} else {
@@ -342,7 +347,7 @@ public class GenerateFeatures implements Runnable {
 //								&& ((nummod && deprel.startsWith("nummod"))
 //										|| !nummod)
 								) {
-							if (-(Math.log(countDist)/Math.log(10)) >= countInfThreshold) { //numOfTriples > threshold
+							if (-Math.log(countDist) >= countInfThreshold) { //numOfTriples > threshold
 								if (!this.getFrequentNumbers().contains(numInt)) {
 									label = "_YES_";
 								} else {
@@ -393,7 +398,7 @@ public class GenerateFeatures implements Runnable {
 //									|| !nummod)
 							) {
 						
-						if (-(Math.log(countDist)/Math.log(10)) >= countInfThreshold) { //numOfTriples > threshold
+						if (-Math.log(countDist) >= countInfThreshold) { //numOfTriples > threshold
 							if (!this.getFrequentNumbers().contains(numInt)) {
 								label = "_YES_";
 							} else {
@@ -429,22 +434,20 @@ public class GenerateFeatures implements Runnable {
 				
 //				sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
 //				sb.append(System.getProperty("line.separator"));
-				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
+//				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
+				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
 				labels.add(label);
 				tokenIdx ++;								
 				
 			} else if (Numbers.properNumber(pos, ner)) {						
-				word = ""; lemma = ""; deprel = "";
+				word = ""; lemma = ""; deprel = "O"; dependent = "O";
 				
 				while (k<sent.words().size()) {
 					if (Numbers.properNumber(sent.posTag(k), sent.nerTag(k))) {
 						word += sent.word(k) + "_";
 						lemma += sent.lemma(k) + "_";
 						if (sent.incomingDependencyLabel(k).isPresent()) deprel = sent.incomingDependencyLabel(k).get();
-						else deprel = "O";
-						if (sent.governor(k).isPresent() && !deprel.equals("root")) {
-							deprel += "_" + sent.lemma(sent.governor(k).get());
-						}
+						if (sent.governor(k).isPresent() && deprel.equals("nummod")) dependent = sent.lemma(sent.governor(k).get());
 						k++;
 						
 					} else {
@@ -464,7 +467,7 @@ public class GenerateFeatures implements Runnable {
 									&& ((nummod && deprel.startsWith("nummod"))
 											|| !nummod)
 									) {
-								if (-(Math.log(countDist)/Math.log(10)) >= countInfThreshold) { //numOfTriples > threshold
+								if (-Math.log(countDist) >= countInfThreshold) { //numOfTriples > threshold
 									if (!this.getFrequentNumbers().contains(numInt)) {
 										label = "_YES_";
 									} else {
@@ -530,7 +533,7 @@ public class GenerateFeatures implements Runnable {
 									&& ((nummod && deprel.startsWith("nummod"))
 											|| !nummod)
 									) {
-								if (-(Math.log(countDist)/Math.log(10)) >= countInfThreshold) { //numOfTriples > threshold
+								if (-Math.log(countDist) >= countInfThreshold) { //numOfTriples > threshold
 									if (!this.getFrequentNumbers().contains(numInt)) {
 										label = "_YES_";
 									} else {
@@ -580,7 +583,7 @@ public class GenerateFeatures implements Runnable {
 										|| !nummod)
 								) {
 							
-							if (-(Math.log(countDist)/Math.log(10)) >= countInfThreshold) { //numOfTriples > threshold
+							if (-Math.log(countDist) >= countInfThreshold) { //numOfTriples > threshold
 								if (!this.getFrequentNumbers().contains(numInt)) {
 									label = "_YES_";
 								} else {
@@ -617,21 +620,21 @@ public class GenerateFeatures implements Runnable {
 //				sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
 //				sb.append(System.getProperty("line.separator"));
 				k--;
-				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
+				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
 				labels.add(label);
 				tokenIdx ++;
 				
-				word = ""; lemma = ""; deprel = "";
+				word = ""; lemma = ""; deprel = "O"; dependent = "O";
 				
-			} else if (Numbers.properName(pos, ner)) {
-				word = ""; lemma = ""; deprel = "";
+			} else if (Numbers.properNoun(pos, ner)) {
+				word = ""; lemma = ""; deprel = "O"; dependent = "O";
 				
 				while (k<sent.words().size()) {
-					if (Numbers.properName(sent.posTag(k), sent.nerTag(k))) {
+					if (Numbers.properNoun(sent.posTag(k), sent.nerTag(k))) {
 						word += sent.word(k) + "_";
-						lemma = "_name_";
-						if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
-						else deprel += "O_";
+						lemma = "_propernoun_";
+//						if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
+//						else deprel += "O_";
 						k++;
 						
 					} else if ((sent.posTag(k).equals("-LRB-") || sent.posTag(k).equals("``")) 
@@ -639,17 +642,17 @@ public class GenerateFeatures implements Runnable {
 									|| ((k+2<sent.words().size() && Numbers.properName(sent.posTag(k+2), sent.nerTag(k+2))))
 							   )) {
 						word += sent.word(k) + "_";
-						lemma = "_name_";
-						if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
-						else deprel += "O_";
+						lemma = "_propernoun_";
+//						if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
+//						else deprel += "O_";
 						k++;
 						lrb = true;
 						
 					} else if (lrb && (sent.posTag(k).equals("-RRB-") || sent.posTag(k).equals("''"))) {
 						word += sent.word(k) + "_";
-						lemma = "_name_";
-						if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
-						else deprel += "O_";
+						lemma = "_propernoun_";
+//						if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
+//						else deprel += "O_";
 						k++;
 						lrb = false;
 						
@@ -661,11 +664,12 @@ public class GenerateFeatures implements Runnable {
 //					sb.append(generateLine(wikidataId, j+"", k+"", word.substring(0, word.length()-1), lemma, pos, ner, deprel.substring(0, deprel.length()-1), label));
 //					sb.append(System.getProperty("line.separator"));
 				k--;
-				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word.substring(0, word.length()-1), lemma, pos, ner, deprel.substring(0, deprel.length()-1)));
+//				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word.substring(0, word.length()-1), lemma, pos, ner, deprel.substring(0, deprel.length()-1)));
+				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word.substring(0, word.length()-1), lemma, pos, ner, dependent));
 				labels.add(label);
 				tokenIdx ++;
 				
-				word = ""; lemma = ""; deprel = "";
+				word = ""; lemma = ""; deprel = "O"; dependent = "O";
 				
 			} else {
 				word = sent.word(k);
@@ -678,7 +682,8 @@ public class GenerateFeatures implements Runnable {
 				
 //					sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
 //					sb.append(System.getProperty("line.separator"));
-				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
+//				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel));
+				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, "O"));
 				labels.add(label);
 				tokenIdx ++;
 			}
