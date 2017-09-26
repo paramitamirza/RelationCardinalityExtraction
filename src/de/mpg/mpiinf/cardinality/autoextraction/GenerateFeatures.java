@@ -227,7 +227,7 @@ public class GenerateFeatures implements Runnable {
 			boolean ignoreFreq, int maxTripleCount) {
 		String word = "", lemma = "", pos = "", ner = "", deprel = "", dependent = "", label = "";
 		StringBuilder sb = new StringBuilder();
-		int k;
+		int k, depIdx;
 		boolean lrb = false;
 		
 		List<Integer> idxToAdd = new ArrayList<Integer>();
@@ -246,13 +246,17 @@ public class GenerateFeatures implements Runnable {
 		for (k=0; k<sent.words().size(); k++) {
 			pos = sent.posTag(k);
 			ner = sent.nerTag(k);
-			deprel = "O";
+			deprel = "O"; 
 			if (sent.incomingDependencyLabel(k).isPresent()) {
 				deprel = sent.incomingDependencyLabel(k).get();
 			}
-			dependent = "O";
+			dependent = "O"; depIdx = k;
 			if (sent.governor(k).isPresent() && !deprel.equals("root")) {
-				dependent = sent.lemma(sent.governor(k).get());
+				depIdx = sent.governor(k).get();
+				if (depIdx > k) {	//if the modified noun is AFTER the number
+					dependent = sent.lemma(depIdx);
+					if (dependent.startsWith("latingreek_")) dependent = "O";
+				}
 			}
 			label = "O";
 						
@@ -263,8 +267,8 @@ public class GenerateFeatures implements Runnable {
 					&& deprel.equals("det")
 					) {
 				word = sent.word(k);
-				lemma = "_num_";
-				if (dependent.startsWith("latingreek_")) dependent = "O";
+				lemma = sent.lemma(k);
+				if (!dependent.equals("O")) lemma = "_num_";
 				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
 				labels.add(label);
 				tokenIdx ++;
@@ -448,7 +452,10 @@ public class GenerateFeatures implements Runnable {
 						word += sent.word(k) + "_";
 						lemma += sent.lemma(k) + "_";
 						if (sent.incomingDependencyLabel(k).isPresent()) deprel = sent.incomingDependencyLabel(k).get();
-						if (sent.governor(k).isPresent() && deprel.equals("nummod")) dependent = sent.lemma(sent.governor(k).get());
+						if (sent.governor(k).isPresent() && deprel.equals("nummod")) {
+							depIdx = sent.governor(k).get();
+							dependent = sent.lemma(sent.governor(k).get());
+						}
 						k++;
 						
 					} else {
@@ -465,7 +472,7 @@ public class GenerateFeatures implements Runnable {
 					if (compositional) {
 						if (numToAdd > 0) {
 							if (numInt == numOfTriples
-									&& ((nummod && deprel.startsWith("nummod"))
+									&& ((nummod && deprel.startsWith("nummod") && depIdx >= k)
 											|| !nummod)
 									) {
 								if (-Math.log(countDist) >= countInfThreshold) { //numOfTriples > threshold
@@ -487,7 +494,7 @@ public class GenerateFeatures implements Runnable {
 								
 							} else {
 								if ((numToAdd+numInt) == numOfTriples
-										&& ((nummod && deprel.startsWith("nummod"))
+										&& ((nummod && deprel.startsWith("nummod") && depIdx >= k)
 												|| !nummod)
 										) {
 									if (conjExist && (tokenIdx-lastCompIdx) <= 5) {
@@ -499,7 +506,7 @@ public class GenerateFeatures implements Runnable {
 									conjExist = false;
 									
 								} else if ((numToAdd+numInt) < numOfTriples
-										&& ((nummod && deprel.startsWith("nummod"))
+										&& ((nummod && deprel.startsWith("nummod") && depIdx >= k)
 												|| !nummod)
 										) {
 									label = "_NO_";
@@ -531,7 +538,7 @@ public class GenerateFeatures implements Runnable {
 							
 						} else {
 							if (numInt == numOfTriples
-									&& ((nummod && deprel.startsWith("nummod"))
+									&& ((nummod && deprel.startsWith("nummod") && depIdx >= k)
 											|| !nummod)
 									) {
 								if (-Math.log(countDist) >= countInfThreshold) { //numOfTriples > threshold
@@ -549,7 +556,7 @@ public class GenerateFeatures implements Runnable {
 								}
 								
 							} else if (numInt < numOfTriples
-									&& ((nummod && deprel.startsWith("nummod"))
+									&& ((nummod && deprel.startsWith("nummod") && depIdx >= k)
 											|| !nummod)
 									) {
 								label = "_NO_";
@@ -559,7 +566,7 @@ public class GenerateFeatures implements Runnable {
 								conjExist = false;
 								
 							} else if (numInt > numOfTriples
-									&& ((nummod && deprel.startsWith("nummod"))
+									&& ((nummod && deprel.startsWith("nummod") && depIdx >= k)
 											|| !nummod)
 									){
 								if ((numInt <= maxTripleCount)
@@ -580,7 +587,7 @@ public class GenerateFeatures implements Runnable {
 						
 					} else {
 						if (numInt == numOfTriples
-								&& ((nummod && deprel.startsWith("nummod"))
+								&& ((nummod && deprel.startsWith("nummod") && depIdx >= k)
 										|| !nummod)
 								) {
 							
@@ -599,7 +606,7 @@ public class GenerateFeatures implements Runnable {
 							}
 							
 						} else if (numInt > numOfTriples
-								&& ((nummod && deprel.startsWith("nummod"))
+								&& ((nummod && deprel.startsWith("nummod") && depIdx >= k)
 										|| !nummod)
 								) {	
 							if ((numInt <= maxTripleCount)

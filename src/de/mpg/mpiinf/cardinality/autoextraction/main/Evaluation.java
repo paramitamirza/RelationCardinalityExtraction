@@ -145,7 +145,7 @@ public class Evaluation {
 	private boolean conjExist(List<String> sentence, int startIdx, int endIdx) {
 		for (int i=startIdx; i<endIdx; i++) {
 			if (sentence.get(i).toLowerCase().equals(",")
-					|| sentence.get(i).toLowerCase().equals(";")
+//					|| sentence.get(i).toLowerCase().equals(";")
 					|| sentence.get(i).toLowerCase().equals("and")
 					) {
 				return true;
@@ -312,7 +312,7 @@ public class Evaluation {
 									
 									if (pp > threshold) {
 										if (mlist.isEmpty()) {
-											n = Long.parseLong(numbers.get(keys[0]).split("#")[0]);
+											n = Long.parseLong(numbers.get(keys[k]).split("#")[0]);
 											mlist.add(mm);
 											p = pp;
 											
@@ -322,6 +322,14 @@ public class Evaluation {
 	//											p += pp;
 												n += Long.parseLong(numbers.get(keys[k]).split("#")[0]);
 												mlist.add(mm);
+											
+											} else {
+												if (pp > p) {
+													mlist.clear();
+													n = Long.parseLong(numbers.get(keys[k]).split("#")[0]);
+													mlist.add(mm);
+													p = pp;
+												}
 											}
 										}									
 									}
@@ -384,6 +392,8 @@ public class Evaluation {
 					String wikiCurid = instanceCurId.get(entityId);
 					String wikiLabel = instanceLabel.get(entityId);
 					
+//					predictedProb = predictedProb + (1.0 - highestCRFScore);	//normalize the probability score!
+					
 					if (bw != null) {
 						if (predictedProb >= minConfScore) {
 							bw.write(entityId + "\t"
@@ -405,20 +415,24 @@ public class Evaluation {
 					}
 					if (numChild > 0) {
 						available += numChild;
-						if (relaxedMatch) {
-							if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
-							else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
-							
-						} else {
-							if (numChild == predictedCardinal) tp ++;
-							else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
+						
+						if (predictedProb >= minConfScore) {
+							if (relaxedMatch) {
+								if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
+								else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
+								
+							} else {
+								if (numChild == predictedCardinal) tp ++;
+								else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
+							}
+							if (predictedCardinal > numChild) {
+								incomplete ++;
+								missing += predictedCardinal - numChild;
+							}
 						}
+						total ++;
 					}
-					if (predictedCardinal > numChild) {
-						incomplete ++;
-						missing += predictedCardinal - numChild;
-					}
-					total ++;
+					
 					entities.add(entityId);
 					
 					predictedCardinal = 0;
@@ -434,7 +448,7 @@ public class Evaluation {
 						prob = Double.valueOf(cols[cols.length-labels.length+l].split("/")[1]);
 					}
 				}
-				prob = prob / highestCRFScore;
+				
 				if (prob > threshold) {
 					nums.add(cols[3]);
 					probs.add(prob);
@@ -451,6 +465,8 @@ public class Evaluation {
 		int numChild = instanceNum.get(entityId);
 		String wikiCurid = instanceCurId.get(entityId);
 		String wikiLabel = instanceLabel.get(entityId);
+		
+//		predictedProb = predictedProb + (1.0 - highestCRFScore);	//normalize the probability score!
 		
 		if (bw != null) {
 			if (predictedProb >= minConfScore) {
@@ -471,23 +487,27 @@ public class Evaluation {
 //		} else {
 //			System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
 		}
+		
 		if (numChild > 0) {
 			available += numChild;
-			if (predictedCardinal < numChild) less ++;
-			if (relaxedMatch) {
-				if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
-				else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
-				
-			} else {
-				if (numChild == predictedCardinal) tp ++;
-				else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
+			
+			if (predictedProb >= minConfScore) {
+				if (relaxedMatch) {
+					if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
+					else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
+					
+				} else {
+					if (numChild == predictedCardinal) tp ++;
+					else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
+				}
+				if (predictedCardinal > numChild) {
+					incomplete ++;
+					missing += predictedCardinal - numChild;
+				}
 			}
+			total ++;
 		}
-		if (predictedCardinal > numChild) {
-			incomplete ++;
-			missing += predictedCardinal - numChild;
-		}
-		total ++;
+		
 		entities.add(entityId);
 		
 		predictedCardinal = 0;

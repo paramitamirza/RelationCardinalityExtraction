@@ -222,8 +222,10 @@ public class FeatureExtractionConcurrent {
 				training = false;
 			} 
 	        
+	        if (idxTrain > maxNumTrain) break;
+	        
 	        if (training 
-	        		&& (idxTrain < maxNumTrain)
+//	        		&& (idxTrain < maxNumTrain)
 //	        		&& (Integer.parseInt(quarter) <= maxNumTrain)
 	        		) {
 	        	if ((quarterPart == 0) 

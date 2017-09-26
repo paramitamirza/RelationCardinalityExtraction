@@ -230,7 +230,9 @@ public class Transform {
 				if (postPrefixLetinGreek.contains(post)) {
 					return "LatinGreek_" + word + "_" + prefixLatinGreek.get(key) + "_" + post;
 				} else if (post.isEmpty()) {
-					return "LatinGreek_" + word + "_" + prefixLatinGreek.get(key) + "_" + "null";
+					if (key.equalsIgnoreCase("duo") || key.equalsIgnoreCase("trio")) {
+						return "LatinGreek_" + word + "_" + prefixLatinGreek.get(key) + "_" + "o";
+					}
 				}
 			}
 		}
