@@ -630,7 +630,9 @@ public class GenerateFeatures implements Runnable {
 				word = ""; lemma = ""; deprel = "O"; dependent = "O";
 				
 				while (k<sent.words().size()) {
-					if (Numbers.properNoun(sent.posTag(k), sent.nerTag(k))) {
+					if (sent.word(k).startsWith("LatinGreek_")) {
+						break;
+					} else if (Numbers.properNoun(sent.posTag(k), sent.nerTag(k))) {
 						word += sent.word(k) + "_";
 						lemma = "_propernoun_";
 //						if (sent.incomingDependencyLabel(k).isPresent()) deprel += sent.incomingDependencyLabel(k).get() + "_";
