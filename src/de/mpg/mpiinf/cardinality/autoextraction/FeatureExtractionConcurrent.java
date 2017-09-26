@@ -11,8 +11,10 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -126,13 +128,22 @@ public class FeatureExtractionConcurrent {
 		BufferedReader br = new BufferedReader(new FileReader(getInputCsvFile()));
 		
 		int numTrain = ReadFromFile.countLines(this.getInputCsvFile());
-		if (!this.getInputRandomCsvFile().equals("")) {
-			numTrain = numTrain - ReadFromFile.countLines(this.getInputRandomCsvFile());
-		}
 		int maxNumTrain = Math.round(topPopular * numTrain);
 //		int maxNumTrain = Math.round(topPopular * 4);
-		int idxTrain = 0;
 		
+		Set<String> topPopularIds = new HashSet<String>();
+		line = br.readLine();
+		int idxId = 0;
+		while (line != null
+				&& idxId < maxNumTrain) {
+			wikidataId = line.split(delimiter)[0];
+			topPopularIds.add(wikidataId);
+			line = br.readLine();
+			idxId ++;
+		}
+		br.close();
+		
+		br = new BufferedReader(new FileReader(getInputCsvFile()));
 		line = br.readLine();
 		
 		//First wikidataId starts...
@@ -162,21 +173,19 @@ public class FeatureExtractionConcurrent {
         	) {
 			training = false;
 		} 
-        if (training 
-        		&& (idxTrain < maxNumTrain)
-//        		&& (Integer.parseInt(quarter) <= maxNumTrain)
-        		) {
-        	if ((quarterPart == 0) 
-        			|| (quarterPart > 0 && quarterPart == Integer.parseInt(quarter))) {
-				GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
-						wiki, wikidataId, count, curId, freqNum,
-		        		training,
-		        		nummod, compositional, 
-		        		infThreshold, countDist,
-		        		transform, transformZero, transformOne,
-		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
-				ext.run();
-				idxTrain ++;
+        if (training) {
+        	if (topPopularIds.contains(wikidataId)) {
+	        	if ((quarterPart == 0) 
+	        			|| (quarterPart > 0 && quarterPart == Integer.parseInt(quarter))) {
+					GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
+							wiki, wikidataId, count, curId, freqNum,
+			        		training,
+			        		nummod, compositional, 
+			        		infThreshold, countDist,
+			        		transform, transformZero, transformOne,
+			        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
+					ext.run();
+	        	}
         	}
         } else {
         	GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
@@ -222,23 +231,19 @@ public class FeatureExtractionConcurrent {
 				training = false;
 			} 
 	        
-	        if (idxTrain > maxNumTrain) break;
-	        
-	        if (training 
-//	        		&& (idxTrain < maxNumTrain)
-//	        		&& (Integer.parseInt(quarter) <= maxNumTrain)
-	        		) {
-	        	if ((quarterPart == 0) 
-	        			|| (quarterPart > 0 && quarterPart == Integer.parseInt(quarter))) {
-		        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
-		        			wiki, wikidataId, count, curId, freqNum,
-			        		training,
-			        		nummod, compositional, 
-			        		infThreshold, countDist,
-			        		transform, transformZero, transformOne,
-			        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
-			        executor.execute(worker);
-			        idxTrain ++;
+	        if (training) {
+	        	if (topPopularIds.contains(wikidataId)) {
+		        	if ((quarterPart == 0) 
+		        			|| (quarterPart > 0 && quarterPart == Integer.parseInt(quarter))) {
+			        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
+			        			wiki, wikidataId, count, curId, freqNum,
+				        		training,
+				        		nummod, compositional, 
+				        		infThreshold, countDist,
+				        		transform, transformZero, transformOne,
+				        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
+				        executor.execute(worker);
+		        	}
 	        	}
 	        } else {
 	        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
