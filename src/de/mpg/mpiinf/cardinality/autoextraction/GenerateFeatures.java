@@ -264,6 +264,7 @@ public class GenerateFeatures implements Runnable {
 					) {
 				word = sent.word(k);
 				lemma = "_num_";
+				if (dependent.startsWith("latingreek_")) dependent = "O";
 				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
 				labels.add(label);
 				tokenIdx ++;
