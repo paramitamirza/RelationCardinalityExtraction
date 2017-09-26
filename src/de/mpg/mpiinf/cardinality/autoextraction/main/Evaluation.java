@@ -254,7 +254,8 @@ public class Evaluation {
 		int complete, incomplete = 0, less = 0;
 		int available = 0, missing = 0;
 		int total = 0;
-		double threshold = minConfScore;
+//		double threshold = minConfScore;
+		double threshold = 0.1;
 		
 		String[] cols;
 		List<String> sentence = new ArrayList<String>();
