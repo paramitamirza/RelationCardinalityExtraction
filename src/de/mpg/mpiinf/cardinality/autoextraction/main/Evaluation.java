@@ -393,7 +393,8 @@ public class Evaluation {
 					String wikiCurid = instanceCurId.get(entityId);
 					String wikiLabel = instanceLabel.get(entityId);
 					
-					if (predictedProb > 0) predictedProb = predictedProb + (1.0 - highestCRFScore);	//normalize the probability score!
+//					if (predictedProb > 0) predictedProb = predictedProb + (1.0 - highestCRFScore);	//normalize the probability score!
+					if (predictedProb > 0) predictedProb = predictedProb / highestCRFScore;	//normalize the probability score!
 					
 					if (bw != null) {
 						if (predictedProb >= minConfScore) {
@@ -467,7 +468,8 @@ public class Evaluation {
 		String wikiCurid = instanceCurId.get(entityId);
 		String wikiLabel = instanceLabel.get(entityId);
 		
-		if (predictedProb > 0) predictedProb = predictedProb + (1.0 - highestCRFScore);	//normalize the probability score!
+//		if (predictedProb > 0) predictedProb = predictedProb + (1.0 - highestCRFScore);	//normalize the probability score!
+		if (predictedProb > 0) predictedProb = predictedProb / highestCRFScore;	//normalize the probability score!
 		
 		if (bw != null) {
 			if (predictedProb >= minConfScore) {
