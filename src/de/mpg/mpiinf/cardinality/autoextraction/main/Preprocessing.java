@@ -118,8 +118,9 @@ public class Preprocessing {
 			boolean nummod = cmd.hasOption("d");
 			boolean compositional = cmd.hasOption("s");
 			boolean transform = cmd.hasOption("x");
-			boolean transformOne = cmd.hasOption("y");
-			boolean transformZero = cmd.hasOption("z");
+			boolean ordinal = cmd.hasOption("y");
+			boolean transformOne = cmd.hasOption("1");
+			boolean transformZero = cmd.hasOption("0");
 			boolean ignoreHigher = cmd.hasOption("h");
 			
 			int ignoreFreq = -1;
@@ -137,7 +138,7 @@ public class Preprocessing {
 			int ignoreHigherLess = 0;
 			if (cmd.hasOption("h")) ignoreHigherLess = Integer.parseInt(cmd.getOptionValue("ignorehigher"));
 			
-			featExtraction.run(wiki, nummod, compositional, threshold, 
+			featExtraction.run(wiki, ordinal, nummod, compositional, threshold, 
 					transform, transformZero, transformOne, 
 					ignoreHigher, ignoreHigherLess, ignoreFreq, topPopular, quarterPart);
 		}
@@ -207,11 +208,15 @@ public class Preprocessing {
 		transform.setRequired(false);
 		options.addOption(transform);
 		
-		Option transformOne = new Option("y", "transformone", false, "Transform articles into 1");
+		Option ordinal = new Option("y", "ordinal", false, "Consider ordinals as candidates");
+		ordinal.setRequired(false);
+		options.addOption(ordinal);
+		
+		Option transformOne = new Option("1", "transform1", false, "Transform articles into 1");
 		transformOne.setRequired(false);
 		options.addOption(transformOne);
 		
-		Option transformZero = new Option("z", "transformzero", false, "Transform negative sentences into (containing) 0");
+		Option transformZero = new Option("0", "transform0", false, "Transform negative sentences into (containing) 0");
 		transformZero.setRequired(false);
 		options.addOption(transformZero);
 		

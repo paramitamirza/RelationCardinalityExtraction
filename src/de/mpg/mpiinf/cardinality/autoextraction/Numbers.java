@@ -16,9 +16,9 @@ public class Numbers {
 	private static String[] digitsArr = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
 			"eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"};
 	private static String[] tensArr = {"", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
-	private static String[] ordinalsArr = {"", "fir", "seco", "thi", "four", "fif", "six", "seven", "eigh", "nin", "ten", 
-			"eleven", "twelf", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twentie"};
-	private static String[] tenOrdinalsArr = {"", "ten", "twentie", "thirtie", "fortie", "fiftie", "sixtie", "seventie", "eightie", "ninetie"};
+	private static String[] ordinalsArr = {"", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", 
+			"eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth", "nineteenth", "twentieth"};
+	private static String[] tenOrdinalsArr = {"", "tenth", "twentieth", "thirtieth", "fortieth", "fiftieth", "sixtieth", "seventieth", "eightieth", "ninetieth"};
 	
 	public static List<String> digits = Arrays.asList(digitsArr);
 	public static List<String> tens = Arrays.asList(tensArr);
@@ -35,17 +35,24 @@ public class Numbers {
 		long number = -999; 
 		if (numStr.contains(",")) numStr = numStr.replace(",", "");
 		if (numStr.contains("-")) numStr = numStr.replace("-", "_");
+		if (numStr.contains("and_")) numStr = numStr.replace("and_", "_");
 		String[] words = numStr.split("_");
 		
 		if (words.length == 4) {
 			if (digits.contains(words[0]) && hundreds.containsKey(words[1])
 					&& tens.contains(words[2]) && digits.contains(words[3])) {
 				number = (digits.indexOf(words[0]) * hundreds.get(words[1])) + (tens.indexOf(words[2]) * 10) + digits.indexOf(words[3]);
+			} else if (digits.contains(words[0]) && hundreds.containsKey(words[1])
+					&& tens.contains(words[2]) && ordinals.contains(words[3])) {
+				number = (digits.indexOf(words[0]) * hundreds.get(words[1])) + (tens.indexOf(words[2]) * 10) + ordinals.indexOf(words[3]);
 			}
 		} else if (words.length == 3) {
 			if (hundreds.containsKey(words[0])
 					&& tens.contains(words[1]) && digits.contains(words[2])) {
 				number = (1 * hundreds.get(words[0])) + (tens.indexOf(words[1]) * 10) + digits.indexOf(words[2]);
+			} else if (hundreds.containsKey(words[0])
+					&& tens.contains(words[1]) && ordinals.contains(words[2])) {
+				number = (1 * hundreds.get(words[0])) + (tens.indexOf(words[1]) * 10) + ordinals.indexOf(words[2]);
 			}
 		} else if (words.length == 2) {
 			if (tens.contains(words[0]) && digits.contains(words[1])) {
@@ -64,8 +71,12 @@ public class Numbers {
 			else if (digits.contains(numStr)) number = digits.indexOf(numStr);
 			else if (hundreds.containsKey(numStr)) number = hundreds.get(numStr);
 			else if (numStr.matches("^-?\\d+$")) number = new Long(Long.parseLong(numStr));
-			else if (numStr.length() > 2 && ordinals.contains(numStr.substring(0, numStr.length()-2))) number = ordinals.indexOf(numStr);
-			else if (numStr.length() > 2 && tenOrdinals.contains(numStr.substring(0, numStr.length()-2))) number = tenOrdinals.indexOf(numStr) * 10;
+			else if (ordinals.contains(numStr)) number = ordinals.indexOf(numStr);
+			else if (tenOrdinals.contains(numStr)) number = tenOrdinals.indexOf(numStr) * 10;
+			else if (numStr.matches("^-?\\d+st$")) number = new Long(Long.parseLong(numStr.substring(0, numStr.length()-2)));
+			else if (numStr.matches("^-?\\d+nd$")) number = new Long(Long.parseLong(numStr.substring(0, numStr.length()-2)));
+			else if (numStr.matches("^-?\\d+rd$")) number = new Long(Long.parseLong(numStr.substring(0, numStr.length()-2)));
+			else if (numStr.matches("^-?\\d+th$")) number = new Long(Long.parseLong(numStr.substring(0, numStr.length()-2)));
 		}
 		
 		return number;
@@ -78,12 +89,17 @@ public class Numbers {
 	
 	public static boolean properNumber(String pos, String ner) {
 		if (pos.equals("CD")
-				&& !ner.equals("MONEY")
-				&& !ner.equals("PERCENT")
-				&& !ner.equals("DATE")
-				&& !ner.equals("TIME")
-				&& !ner.equals("DURATION")
-				&& !ner.equals("SET")
+				&& ner.equals("NUMBER")
+				) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static boolean properConjNumber(String pos, String ner) {
+		if (pos.equals("CC")
+				&& ner.equals("NUMBER")
 				) {
 			return true;
 		} else {
@@ -92,7 +108,25 @@ public class Numbers {
 	}
 	
 	public static boolean properOrdinal(String pos, String ner) {
-		if (pos.equals("JJ")
+		if ((pos.equals("JJ"))
+				&& ner.equals("ORDINAL")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static boolean properNumOrdinal(String pos, String ner) {
+		if (pos.equals("CD")
+				&& ner.equals("ORDINAL")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static boolean properConjOrdinal(String pos, String ner) {
+		if (pos.equals("CC")
 				&& ner.equals("ORDINAL")) {
 			return true;
 		} else {

@@ -34,6 +34,7 @@ public class GenerateFeatures implements Runnable {
 	
 	private boolean training;
 	
+	private boolean ordinal;
 	private boolean nummod;
 	private boolean compositional;
 	
@@ -55,6 +56,7 @@ public class GenerateFeatures implements Runnable {
 			WikipediaArticle wiki, String wikidataId, String count, Integer curId, 
 			String freqNum,
 			boolean training,
+			boolean ordinal,
 			boolean nummod, boolean compositional, 
 			float countInfThreshold, String countDist,
 			boolean transform, boolean transformZero, boolean transformOne,
@@ -71,6 +73,7 @@ public class GenerateFeatures implements Runnable {
 		
 		this.setTraining(training);
 		
+		this.setOrdinal(ordinal);
 		this.setNummod(nummod);
 		this.setCompositional(compositional);
 		
@@ -133,7 +136,7 @@ public class GenerateFeatures implements Runnable {
 		    				if (sent != null) {
 		    					
 		    					toPrint.append(generateFeatures(sent, j, numOfTriples, 
-		    							this.isNummod(), this.isCompositional(), 
+		    							this.isOrdinal(), this.isNummod(), this.isCompositional(), 
 		    							this.getCountInfThreshold(), this.getCountDist(),
 		    							this.isIgnoreHigher(), this.getIgnoreHigherLess(),
 		    							this.isIgnoreFreq(), this.getMaxTripleCount()).toString());
@@ -221,7 +224,7 @@ public class GenerateFeatures implements Runnable {
 	}
 	
 	private StringBuilder generateFeatures(Sentence sent, int j, int numOfTriples, 
-			boolean nummod, boolean compositional, 
+			boolean ordinal, boolean nummod, boolean compositional, 
 			double countInfThreshold, double countDist,
 			boolean ignoreHigher, int ignoreHigherLess,
 			boolean ignoreFreq, int maxTripleCount) {
@@ -448,7 +451,9 @@ public class GenerateFeatures implements Runnable {
 				word = ""; lemma = ""; deprel = "O"; dependent = "O";
 				
 				while (k<sent.words().size()) {
-					if (Numbers.properNumber(sent.posTag(k), sent.nerTag(k))) {
+					if (Numbers.properNumber(sent.posTag(k), sent.nerTag(k))
+							|| Numbers.properConjNumber(sent.posTag(k), sent.nerTag(k))
+							) {
 						word += sent.word(k) + "_";
 						lemma += sent.lemma(k) + "_";
 						if (sent.incomingDependencyLabel(k).isPresent()) deprel = sent.incomingDependencyLabel(k).get();
@@ -634,6 +639,391 @@ public class GenerateFeatures implements Runnable {
 				
 				word = ""; lemma = ""; deprel = "O"; dependent = "O";
 				
+			} else if (ordinal && Numbers.properOrdinal(pos, ner)) {						
+				word = ""; lemma = ""; deprel = "O"; dependent = "O";
+				
+				while (k<sent.words().size()) {
+					if (Numbers.properOrdinal(sent.posTag(k), sent.nerTag(k))) {
+						word += sent.word(k) + "_";
+						lemma += sent.lemma(k) + "_";
+						if (sent.incomingDependencyLabel(k).isPresent()) deprel = sent.incomingDependencyLabel(k).get();
+						if (sent.governor(k).isPresent() && deprel.equals("amod")) {
+							depIdx = sent.governor(k).get();
+							dependent = sent.lemma(sent.governor(k).get());
+						}
+						k++;
+						
+					} else {
+						break;
+					}
+				}
+				word = word.substring(0, word.length()-1);
+				lemma = lemma.substring(0, lemma.length()-1);
+				
+				numInt = Numbers.getInteger(word.toLowerCase());
+				
+				if (numInt > 0) {
+					lemma = "_ord_";
+					
+					if (compositional) {
+						if (numToAdd > 0) {
+							if (numInt == numOfTriples
+									&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+											|| !nummod)
+									) {
+								if (-(Math.log(countDist) / Math.log(2)) >= countInfThreshold) { //numOfTriples > threshold
+									if (!this.getFrequentNumbers().contains(numInt)) {
+										label = "_YES_";
+									} else {
+										label = "_MAYBE_";
+									}
+								} else {				
+									if (!this.getFrequentNumbers().contains(numInt)) {
+										label = "_MAYBE_";
+									} else {
+										label = "_NO_";	
+									}
+								}
+								numToAdd = 0;
+								idxToAdd.clear();
+								conjExist = false;
+								
+							} else {
+								if ((numToAdd+numInt) == numOfTriples
+										&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+												|| !nummod)
+										) {
+									if (conjExist && (tokenIdx-lastCompIdx) <= 5) {
+										label = "_YES_";
+										for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
+									}
+									numToAdd = 0;
+									idxToAdd.clear();
+									conjExist = false;
+									
+								} else if ((numToAdd+numInt) < numOfTriples
+										&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+												|| !nummod)
+										) {
+									label = "_NO_";
+									if (conjExist && (tokenIdx-lastCompIdx) <= 5) {
+										numToAdd += numInt;
+										idxToAdd.add(tokenIdx);
+										lastCompIdx = tokenIdx;
+									} else {
+										numToAdd = 0;
+										idxToAdd.clear();
+									}								
+									conjExist = false;
+									
+								} else {	//(numToAdd+numInt) > numOfTriples
+									if (((numToAdd+numInt) <= maxTripleCount)
+											&& (((ignoreHigherLess > 0) 
+													&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess)))
+											|| (ignoreHigherLess == 0))
+									) {
+										label = "_MAYBE_";
+									} else {
+										label = "_NO_";
+									}
+									numToAdd = 0;
+									idxToAdd.clear();
+									conjExist = false;
+								}
+							}
+							
+						} else {
+							if (numInt == numOfTriples
+									&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+											|| !nummod)
+									) {
+								if (-(Math.log(countDist) / Math.log(2)) >= countInfThreshold) { //numOfTriples > threshold
+									if (!this.getFrequentNumbers().contains(numInt)) {
+										label = "_YES_";
+									} else {
+										label = "_MAYBE_";
+									}
+								} else {				
+									if (!this.getFrequentNumbers().contains(numInt)) {
+										label = "_MAYBE_";
+									} else {
+										label = "_NO_";	
+									}
+								}
+								
+							} else if (numInt < numOfTriples
+									&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+											|| !nummod)
+									) {
+								label = "_NO_";
+								numToAdd += numInt;
+								idxToAdd.add(tokenIdx);
+								lastCompIdx = tokenIdx;
+								conjExist = false;
+								
+							} else if (numInt > numOfTriples
+									&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+											|| !nummod)
+									){
+								if ((numInt <= maxTripleCount)
+										&& (((ignoreHigherLess > 0) 
+												&& (numInt <= (numOfTriples + ignoreHigherLess)))
+										|| (ignoreHigherLess == 0))
+								) {
+									label = "_MAYBE_";
+								} else {
+									label = "_NO_";
+								}
+								conjExist = false;
+								
+							} else {
+								label = "_NO_";
+							}
+						}
+						
+					} else {
+						if (numInt == numOfTriples
+								&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+										|| !nummod)
+								) {
+							
+							if (-(Math.log(countDist) / Math.log(2)) >= countInfThreshold) { //numOfTriples > threshold
+								if (!this.getFrequentNumbers().contains(numInt)) {
+									label = "_YES_";
+								} else {
+									label = "_MAYBE_";
+								}
+							} else {				
+								if (!this.getFrequentNumbers().contains(numInt)) {
+									label = "_MAYBE_";
+								} else {
+									label = "_NO_";	
+								}
+							}
+							
+						} else if (numInt > numOfTriples
+								&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+										|| !nummod)
+								) {	
+							if ((numInt <= maxTripleCount)
+									&& (((ignoreHigherLess > 0) 
+											&& (numInt <= (numOfTriples + ignoreHigherLess)))
+									|| (ignoreHigherLess == 0))
+							) {
+								label = "_MAYBE_";
+							} else {
+								label = "_NO_";
+							}
+
+						} else {	//numInt < numOfTriples
+							label = "_NO_";
+						}
+					}
+				}
+				
+//				sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
+//				sb.append(System.getProperty("line.separator"));
+				k--;
+				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
+				labels.add(label);
+				tokenIdx ++;
+				
+				word = ""; lemma = ""; deprel = "O"; dependent = "O";
+				
+			} else if (ordinal && Numbers.properNumOrdinal(pos, ner)) {						
+				word = ""; lemma = ""; deprel = "O"; dependent = "O";
+				
+				while (k<sent.words().size()) {
+					if (Numbers.properNumOrdinal(sent.posTag(k), sent.nerTag(k))
+							|| Numbers.properOrdinal(sent.posTag(k), sent.nerTag(k))
+							|| Numbers.properConjOrdinal(sent.posTag(k), sent.nerTag(k))
+							) {
+						word += sent.word(k) + "_";
+						lemma += sent.lemma(k) + "_";
+						if (sent.incomingDependencyLabel(k).isPresent()) deprel = sent.incomingDependencyLabel(k).get();
+						if (sent.governor(k).isPresent() && deprel.equals("amod")) {
+							depIdx = sent.governor(k).get();
+							dependent = sent.lemma(sent.governor(k).get());
+						}
+						k++;
+						
+					} else {
+						break;
+					}
+				}
+				word = word.substring(0, word.length()-1);
+				lemma = lemma.substring(0, lemma.length()-1);
+				
+				numInt = Numbers.getInteger(word.toLowerCase());
+				
+				if (numInt > 0) {
+					lemma = "_ord_";
+					
+					if (compositional) {
+						if (numToAdd > 0) {
+							if (numInt == numOfTriples
+									&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+											|| !nummod)
+									) {
+								if (-(Math.log(countDist) / Math.log(2)) >= countInfThreshold) { //numOfTriples > threshold
+									if (!this.getFrequentNumbers().contains(numInt)) {
+										label = "_YES_";
+									} else {
+										label = "_MAYBE_";
+									}
+								} else {				
+									if (!this.getFrequentNumbers().contains(numInt)) {
+										label = "_MAYBE_";
+									} else {
+										label = "_NO_";	
+									}
+								}
+								numToAdd = 0;
+								idxToAdd.clear();
+								conjExist = false;
+								
+							} else {
+								if ((numToAdd+numInt) == numOfTriples
+										&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+												|| !nummod)
+										) {
+									if (conjExist && (tokenIdx-lastCompIdx) <= 5) {
+										label = "_YES_";
+										for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
+									}
+									numToAdd = 0;
+									idxToAdd.clear();
+									conjExist = false;
+									
+								} else if ((numToAdd+numInt) < numOfTriples
+										&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+												|| !nummod)
+										) {
+									label = "_NO_";
+									if (conjExist && (tokenIdx-lastCompIdx) <= 5) {
+										numToAdd += numInt;
+										idxToAdd.add(tokenIdx);
+										lastCompIdx = tokenIdx;
+									} else {
+										numToAdd = 0;
+										idxToAdd.clear();
+									}								
+									conjExist = false;
+									
+								} else {	//(numToAdd+numInt) > numOfTriples
+									if (((numToAdd+numInt) <= maxTripleCount)
+											&& (((ignoreHigherLess > 0) 
+													&& ((numToAdd+numInt) <= (numOfTriples + ignoreHigherLess)))
+											|| (ignoreHigherLess == 0))
+									) {
+										label = "_MAYBE_";
+									} else {
+										label = "_NO_";
+									}
+									numToAdd = 0;
+									idxToAdd.clear();
+									conjExist = false;
+								}
+							}
+							
+						} else {
+							if (numInt == numOfTriples
+									&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+											|| !nummod)
+									) {
+								if (-(Math.log(countDist) / Math.log(2)) >= countInfThreshold) { //numOfTriples > threshold
+									if (!this.getFrequentNumbers().contains(numInt)) {
+										label = "_YES_";
+									} else {
+										label = "_MAYBE_";
+									}
+								} else {				
+									if (!this.getFrequentNumbers().contains(numInt)) {
+										label = "_MAYBE_";
+									} else {
+										label = "_NO_";	
+									}
+								}
+								
+							} else if (numInt < numOfTriples
+									&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+											|| !nummod)
+									) {
+								label = "_NO_";
+								numToAdd += numInt;
+								idxToAdd.add(tokenIdx);
+								lastCompIdx = tokenIdx;
+								conjExist = false;
+								
+							} else if (numInt > numOfTriples
+									&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+											|| !nummod)
+									){
+								if ((numInt <= maxTripleCount)
+										&& (((ignoreHigherLess > 0) 
+												&& (numInt <= (numOfTriples + ignoreHigherLess)))
+										|| (ignoreHigherLess == 0))
+								) {
+									label = "_MAYBE_";
+								} else {
+									label = "_NO_";
+								}
+								conjExist = false;
+								
+							} else {
+								label = "_NO_";
+							}
+						}
+						
+					} else {
+						if (numInt == numOfTriples
+								&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+										|| !nummod)
+								) {
+							
+							if (-(Math.log(countDist) / Math.log(2)) >= countInfThreshold) { //numOfTriples > threshold
+								if (!this.getFrequentNumbers().contains(numInt)) {
+									label = "_YES_";
+								} else {
+									label = "_MAYBE_";
+								}
+							} else {				
+								if (!this.getFrequentNumbers().contains(numInt)) {
+									label = "_MAYBE_";
+								} else {
+									label = "_NO_";	
+								}
+							}
+							
+						} else if (numInt > numOfTriples
+								&& ((nummod && deprel.startsWith("amod") && depIdx >= k)
+										|| !nummod)
+								) {	
+							if ((numInt <= maxTripleCount)
+									&& (((ignoreHigherLess > 0) 
+											&& (numInt <= (numOfTriples + ignoreHigherLess)))
+									|| (ignoreHigherLess == 0))
+							) {
+								label = "_MAYBE_";
+							} else {
+								label = "_NO_";
+							}
+
+						} else {	//numInt < numOfTriples
+							label = "_NO_";
+						}
+					}
+				}
+				
+//				sb.append(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, deprel, label));
+//				sb.append(System.getProperty("line.separator"));
+				k--;
+				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
+				labels.add(label);
+				tokenIdx ++;
+				
+				word = ""; lemma = ""; deprel = "O"; dependent = "O";
+				
 			} else if (Numbers.properNoun(pos, ner)) {
 				word = ""; lemma = ""; deprel = "O"; dependent = "O";
 				
@@ -785,6 +1175,14 @@ public class GenerateFeatures implements Runnable {
 
 	public void setRelName(String relName) {
 		this.relName = relName;
+	}
+	
+	public boolean isOrdinal() {
+		return ordinal;
+	}
+
+	public void setOrdinal(boolean ordinal) {
+		this.ordinal = ordinal;
 	}
 	
 	public boolean isNummod() {

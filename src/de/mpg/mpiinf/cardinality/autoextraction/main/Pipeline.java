@@ -73,8 +73,9 @@ public class Pipeline {
 		boolean nummod = cmd.hasOption("d");
 		boolean compositional = cmd.hasOption("s");
 		boolean transform = cmd.hasOption("x");
-		boolean transformOne = cmd.hasOption("y");
-		boolean transformZero = cmd.hasOption("z");
+		boolean ordinal = cmd.hasOption("y");
+		boolean transformOne = cmd.hasOption("1");
+		boolean transformZero = cmd.hasOption("0");
 		boolean ignoreHigher = cmd.hasOption("h");
 		
 		int ignoreFreq = -1;
@@ -92,7 +93,7 @@ public class Pipeline {
 		int ignoreHigherLess = -1;
 		if (cmd.hasOption("h")) ignoreHigherLess = Integer.parseInt(cmd.getOptionValue("ignorehigher"));
 		
-		featExtraction.run(wiki, nummod, compositional, threshold, 
+		featExtraction.run(wiki, ordinal, nummod, compositional, threshold, 
 				transform, transformZero, transformOne, 
 				ignoreHigher, ignoreHigherLess, ignoreFreq, topPopular, quarterPart);
 		
@@ -126,13 +127,16 @@ public class Pipeline {
 			resultFile = cmd.getOptionValue("result");
 		}
 		
-		float minConfScore = (float)0.1;
+		float minConfScore = (float)0.0;
 		if (cmd.hasOption("v")) minConfScore = Float.parseFloat(cmd.getOptionValue("confidence"));
+		
+		float zScore = (float)100.0;
+		if (cmd.hasOption("z")) zScore = Float.parseFloat(cmd.getOptionValue("zscore"));
 		
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
 		String crfOutPath = evalData.replace(".data", ".out");
-		eval.evaluate(relName, testCsvFile, delimiter, crfOutPath, labels, predictionFile, resultFile, compositional, false, minConfScore, trainSize, false);
+		eval.evaluate(relName, testCsvFile, delimiter, crfOutPath, labels, predictionFile, resultFile, compositional, false, minConfScore, zScore, trainSize, false);
 		
 		long endTime   = System.currentTimeMillis();
 		float totalTime = (endTime - startTime)/(float)1000;
@@ -218,11 +222,15 @@ public class Pipeline {
 		transform.setRequired(false);
 		options.addOption(transform);
 		
-		Option transformOne = new Option("y", "transformone", false, "Transform articles into 1");
+		Option ordinal = new Option("y", "ordinal", false, "Consider ordinals as candidates");
+		ordinal.setRequired(false);
+		options.addOption(ordinal);
+		
+		Option transformOne = new Option("1", "transform1", false, "Transform articles into 1");
 		transformOne.setRequired(false);
 		options.addOption(transformOne);
 		
-		Option transformZero = new Option("z", "transformzero", false, "Transform negative sentences into (containing) 0");
+		Option transformZero = new Option("0", "transform0", false, "Transform negative sentences into (containing) 0");
 		transformZero.setRequired(false);
 		options.addOption(transformZero);
 		
@@ -249,6 +257,10 @@ public class Pipeline {
 		Option minConfScore = new Option("v", "confidence", true, "Minimum confidence score");
 		minConfScore.setRequired(false);
 		options.addOption(minConfScore);
+		
+		Option zScoreRange = new Option("z", "zscore", true, "Maximum range of z-score");
+		zScoreRange.setRequired(false);
+		options.addOption(zScoreRange);
 		
 		return options;
 	}

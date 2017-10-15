@@ -86,10 +86,10 @@ public class FeatureExtractionConcurrent {
 		}
 		
 		WikipediaArticle wiki = new WikipediaArticle();
-		featExtraction.run(wiki, true, false, 0, false, false, false, false, -99, 0, (float) 1.0, 0);
+		featExtraction.run(wiki, false, true, false, 0, false, false, false, false, -99, 0, (float) 1.0, 0);
 	}
 	
-	public void run(WikipediaArticle wiki, boolean nummod, boolean compositional, float infThreshold,
+	public void run(WikipediaArticle wiki, boolean ordinal, boolean nummod, boolean compositional, float infThreshold,
 			boolean transform, boolean transformZero, boolean transformOne,
 			boolean ignoreHigher, int ignoreHigherLess,
 			int ignoreFreq, float topPopular, int quarterPart) throws IOException, InterruptedException {
@@ -180,7 +180,7 @@ public class FeatureExtractionConcurrent {
 					GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
 							wiki, wikidataId, count, curId, freqNum,
 			        		training,
-			        		nummod, compositional, 
+			        		ordinal, nummod, compositional, 
 			        		infThreshold, countDist,
 			        		transform, transformZero, transformOne,
 			        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
@@ -191,7 +191,7 @@ public class FeatureExtractionConcurrent {
         	GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
         			wiki, wikidataId, count, curId, freqNum,
 	        		training,
-	        		nummod, compositional, 
+	        		ordinal, nummod, compositional, 
 	        		infThreshold, countDist,
 	        		transform, transformZero, transformOne,
 	        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
@@ -238,7 +238,7 @@ public class FeatureExtractionConcurrent {
 			        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
 			        			wiki, wikidataId, count, curId, freqNum,
 				        		training,
-				        		nummod, compositional, 
+				        		ordinal, nummod, compositional, 
 				        		infThreshold, countDist,
 				        		transform, transformZero, transformOne,
 				        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
@@ -249,7 +249,7 @@ public class FeatureExtractionConcurrent {
 	        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
 	        			wiki, wikidataId, count, curId, freqNum,
 		        		training,
-		        		nummod, compositional, 
+		        		ordinal, nummod, compositional, 
 		        		infThreshold, countDist,
 		        		transform, transformZero, transformOne,
 		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);

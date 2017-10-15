@@ -8,12 +8,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -22,8 +26,11 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import de.mpg.mpiinf.cardinality.autoextraction.Numbers;
+import edu.stanford.nlp.util.Pair;
 import edu.stanford.nlp.util.StringUtils;
 
 public class Evaluation {
@@ -67,13 +74,16 @@ public class Evaluation {
 		String[] labels = {"O", "_YES_"};
 		boolean compositional = cmd.hasOption("c");
 		
-		float minConfScore = (float)0.1;
+		float minConfScore = (float)0.0;
 		if (cmd.hasOption("v")) minConfScore = Float.parseFloat(cmd.getOptionValue("confidence"));
+		
+		float zScore = (float)100.0;
+		if (cmd.hasOption("z")) zScore = Float.parseFloat(cmd.getOptionValue("zscore"));
 		
 		boolean relaxed = false;
 		if (cmd.hasOption("x")) relaxed = true;
 		
-		eval.evaluate(relName, csvPath, delimiter, crfOutPath, labels, outputPath, resultPath, compositional, false, minConfScore, 0, relaxed);
+		eval.evaluate(relName, csvPath, delimiter, crfOutPath, labels, outputPath, resultPath, compositional, false, minConfScore, zScore, 0, relaxed);
 	}
 	
 	public static Options getEvalOptions() {
@@ -110,6 +120,10 @@ public class Evaluation {
 		Option minConfScore = new Option("v", "confidence", true, "Minimum confidence score");
 		minConfScore.setRequired(false);
 		options.addOption(minConfScore);
+		
+		Option zScoreRange = new Option("z", "zscore", true, "Maximum range of z-score");
+		zScoreRange.setRequired(false);
+		options.addOption(zScoreRange);
 		
 		Option relaxedMatch = new Option("x", "relaxed", false, "Relaxed match to the triple count (less than count is considered correct)");
 		relaxedMatch.setRequired(false);
@@ -154,7 +168,7 @@ public class Evaluation {
 		return false;
 	}
 	
-	private double getHighestCRFScore(String crfOutPath, String[] labels) throws IOException {
+	private DescriptiveStatistics getDescriptiveStatistics(String crfOutPath, String[] labels, long maxNum) throws IOException {
 		BufferedReader br; String line;
 		
 		//Read result (.out) file
@@ -162,20 +176,35 @@ public class Evaluation {
 		
 		Double prob = 0.0, highestProb = 0.0;
 		List<String> nums = new ArrayList<String>();
+		List<String> ords = new ArrayList<String>();
 		List<Double> probs = new ArrayList<Double>();
 		String[] cols;
 		String entityId = null;
 		Set<String> entities = new HashSet<String>();
+		double threshold = 0.1;
 		
-		line = br.readLine();
+		DescriptiveStatistics stats = new DescriptiveStatistics();
+		
+		line = br.readLine();	//CRF sentence score
+		
 		while (line != null) {
 			
-			if(!StringUtils.join(nums, "").equals("")) {
-				Map<Integer, String> numbers = extractNumber(nums, probs);
+			if(!StringUtils.join(nums, "").equals("")
+					|| !StringUtils.join(ords, "").equals("")) {
+				
+				Map<Integer, String> numbers = extractNumber(nums, probs, maxNum);
+				Map<Integer, String> ordinals = extractNumber(ords, probs, maxNum);
 				
 				for (Integer key : numbers.keySet()) {
 					prob = Double.parseDouble(numbers.get(key).split("#")[1]);
-					if (prob > highestProb) highestProb = prob;
+					if (prob > threshold)
+						stats.addValue(prob);
+				}
+				
+				for (Integer key : ordinals.keySet()) {
+					prob = Double.parseDouble(ordinals.get(key).split("#")[1]);
+					if (prob > threshold)
+						stats.addValue(prob);
 				}
 			}
 				
@@ -184,7 +213,6 @@ public class Evaluation {
 			nums = new ArrayList<String>();
 			probs = new ArrayList<Double>();
 			
-			line = br.readLine();
 			line = br.readLine();
 			
 			while (line != null && !line.trim().equals("")) {
@@ -208,35 +236,79 @@ public class Evaluation {
 				
 				line = br.readLine();
 			}
+			
+			line = br.readLine();
 		}
 		br.close();
-		return highestProb;
+		
+		return stats;
+	}
+	
+	private double getMedian(DescriptiveStatistics stats) {
+		int size = stats.getSortedValues().length;
+		if (stats.getSortedValues().length% 2 == 0)
+		    return ((double) stats.getSortedValues()[size/2] + (double) stats.getSortedValues()[size/2 - 1]) / 2;
+		else
+		    return (double) stats.getSortedValues()[size/2];
+	}
+	
+	private double getMAD(DescriptiveStatistics stats) {
+		DescriptiveStatistics st = new DescriptiveStatistics();
+		
+		double median = getMedian(stats);
+		
+		for (double d : stats.getValues()) {
+			st.addValue(Math.abs(d - median));
+		}
+		
+		return getMedian(st);
 	}
 	
 	public void evaluate(String relName, String csvPath, String delimiter, String crfOutPath, 
 			String[] labels, String outPath, String resultPath,
 			boolean addSameSentence, boolean addDiffSentence,
-			float minConfScore, long trainSize, boolean relaxedMatch) throws IOException {
+			float tConf, float zRange, long trainSize, boolean relaxedMatch) throws IOException {
 		
 		long startTime = System.currentTimeMillis();
-		double highestCRFScore = getHighestCRFScore(crfOutPath, labels);
-		System.out.println("Highest CRF score: " + highestCRFScore);
+		
 		System.out.print("Evaluate CRF++ output file... ");
 		
 		//Read .csv file
-		BufferedReader br; String line;
+		BufferedReader br; 
+		String line;
+		
 		Map<String, Integer> instanceNum = new HashMap<String, Integer>();
 		Map<String, String> instanceCurId = new HashMap<String, String>();
 		Map<String, String> instanceLabel = new HashMap<String, String>();
+		
+		int num = 0;
+		long maxNum = 0;
+		
 		br = new BufferedReader(new FileReader(csvPath));
 		line = br.readLine();
 		while (line != null) {
-			instanceNum.put(line.split(delimiter)[0], Integer.parseInt(line.split(delimiter)[1]));
+			num = Integer.parseInt(line.split(delimiter)[1]);
+			instanceNum.put(line.split(delimiter)[0], num);
+			if (num > maxNum) maxNum = num;
 			instanceCurId.put(line.split(delimiter)[0], line.split(delimiter)[2]);
 			instanceLabel.put(line.split(delimiter)[0], line.split(delimiter)[3]);
 			line = br.readLine();
 		}
 		br.close();
+		
+		boolean zscore = true;
+		
+		DescriptiveStatistics dstats = new DescriptiveStatistics();
+//		SummaryStatistics sstats = new SummaryStatistics();
+		double median = 0.0, mad = 0.0;
+		
+//		if (zscore) {
+			dstats = getDescriptiveStatistics(crfOutPath, labels, maxNum);
+			median = getMedian(dstats);
+			mad = getMAD(dstats);
+//		} else {
+//			sstats = getSummaryStatistics(crfOutPath, labels);
+//		}
 		
 		//Read result (.out) file
 		br = new BufferedReader(new FileReader(crfOutPath));
@@ -249,9 +321,12 @@ public class Evaluation {
 		List<String> nums = new ArrayList<String>();
 		List<Double> probs = new ArrayList<Double>();
 		
+		List<String> ords = new ArrayList<String>();
+		List<Double> oprobs = new ArrayList<Double>();
+		
 		int tp = 0;
 		int fp = 0;
-		int complete, incomplete = 0, less = 0;
+		int complete = 0, incomplete = 0, less = 0;
 		int available = 0, missing = 0;
 		int total = 0;
 //		double threshold = minConfScore;
@@ -260,23 +335,32 @@ public class Evaluation {
 		String[] cols;
 		List<String> sentence = new ArrayList<String>();
 		String entityId = null;
-		line = "";
 		
-		long predictedCardinal = 0;
-		double predictedProb = 0.0;
+		long predictedCardinal = 0, predictedOrdinal = 0;
+		double predictedProb = 0.0, predictedProbZ = 0.0, predictedProbS = 0.0;
+		double predictedOProb = 0.0, predictedOProbZ = 0.0, predictedOProbS = 0.0;
 		int numPredicted = 0;
-		String evidence = "";
+		String evidence = "", evidenceo = "";
 		
 		Set<String> entities = new HashSet<String>();
 		
+		line = br.readLine();	//CRF sentence score
+		
 		while (line != null) {
 			
-			if(!StringUtils.join(nums, "").equals("")) {
-				Map<Integer, String> numbers = extractNumber(nums, probs);
-				long n = 0;
+			if(!StringUtils.join(nums, "").equals("")
+					|| !StringUtils.join(ords, "").equals("")) {
+				
+				Map<Integer, String> numbers = extractNumber(nums, probs, maxNum);
+				Map<Integer, String> ordinals = extractNumber(ords, oprobs, maxNum);
+				
+				long n = 0, no = 0;
 				double p = 0.0, pp;
+				double po = 0.0, ppo;
 				int m = 0, mm;
+				int mo = 0, mmo;
 				List<Integer> mlist = new ArrayList<Integer>();
+				List<Integer> mlisto = new ArrayList<Integer>();
 				
 				if (!numbers.isEmpty()) {
 				
@@ -355,32 +439,63 @@ public class Evaluation {
 					}
 				}
 				
-				if (addDiffSentence) {	
-					//When there are more than one sentences, add them up
-					predictedCardinal += n;
-					predictedProb += p;
-					evidence += wordsToSentence(sentence, mlist) + "|";
-					numPredicted++;
-					predictedProb = predictedProb / numPredicted;
+				if (!ordinals.isEmpty()) {
 					
-				} else {
+					//When there are more than one in a sentence, choose the most probable
+					for (Integer key : ordinals.keySet()) {
+						ppo = Double.parseDouble(ordinals.get(key).split("#")[1]);
+						mmo = key;
+						if (ppo > threshold) {
+							if (ppo > po) {
+								no = Long.parseLong(ordinals.get(key).split("#")[0]);
+								po = ppo;
+								mo = mmo;
+							} else if (ppo == po) {
+								if (Long.parseLong(ordinals.get(key).split("#")[0]) >= no) {
+									no = Long.parseLong(ordinals.get(key).split("#")[0]);
+									po = ppo;
+									mo = mmo;
+								}
+							}
+						}
+					}
+					mlisto.add(mo);
+				}
+				
+//				if (addDiffSentence) {	
+//					//When there are more than one sentences, add them up
+//					predictedCardinal += n;
+//					predictedProb += p;
+//					evidence += wordsToSentence(sentence, mlist) + "|";
+//					numPredicted++;
+//					predictedProb = predictedProb / numPredicted;
+//					
+//				} else {
 					//When there are more than one sentences, choose the most probable
 					if (p > predictedProb) {
 						predictedCardinal = n;
 						predictedProb = p;
-						
 						evidence = wordsToSentence(sentence, mlist);
 					}
-				}
+					
+					if (po > predictedOProb) {
+						predictedOrdinal = no;
+						predictedOProb = po;
+						evidenceo = wordsToSentence(sentence, mlisto);
+					}
+//				}
 			}
 			
 			//Sentence starts			
 			
 			nums = new ArrayList<String>();
 			probs = new ArrayList<Double>();
+			
+			ords = new ArrayList<String>();
+			oprobs = new ArrayList<Double>();
+			
 			sentence = new ArrayList<String>();
 			
-			line = br.readLine();
 			line = br.readLine();
 			
 			while (line != null && !line.trim().equals("")) {
@@ -393,32 +508,50 @@ public class Evaluation {
 					String wikiCurid = instanceCurId.get(entityId);
 					String wikiLabel = instanceLabel.get(entityId);
 					
-//					if (predictedProb > 0) predictedProb = predictedProb + (1.0 - highestCRFScore);	//normalize the probability score!
-					if (predictedProb > 0) predictedProb = predictedProb / highestCRFScore;	//normalize the probability score!
+					predictedProbZ = 0.0; predictedProbS = 0.0;
+					if (predictedProb > 0) predictedProbZ = 0.6745 * (predictedProb - median) / mad;	//modified z-score: normalize the probability score!						
+					if (predictedProb > 0) predictedProbS = (predictedProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
+						
+					predictedOProbZ = 0.0; predictedOProbS = 0.0;
+					if (predictedOProb > 0) predictedOProbZ = 0.6745 * (predictedOProb - median) / mad;	//modified z-score: normalize the probability score!						
+					if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
+					
+					if (predictedOrdinal > predictedCardinal
+							&& predictedOProbS > predictedProbS) {
+						predictedCardinal = predictedOrdinal;
+						predictedProbS = predictedOProbS;
+						evidence = evidenceo;
+					}
 					
 					if (bw != null) {
-						if (predictedProb >= minConfScore) {
+						if (
+								(tConf == 0 && predictedProb > 0)
+								||
+								(tConf > 0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+								){
 							bw.write(entityId + "\t"
 									+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t"
 									+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
 									+ numChild + "\t" 
 									+ predictedCardinal + "\t" 
-									+ predictedProb + "\t" 
+									+ predictedProbS + "\t" 
 									+ evidence);
-						} else {
-							bw.write(entityId + "\t" 
-									+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t" 
-									+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
-									+ numChild + "\t" + 0 + "\t" + 0 + "\t" + "");
+							bw.newLine();
+//						} else {
+//							bw.write(entityId + "\t" 
+//									+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t" 
+//									+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
+//									+ numChild + "\t" + 0 + "\t" + 0 + "\t" + "");
 						}
-						bw.newLine();
-//					} else {
-//						System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
 					}
-					if (numChild > 0) {
+					if (numChild >= 0) {
 						available += numChild;
 						
-						if (predictedProb >= minConfScore) {
+						if (
+								(tConf == 0 && predictedProb > 0)
+								||
+								(tConf > 0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+								){
 							if (relaxedMatch) {
 								if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
 								else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
@@ -427,9 +560,13 @@ public class Evaluation {
 								if (numChild == predictedCardinal) tp ++;
 								else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
 							}
-							if (predictedCardinal > numChild) {
+							if (predictedCardinal == numChild) {
+								complete ++;
+							} else if (predictedCardinal > numChild) {
 								incomplete ++;
 								missing += predictedCardinal - numChild;
+							} else {
+								less ++;
 							}
 						}
 						total ++;
@@ -439,8 +576,13 @@ public class Evaluation {
 					
 					predictedCardinal = 0;
 					predictedProb = 0.0;
-					numPredicted = 0;
 					evidence = "";
+					
+					predictedOrdinal = 0;
+					predictedOProb = 0.0;
+					evidenceo = "";
+					
+					numPredicted = 0;
 				}
 				
 				entityId = cols[0];
@@ -451,16 +593,33 @@ public class Evaluation {
 					}
 				}
 				
-				if (prob > threshold) {
+				if (prob > threshold 
+						&& !cols[4].equals("_ord_")) {
+					
 					nums.add(cols[3]);
 					probs.add(prob);
+					
 				} else {
 					nums.add("");
 					probs.add(0.0);
 				}
 				
+				if (prob > threshold 
+						&& cols[4].equals("_ord_")) {
+					
+					ords.add(cols[3]);
+					oprobs.add(prob);
+					
+				} else {
+					ords.add("");
+					oprobs.add(0.0);
+				}
+				
 				line = br.readLine();
 			}
+			
+			line = br.readLine();
+			
 		}
 		
 		//Last entity
@@ -468,33 +627,53 @@ public class Evaluation {
 		String wikiCurid = instanceCurId.get(entityId);
 		String wikiLabel = instanceLabel.get(entityId);
 		
-//		if (predictedProb > 0) predictedProb = predictedProb + (1.0 - highestCRFScore);	//normalize the probability score!
-		if (predictedProb > 0) predictedProb = predictedProb / highestCRFScore;	//normalize the probability score!
+		predictedProbZ = 0.0; predictedProbS = 0.0;
+		if (predictedProb > 0) predictedProbZ = 0.6745 * (predictedProb - median) / mad;	//modified z-score: normalize the probability score!						
+		if (predictedProb > 0) predictedProbS = (predictedProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
+			
+		predictedOProbZ = 0.0; predictedOProbS = 0.0;
+		if (predictedOProb > 0) predictedOProbZ = 0.6745 * (predictedOProb - median) / mad;	//modified z-score: normalize the probability score!						
+		if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
 		
+		if (predictedOrdinal > predictedCardinal
+				&& predictedOProbS > predictedProbS) {
+			predictedCardinal = predictedOrdinal;
+			predictedProbS = predictedOProbS;
+			evidence = evidenceo;
+		}			
+			
 		if (bw != null) {
-			if (predictedProb >= minConfScore) {
+			if (
+					(tConf == 0 && predictedProb > 0)
+					||
+					(tConf > 0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+					){
 				bw.write(entityId + "\t"
 						+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t"
 						+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
 						+ numChild + "\t" 
 						+ predictedCardinal + "\t" 
-						+ predictedProb + "\t" 
+						+ predictedProbS + "\t" 
 						+ evidence);
-			} else {
-				bw.write(entityId + "\t" 
-						+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t" 
-						+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
-						+ numChild + "\t" + 0 + "\t" + 0 + "\t" + "");
+				bw.newLine();
+//			} else {
+//				bw.write(entityId + "\t" 
+//						+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t" 
+//						+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
+//						+ numChild + "\t" + 0 + "\t" + 0 + "\t" + "");
 			}
-			bw.newLine();
 //		} else {
 //			System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
 		}
 		
-		if (numChild > 0) {
+		if (numChild >= 0) {
 			available += numChild;
 			
-			if (predictedProb >= minConfScore) {
+			if (
+					(tConf == 0 && predictedProb > 0)
+					||
+					(tConf > 0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+					){
 				if (relaxedMatch) {
 					if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
 					else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
@@ -503,9 +682,13 @@ public class Evaluation {
 					if (numChild == predictedCardinal) tp ++;
 					else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
 				}
-				if (predictedCardinal > numChild) {
+				if (predictedCardinal == numChild) {
+					complete ++;
+				} else if (predictedCardinal > numChild) {
 					incomplete ++;
 					missing += predictedCardinal - numChild;
+				} else {
+					less ++;
 				}
 			}
 			total ++;
@@ -515,8 +698,13 @@ public class Evaluation {
 		
 		predictedCardinal = 0;
 		predictedProb = 0.0;
-		numPredicted = 0;
 		evidence = "";
+		
+		predictedOrdinal = 0;
+		predictedOProb = 0.0;
+		evidenceo = "";
+		
+		numPredicted = 0;
 		
 		br.close();
 		if (bw != null) bw.close();
@@ -529,8 +717,6 @@ public class Evaluation {
 //		double recall = (double)tp / instanceNum.size();
 		double recall = (double)tp / (double)total;
 		double fscore = (2 * precision * recall) / (precision + recall);
-		
-		complete = tp;
 		
 		if (resultPath != null) {
 			bw = new BufferedWriter(new FileWriter(resultPath, true));
@@ -554,7 +740,7 @@ public class Evaluation {
 	}
 	
 	//TODO Change the key, should be the index
-	public Map<Integer, String> extractNumber(List<String> nums, List<Double> probs) {
+	public Map<Integer, String> extractNumber(List<String> nums, List<Double> probs, long maxNum) {
 		Map<Integer, String> numTriple = new LinkedHashMap<Integer, String>();
 		String number = "";
 		Double prob = 0.0;
@@ -566,7 +752,9 @@ public class Evaluation {
 				if (number.startsWith("LatinGreek_")) {
 					numTriple.put(i, number.split("_")[2] + "#" + prob);
 					
-				} else if (Numbers.getInteger(number) > 0) {
+				} else if (Numbers.getInteger(number) > 0 
+						&& Numbers.getInteger(number) <= maxNum
+						) {
 					numTriple.put(i, Numbers.getInteger(number) + "#" + prob);
 				
 				} else if (number.equals("a") || number.equals("an")) {
