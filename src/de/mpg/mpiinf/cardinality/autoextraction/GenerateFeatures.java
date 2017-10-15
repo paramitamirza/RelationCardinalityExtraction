@@ -276,6 +276,19 @@ public class GenerateFeatures implements Runnable {
 				labels.add(label);
 				tokenIdx ++;
 				
+			} else if (!this.isTraining()
+					&& this.isTransformZero()
+					&& sent.word(k).equals("no")
+					&& pos.equals("DT")
+					&& deprel.equals("neg")
+					) {
+				word = sent.word(k);
+				lemma = sent.lemma(k);
+				if (!dependent.equals("O")) lemma = "_num_";
+				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
+				labels.add(label);
+				tokenIdx ++;
+				
 			} else if (sent.word(k).startsWith("LatinGreek_")) {
 				word = sent.word(k).split("_")[0] + "_" + sent.word(k).split("_")[1] + "_" + sent.word(k).split("_")[2];
 				lemma = "_" + sent.word(k).split("_")[3] + "_";
