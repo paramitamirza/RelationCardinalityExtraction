@@ -362,7 +362,7 @@ public class Evaluation {
 		int fp = 0;
 		int complete = 0, incomplete = 0, less = 0;
 		int available = 0, missing = 0;
-		int total = 0;
+		int total = 0, ctotal = 0;
 //		double threshold = minConfScore;
 		double threshold = 0.1;
 		
@@ -622,6 +622,7 @@ public class Evaluation {
 						}
 						total ++;
 					}
+					ctotal ++;
 					
 					entities.add(entityId);
 					
@@ -766,7 +767,8 @@ public class Evaluation {
 			}
 			total ++;
 		}
-
+		
+		ctotal ++;
 
 		entities.add(entityId);
 		
@@ -785,7 +787,7 @@ public class Evaluation {
 		
 		long endTime   = System.currentTimeMillis();
 		float totalTime = (endTime - startTime)/(float)1000;
-		System.out.println("done [ " + totalTime + " sec].");
+		System.out.println("done [ " + totalTime + " sec] for " + ctotal + " entities.");
 		
 		double precision = (double)tp / (double)(tp + fp);
 //		double recall = (double)tp / instanceNum.size();
