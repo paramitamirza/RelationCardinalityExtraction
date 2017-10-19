@@ -696,76 +696,76 @@ public class Evaluation {
 			
 		predictedOProbZ = 0.0; predictedOProbS = 0.0;
 		if (addOrdinals) {
-                         if (predictedOProb > 0 && madO > 0.0) predictedOProbZ = 0.6745 * (predictedOProb - medianO) / madO;     //modified z-score: normalize the probability score!
-                         if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstatsO.getMin()) / (dstatsO.getMax() - dstatsO.getMin());  //rescaling: normalize the probability score!
-
-//                       System.out.println("cardinal::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
-//                       System.out.println("ordinal::: " + predictedOrdinal + ":" + predictedOProbS + ":" + evidenceo);
-
-                         if (predictedOProbS > predictedProbS
-//                               && predictedOrdinal > predictedCardinal
-                                 ) {
-                                 predictedCardinal = predictedOrdinal;
-                                 predictedProb = predictedOProb;
-                                 predictedProbS = predictedOProbS;
-                                 predictedProbZ = predictedOProbZ;
-                                 evidence = evidenceo;
-                         }
-                }
-
-                                        if (bw != null) {
-                                                if (
-                                                                (tConf < 0 && predictedProb > 0)
-                                                                ||
-                                                                (tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
-                                                                ||
-                                                                (tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
-                                                                ){
-//                                                      System.out.println("final::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
-                                                        bw.write(entityId + "\t"
-                                                                        + "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t"
-                                                                        + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t"
-                                                                        + numChild + "\t"
-                                                                        + predictedCardinal + "\t"
-                                                                        + predictedProbS + "\t"
-                                                                        + evidence);
-                                                        bw.newLine();
-//                                              } else {
-//                                                      bw.write(entityId + "\t"
-//                                                                      + "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t"
-//                                                                      + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t"
-//                                                                      + numChild + "\t" + 0 + "\t" + 0 + "\t" + "");
-                                                }
-                                        }
-                                        if (numChild >= 0) {
-                                                available += numChild;
-
-                                                if (
-                                                                (tConf < 0 && predictedProb > 0)
-                                                                ||
-                                                                (tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
-                                                                ||
-                                                                (tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
-                                                                ){
-                                                        if (relaxedMatch) {
-                                                                if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
-                                                                else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
-
-                                                        } else {
-                                                                if (numChild == predictedCardinal) tp ++;
-                                                                else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
-                                                        }
-                                                        if (predictedCardinal == numChild) {
-                                                                complete ++;
-                                                        } else if (predictedCardinal > numChild) {
-                                                                incomplete ++;
-                                                                missing += predictedCardinal - numChild;
-                                                        } else {
-                                                                less ++;
-                                                        }
-                                                }
-                                                total ++;
-                                        }
+			if (predictedOProb > 0 && madO > 0.0) predictedOProbZ = 0.6745 * (predictedOProb - medianO) / madO;	//modified z-score: normalize the probability score!						
+			if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstatsO.getMin()) / (dstatsO.getMax() - dstatsO.getMin());	//rescaling: normalize the probability score!
+			
+//			System.out.println("cardinal::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
+//			System.out.println("ordinal::: " + predictedOrdinal + ":" + predictedOProbS + ":" + evidenceo);
+			
+			if (predictedOProbS > predictedProbS
+//					&& predictedOrdinal > predictedCardinal
+					) {
+				predictedCardinal = predictedOrdinal;
+				predictedProb = predictedOProb;
+				predictedProbS = predictedOProbS;
+				predictedProbZ = predictedOProbZ;
+				evidence = evidenceo;
+			}
+		}
+		
+		if (bw != null) {
+			if (
+					(tConf < 0 && predictedProb > 0)
+					||
+					(tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+					||
+					(tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+					){
+//				System.out.println("final::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
+				bw.write(entityId + "\t"
+						+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t"
+						+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
+						+ numChild + "\t" 
+						+ predictedCardinal + "\t" 
+						+ predictedProbS + "\t" 
+						+ evidence);
+				bw.newLine();
+//			} else {
+//				bw.write(entityId + "\t" 
+//						+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t" 
+//						+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
+//						+ numChild + "\t" + 0 + "\t" + 0 + "\t" + "");
+			}
+		}
+		if (numChild >= 0) {
+			available += numChild;
+			
+			if (
+					(tConf < 0 && predictedProb > 0)
+					||
+					(tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+					||
+					(tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+					){
+				if (relaxedMatch) {
+					if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
+					else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
+					
+				} else {
+					if (numChild == predictedCardinal) tp ++;
+					else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
+				}
+				if (predictedCardinal == numChild) {
+					complete ++;
+				} else if (predictedCardinal > numChild) {
+					incomplete ++;
+					missing += predictedCardinal - numChild;
+				} else {
+					less ++;
+				}
+			}
+			total ++;
+		}
 
 
 		entities.add(entityId);
