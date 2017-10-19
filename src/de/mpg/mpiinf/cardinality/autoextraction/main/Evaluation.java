@@ -552,8 +552,8 @@ public class Evaluation {
 						
 					predictedOProbZ = 0.0; predictedOProbS = 0.0;
 					if (addOrdinals) {
-						if (predictedOProb > 0 && madO > 0.0) predictedOProbZ = 0.6745 * (predictedOProb - medianO) / madO;	//modified z-score: normalize the probability score!						
-						if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstatsO.getMin()) / (dstatsO.getMax() - dstatsO.getMin());	//rescaling: normalize the probability score!
+						if (predictedOProb > 0 && mad > 0.0) predictedOProbZ = 0.6745 * (predictedOProb - median) / mad;	//modified z-score: normalize the probability score!						
+						if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
 						
 //						System.out.println("cardinal::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
 //						System.out.println("ordinal::: " + predictedOrdinal + ":" + predictedOProbS + ":" + evidenceo);
@@ -696,8 +696,8 @@ public class Evaluation {
 			
 		predictedOProbZ = 0.0; predictedOProbS = 0.0;
 		if (addOrdinals) {
-			if (predictedOProb > 0 && madO > 0.0) predictedOProbZ = 0.6745 * (predictedOProb - medianO) / madO;	//modified z-score: normalize the probability score!						
-			if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstatsO.getMin()) / (dstatsO.getMax() - dstatsO.getMin());	//rescaling: normalize the probability score!
+			if (predictedOProb > 0 && mad > 0.0) predictedOProbZ = 0.6745 * (predictedOProb - median) / mad;	//modified z-score: normalize the probability score!						
+			if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
 			
 //			System.out.println("cardinal::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
 //			System.out.println("ordinal::: " + predictedOrdinal + ":" + predictedOProbS + ":" + evidenceo);
