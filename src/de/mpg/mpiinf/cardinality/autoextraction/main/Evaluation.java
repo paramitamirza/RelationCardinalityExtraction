@@ -334,8 +334,10 @@ public class Evaluation {
 		double medianO = 0.0, madO = 0.0;
 		
 		dstats = getDescriptiveStatistics(crfOutPath, labels, maxNum);
-		median = getMedian(dstats);
-		mad = getMAD(dstats);
+		if (dstats.getSortedValues().length > 0) {
+			median = getMedian(dstats);
+			mad = getMAD(dstats);
+		}
 		if (addOrdinals) {
 			dstatsO = getDescriptiveStatisticsOrdinals(crfOutPath, labels, maxNum);
 			if (dstatsO.getSortedValues().length > 0) {
