@@ -86,13 +86,20 @@ public class FeatureExtractionConcurrent {
 		}
 		
 		WikipediaArticle wiki = new WikipediaArticle();
-		featExtraction.run(wiki, false, true, false, 0, false, false, false, false, -99, 0, (float) 1.0, 0);
+		featExtraction.run(wiki, false, -99, 0, 0, (float) 1.0, 0,
+				true, false, false, 
+				false, false, false, 
+				false,
+				false);
 	}
 	
-	public void run(WikipediaArticle wiki, boolean ordinal, boolean nummod, boolean compositional, float infThreshold,
-			boolean transform, boolean transformZero, boolean transformOne,
-			boolean ignoreHigher, int ignoreHigherLess,
-			int ignoreFreq, float topPopular, int quarterPart) throws IOException, InterruptedException {
+	public void run(WikipediaArticle wiki, boolean ignoreHigher, int ignoreHigherLess,
+			float infThreshold, int ignoreFreq, float topPopular, int quarterPart,			
+			boolean nummod, boolean ordinal, boolean numterms,
+			boolean articles, boolean quantifiers, boolean pronouns,
+			boolean compositional, 
+			boolean negation
+			) throws IOException, InterruptedException {
 		
 		long startTime = System.currentTimeMillis();
 		System.out.print("Generate feature file (in column format) for CRF++... ");
@@ -177,24 +184,31 @@ public class FeatureExtractionConcurrent {
         	if (topPopularIds.contains(wikidataId)) {
 	        	if ((quarterPart == 0) 
 	        			|| (quarterPart > 0 && quarterPart == Integer.parseInt(quarter))) {
+	        		
 					GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
 							wiki, wikidataId, count, curId, freqNum,
 			        		training,
-			        		ordinal, nummod, compositional, 
+			        		ignoreHigher, ignoreHigherLess, 
 			        		infThreshold, countDist,
-			        		transform, transformZero, transformOne,
-			        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
+			        		isIgnoreFreq, maxCount,
+			        		nummod, ordinal, numterms, 
+			        		articles, quantifiers, pronouns,
+			        		compositional,
+			        		negation);
 					ext.run();
 	        	}
         	}
         } else {
         	GenerateFeatures ext = new GenerateFeatures(getDirFeature(), getRelName(),
-        			wiki, wikidataId, count, curId, freqNum,
+					wiki, wikidataId, count, curId, freqNum,
 	        		training,
-	        		ordinal, nummod, compositional, 
+	        		ignoreHigher, ignoreHigherLess, 
 	        		infThreshold, countDist,
-	        		transform, transformZero, transformOne,
-	        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
+	        		isIgnoreFreq, maxCount,
+	        		nummod, ordinal, numterms, 
+	        		articles, quantifiers, pronouns,
+	        		compositional,
+	        		negation);
 			ext.run();
         }
 		//Done. Next WikidataIds...
@@ -236,23 +250,29 @@ public class FeatureExtractionConcurrent {
 		        	if ((quarterPart == 0) 
 		        			|| (quarterPart > 0 && quarterPart == Integer.parseInt(quarter))) {
 			        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
-			        			wiki, wikidataId, count, curId, freqNum,
+								wiki, wikidataId, count, curId, freqNum,
 				        		training,
-				        		ordinal, nummod, compositional, 
+				        		ignoreHigher, ignoreHigherLess, 
 				        		infThreshold, countDist,
-				        		transform, transformZero, transformOne,
-				        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
+				        		isIgnoreFreq, maxCount,
+				        		nummod, ordinal, numterms, 
+				        		articles, quantifiers, pronouns,
+				        		compositional,
+				        		negation);
 				        executor.execute(worker);
 		        	}
 	        	}
 	        } else {
 	        	Runnable worker = new GenerateFeatures(getDirFeature(), getRelName(),
-	        			wiki, wikidataId, count, curId, freqNum,
+						wiki, wikidataId, count, curId, freqNum,
 		        		training,
-		        		ordinal, nummod, compositional, 
+		        		ignoreHigher, ignoreHigherLess, 
 		        		infThreshold, countDist,
-		        		transform, transformZero, transformOne,
-		        		ignoreHigher, ignoreHigherLess, isIgnoreFreq, maxCount);
+		        		isIgnoreFreq, maxCount,
+		        		nummod, ordinal, numterms, 
+		        		articles, quantifiers, pronouns,
+		        		compositional,
+		        		negation);
 		        executor.execute(worker);
 	        }
              

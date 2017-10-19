@@ -72,9 +72,10 @@ public class Evaluation {
 		
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
-		boolean compositional = cmd.hasOption("c");
+		boolean compositional = cmd.hasOption("compositional");
+		boolean ordinals = cmd.hasOption("ordinals");
 		
-		float minConfScore = (float)0.0;
+		float minConfScore = (float)-1.0;
 		if (cmd.hasOption("v")) minConfScore = Float.parseFloat(cmd.getOptionValue("confidence"));
 		
 		float zScore = (float)100.0;
@@ -83,7 +84,7 @@ public class Evaluation {
 		boolean relaxed = false;
 		if (cmd.hasOption("x")) relaxed = true;
 		
-		eval.evaluate(relName, csvPath, delimiter, crfOutPath, labels, outputPath, resultPath, compositional, false, minConfScore, zScore, 0, relaxed);
+		eval.evaluate(relName, csvPath, delimiter, crfOutPath, labels, outputPath, resultPath, compositional, false, ordinals, minConfScore, zScore, 0, relaxed);
 	}
 	
 	public static Options getEvalOptions() {
@@ -113,9 +114,13 @@ public class Evaluation {
 		result.setRequired(false);
 		options.addOption(result);
 		
-		Option compositional = new Option("c", "compositional", false, "Label compositional numbers as true examples");
+		Option compositional = new Option("compositional", "compositional", false, "Label compositional numbers as true examples");
 		compositional.setRequired(false);
 		options.addOption(compositional);
+		
+		Option ordinal = new Option("ordinals", "ordinals", false, "Consider ordinals as candidates");
+		ordinal.setRequired(false);
+		options.addOption(ordinal);
 		
 		Option minConfScore = new Option("v", "confidence", true, "Minimum confidence score");
 		minConfScore.setRequired(false);
@@ -168,19 +173,44 @@ public class Evaluation {
 		return false;
 	}
 	
+	private boolean isQuantifier(List<String> sentence, int wIdx) {
+		String word = sentence.get(wIdx).toLowerCase();
+		if (word.equals("both")
+				|| word.equals("some")
+				|| word.equals("few")
+				|| word.equals("many")
+				|| word.equals("several")
+				) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean isPossPronouns(List<String> sentence, int wIdx) {
+		String word = sentence.get(wIdx).toLowerCase();
+		if (word.equals("my")
+				|| word.equals("your")
+				|| word.equals("his")
+				|| word.equals("her")
+				|| word.equals("its")
+				|| word.equals("their")
+				|| word.equals("our")
+				) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	private DescriptiveStatistics getDescriptiveStatistics(String crfOutPath, String[] labels, long maxNum) throws IOException {
 		BufferedReader br; String line;
 		
 		//Read result (.out) file
 		br = new BufferedReader(new FileReader(crfOutPath));
 		
-		Double prob = 0.0, highestProb = 0.0;
-		List<String> nums = new ArrayList<String>();
-		List<String> ords = new ArrayList<String>();
-		List<Double> probs = new ArrayList<Double>();
+		Double prob = 0.0;
 		String[] cols;
-		String entityId = null;
-		Set<String> entities = new HashSet<String>();
 		double threshold = 0.1;
 		
 		DescriptiveStatistics stats = new DescriptiveStatistics();
@@ -188,53 +218,52 @@ public class Evaluation {
 		line = br.readLine();	//CRF sentence score
 		
 		while (line != null) {
-			
-			if(!StringUtils.join(nums, "").equals("")
-					|| !StringUtils.join(ords, "").equals("")) {
-				
-				Map<Integer, String> numbers = extractNumber(nums, probs, maxNum);
-				Map<Integer, String> ordinals = extractNumber(ords, probs, maxNum);
-				
-				for (Integer key : numbers.keySet()) {
-					prob = Double.parseDouble(numbers.get(key).split("#")[1]);
-					if (prob > threshold)
-						stats.addValue(prob);
-				}
-				
-				for (Integer key : ordinals.keySet()) {
-					prob = Double.parseDouble(ordinals.get(key).split("#")[1]);
-					if (prob > threshold)
-						stats.addValue(prob);
-				}
-			}
-				
-			//Sentence starts			
-			
-			nums = new ArrayList<String>();
-			probs = new ArrayList<Double>();
-			
-			line = br.readLine();
-			
-			while (line != null && !line.trim().equals("")) {
+			if (!line.trim().equals("") && !line.startsWith("#")) {
 				cols = line.split("\t");
-				
-				if (entityId != null && !cols[0].equals(entityId)
-						&& !entities.contains(entityId)
-						) {	//Entity ends
-					
-					entities.add(entityId);
-				}
-				
-				entityId = cols[0];
 				for (int l=0; l<labels.length; l++) {
 					if (labels[l].equals("_YES_")) {
 						prob = Double.valueOf(cols[cols.length-labels.length+l].split("/")[1]);
 					}
 				}
-				nums.add(cols[3]);
-				probs.add(prob);
-				
-				line = br.readLine();
+				if (prob > threshold 
+						&& cols[4].equals("_num_")) {
+					stats.addValue(prob);
+				}
+			}
+			
+			line = br.readLine();
+		}
+		br.close();
+		
+		return stats;
+	}
+	
+	private DescriptiveStatistics getDescriptiveStatisticsOrdinals(String crfOutPath, String[] labels, long maxNum) throws IOException {
+		BufferedReader br; String line;
+		
+		//Read result (.out) file
+		br = new BufferedReader(new FileReader(crfOutPath));
+		
+		Double prob = 0.0;
+		String[] cols;
+		double threshold = 0.1;
+		
+		DescriptiveStatistics stats = new DescriptiveStatistics();
+		
+		line = br.readLine();	//CRF sentence score
+		
+		while (line != null) {
+			if (!line.trim().equals("") && !line.startsWith("#")) {
+				cols = line.split("\t");
+				for (int l=0; l<labels.length; l++) {
+					if (labels[l].equals("_YES_")) {
+						prob = Double.valueOf(cols[cols.length-labels.length+l].split("/")[1]);
+					}
+				}
+				if (prob > threshold 
+						&& cols[4].equals("_ord_")) {
+					stats.addValue(prob);
+				}
 			}
 			
 			line = br.readLine();
@@ -267,6 +296,7 @@ public class Evaluation {
 	public void evaluate(String relName, String csvPath, String delimiter, String crfOutPath, 
 			String[] labels, String outPath, String resultPath,
 			boolean addSameSentence, boolean addDiffSentence,
+			boolean addOrdinals, 
 			float tConf, float zRange, long trainSize, boolean relaxedMatch) throws IOException {
 		
 		long startTime = System.currentTimeMillis();
@@ -299,16 +329,20 @@ public class Evaluation {
 		boolean zscore = true;
 		
 		DescriptiveStatistics dstats = new DescriptiveStatistics();
-//		SummaryStatistics sstats = new SummaryStatistics();
+		DescriptiveStatistics dstatsO = new DescriptiveStatistics();
 		double median = 0.0, mad = 0.0;
+		double medianO = 0.0, madO = 0.0;
 		
-//		if (zscore) {
-			dstats = getDescriptiveStatistics(crfOutPath, labels, maxNum);
-			median = getMedian(dstats);
-			mad = getMAD(dstats);
-//		} else {
-//			sstats = getSummaryStatistics(crfOutPath, labels);
-//		}
+		dstats = getDescriptiveStatistics(crfOutPath, labels, maxNum);
+		median = getMedian(dstats);
+		mad = getMAD(dstats);
+		if (addOrdinals) {
+			dstatsO = getDescriptiveStatisticsOrdinals(crfOutPath, labels, maxNum);
+			if (dstatsO.getSortedValues().length > 0) {
+				medianO = getMedian(dstatsO);
+				madO = getMAD(dstatsO);
+			}
+		} 
 		
 		//Read result (.out) file
 		br = new BufferedReader(new FileReader(crfOutPath));
@@ -402,7 +436,11 @@ public class Evaluation {
 											p = pp;
 											
 										} else {
-											if (conjExist(sentence, mlist.get(mlist.size()-1), mm)) {
+											if (conjExist(sentence, mlist.get(mlist.size()-1), mm)
+                                                                                                        && (mm - mlist.get(mlist.size()-1)) <= 5 
+													&& !isQuantifier(sentence, mm)
+													&& !isPossPronouns(sentence, mm)
+													) {
 												if (pp > p) p = pp;
 	//											p += pp;
 												n += Long.parseLong(numbers.get(keys[k]).split("#")[0]);
@@ -439,7 +477,7 @@ public class Evaluation {
 					}
 				}
 				
-				if (!ordinals.isEmpty()) {
+				if (addOrdinals && !ordinals.isEmpty()) {
 					
 					//When there are more than one in a sentence, choose the most probable
 					for (Integer key : ordinals.keySet()) {
@@ -478,7 +516,7 @@ public class Evaluation {
 						evidence = wordsToSentence(sentence, mlist);
 					}
 					
-					if (po > predictedOProb) {
+					if (addOrdinals && po > predictedOProb) {
 						predictedOrdinal = no;
 						predictedOProb = po;
 						evidenceo = wordsToSentence(sentence, mlisto);
@@ -509,26 +547,37 @@ public class Evaluation {
 					String wikiLabel = instanceLabel.get(entityId);
 					
 					predictedProbZ = 0.0; predictedProbS = 0.0;
-					if (predictedProb > 0) predictedProbZ = 0.6745 * (predictedProb - median) / mad;	//modified z-score: normalize the probability score!						
+					if (predictedProb > 0 && mad > 0.0) predictedProbZ = 0.6745 * (predictedProb - median) / mad;	//modified z-score: normalize the probability score!						
 					if (predictedProb > 0) predictedProbS = (predictedProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
 						
 					predictedOProbZ = 0.0; predictedOProbS = 0.0;
-					if (predictedOProb > 0) predictedOProbZ = 0.6745 * (predictedOProb - median) / mad;	//modified z-score: normalize the probability score!						
-					if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
-					
-					if (predictedOrdinal > predictedCardinal
-							&& predictedOProbS > predictedProbS) {
-						predictedCardinal = predictedOrdinal;
-						predictedProbS = predictedOProbS;
-						evidence = evidenceo;
+					if (addOrdinals) {
+						if (predictedOProb > 0 && madO > 0.0) predictedOProbZ = 0.6745 * (predictedOProb - medianO) / madO;	//modified z-score: normalize the probability score!						
+						if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstatsO.getMin()) / (dstatsO.getMax() - dstatsO.getMin());	//rescaling: normalize the probability score!
+						
+//						System.out.println("cardinal::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
+//						System.out.println("ordinal::: " + predictedOrdinal + ":" + predictedOProbS + ":" + evidenceo);
+						
+						if (predictedOProbS > predictedProbS
+//								&& predictedOrdinal > predictedCardinal
+								) {
+							predictedCardinal = predictedOrdinal;
+							predictedProb = predictedOProb;
+							predictedProbS = predictedOProbS;
+							predictedProbZ = predictedOProbZ;
+							evidence = evidenceo;
+						}
 					}
 					
 					if (bw != null) {
 						if (
-								(tConf == 0 && predictedProb > 0)
+								(tConf < 0 && predictedProb > 0)
 								||
-								(tConf > 0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+								(tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+								||
+								(tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
 								){
+//							System.out.println("final::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
 							bw.write(entityId + "\t"
 									+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t"
 									+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
@@ -548,9 +597,11 @@ public class Evaluation {
 						available += numChild;
 						
 						if (
-								(tConf == 0 && predictedProb > 0)
+								(tConf < 0 && predictedProb > 0)
 								||
-								(tConf > 0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+								(tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+								||
+								(tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
 								){
 							if (relaxedMatch) {
 								if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
@@ -586,7 +637,17 @@ public class Evaluation {
 				}
 				
 				entityId = cols[0];
-				sentence.add(cols[3]);
+				
+				if (cols[4].equals("_propernoun_")) {
+					sentence.add(cols[3].replaceAll("_", " "));
+				
+				} else if (cols[3].startsWith("PRP$_")) {
+					sentence.add(cols[3].split("_")[2]);
+					
+				} else {
+					sentence.add(cols[3]);
+				}
+				
 				for (int l=0; l<labels.length; l++) {
 					if (labels[l].equals("_YES_")) {
 						prob = Double.valueOf(cols[cols.length-labels.length+l].split("/")[1]);
@@ -604,15 +665,17 @@ public class Evaluation {
 					probs.add(0.0);
 				}
 				
-				if (prob > threshold 
-						&& cols[4].equals("_ord_")) {
-					
-					ords.add(cols[3]);
-					oprobs.add(prob);
-					
-				} else {
-					ords.add("");
-					oprobs.add(0.0);
+				if (addOrdinals) {
+					if (prob > threshold 
+							&& cols[4].equals("_ord_")) {
+						
+						ords.add(cols[3]);
+						oprobs.add(prob);
+						
+					} else {
+						ords.add("");
+						oprobs.add(0.0);
+					}
 				}
 				
 				line = br.readLine();
@@ -632,68 +695,79 @@ public class Evaluation {
 		if (predictedProb > 0) predictedProbS = (predictedProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
 			
 		predictedOProbZ = 0.0; predictedOProbS = 0.0;
-		if (predictedOProb > 0) predictedOProbZ = 0.6745 * (predictedOProb - median) / mad;	//modified z-score: normalize the probability score!						
-		if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
-		
-		if (predictedOrdinal > predictedCardinal
-				&& predictedOProbS > predictedProbS) {
-			predictedCardinal = predictedOrdinal;
-			predictedProbS = predictedOProbS;
-			evidence = evidenceo;
-		}			
-			
-		if (bw != null) {
-			if (
-					(tConf == 0 && predictedProb > 0)
-					||
-					(tConf > 0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
-					){
-				bw.write(entityId + "\t"
-						+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t"
-						+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
-						+ numChild + "\t" 
-						+ predictedCardinal + "\t" 
-						+ predictedProbS + "\t" 
-						+ evidence);
-				bw.newLine();
-//			} else {
-//				bw.write(entityId + "\t" 
-//						+ "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t" 
-//						+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
-//						+ numChild + "\t" + 0 + "\t" + 0 + "\t" + "");
-			}
-//		} else {
-//			System.err.println(entityId + ",https://en.wikipedia.org/wiki?curid=" + wikiLabel + "," + numChild + "," + predictedCardinal + "," + predictedProb + ",\"" + evidence + "\"");
-		}
-		
-		if (numChild >= 0) {
-			available += numChild;
-			
-			if (
-					(tConf == 0 && predictedProb > 0)
-					||
-					(tConf > 0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
-					){
-				if (relaxedMatch) {
-					if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
-					else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
-					
-				} else {
-					if (numChild == predictedCardinal) tp ++;
-					else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
-				}
-				if (predictedCardinal == numChild) {
-					complete ++;
-				} else if (predictedCardinal > numChild) {
-					incomplete ++;
-					missing += predictedCardinal - numChild;
-				} else {
-					less ++;
-				}
-			}
-			total ++;
-		}
-		
+		if (addOrdinals) {
+                         if (predictedOProb > 0 && madO > 0.0) predictedOProbZ = 0.6745 * (predictedOProb - medianO) / madO;     //modified z-score: normalize the probability score!
+                         if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstatsO.getMin()) / (dstatsO.getMax() - dstatsO.getMin());  //rescaling: normalize the probability score!
+
+//                       System.out.println("cardinal::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
+//                       System.out.println("ordinal::: " + predictedOrdinal + ":" + predictedOProbS + ":" + evidenceo);
+
+                         if (predictedOProbS > predictedProbS
+//                               && predictedOrdinal > predictedCardinal
+                                 ) {
+                                 predictedCardinal = predictedOrdinal;
+                                 predictedProb = predictedOProb;
+                                 predictedProbS = predictedOProbS;
+                                 predictedProbZ = predictedOProbZ;
+                                 evidence = evidenceo;
+                         }
+                }
+
+                                        if (bw != null) {
+                                                if (
+                                                                (tConf < 0 && predictedProb > 0)
+                                                                ||
+                                                                (tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+                                                                ||
+                                                                (tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+                                                                ){
+//                                                      System.out.println("final::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
+                                                        bw.write(entityId + "\t"
+                                                                        + "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t"
+                                                                        + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t"
+                                                                        + numChild + "\t"
+                                                                        + predictedCardinal + "\t"
+                                                                        + predictedProbS + "\t"
+                                                                        + evidence);
+                                                        bw.newLine();
+//                                              } else {
+//                                                      bw.write(entityId + "\t"
+//                                                                      + "https://en.wikipedia.org/wiki?curid=" + wikiCurid + "\t"
+//                                                                      + java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t"
+//                                                                      + numChild + "\t" + 0 + "\t" + 0 + "\t" + "");
+                                                }
+                                        }
+                                        if (numChild >= 0) {
+                                                available += numChild;
+
+                                                if (
+                                                                (tConf < 0 && predictedProb > 0)
+                                                                ||
+                                                                (tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+                                                                ||
+                                                                (tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+                                                                ){
+                                                        if (relaxedMatch) {
+                                                                if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
+                                                                else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
+
+                                                        } else {
+                                                                if (numChild == predictedCardinal) tp ++;
+                                                                else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
+                                                        }
+                                                        if (predictedCardinal == numChild) {
+                                                                complete ++;
+                                                        } else if (predictedCardinal > numChild) {
+                                                                incomplete ++;
+                                                                missing += predictedCardinal - numChild;
+                                                        } else {
+                                                                less ++;
+                                                        }
+                                                }
+                                                total ++;
+                                        }
+
+
 		entities.add(entityId);
 		
 		predictedCardinal = 0;
@@ -757,8 +831,27 @@ public class Evaluation {
 						) {
 					numTriple.put(i, Numbers.getInteger(number) + "#" + prob);
 				
-				} else if (number.equals("a") || number.equals("an")) {
+				} else if ((number.equals("a") || number.equals("an"))
+						&& Numbers.getInteger(nums.get(i+1)) < 0	//not followed by a cardinal or ordinal, e.g., a second daughter
+						) {
 					numTriple.put(i, "1" + "#" + prob);
+				
+				} else if (number.equals("both") 
+						|| number.equals("some")
+						|| number.equals("few")
+						|| number.equals("many")
+						|| number.equals("several")
+						) {
+					numTriple.put(i, "2" + "#" + prob);
+				
+				} else if (number.startsWith("PRP$_")) {
+					
+					if (number.split("_")[1].equals("S")) {
+						numTriple.put(i, "1" + "#" + prob);
+						
+					} else if (number.split("_")[1].equals("P")) {
+						numTriple.put(i, "2" + "#" + prob);
+					}
 				}
 			}
 		}

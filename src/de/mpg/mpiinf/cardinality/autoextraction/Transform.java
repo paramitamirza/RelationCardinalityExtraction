@@ -132,7 +132,7 @@ public class Transform {
 		transformed = transform.transform(sentence, true, true, true, true);
 		System.out.println(sentence + " --> " + transformed);
 		
-		sentence = "The quintuplets play with a hexagon.";
+		sentence = "The triplets play with a hexagon.";
 		transformed = transform.transform(sentence, true, true, true, true);
 		System.out.println(sentence + " --> " + transformed);
 		
@@ -228,7 +228,11 @@ public class Transform {
 			if (lemma.startsWith(key)) {
 				post = lemma.replace(key, "");
 				if (postPrefixLetinGreek.contains(post)) {
-					return "LatinGreek_" + word + "_" + prefixLatinGreek.get(key) + "_" + post;
+					if (post.equals("uplet")){
+						return "LatinGreek_" + word + "_" + prefixLatinGreek.get(key) + "_" + "plet";
+					} else {
+						return "LatinGreek_" + word + "_" + prefixLatinGreek.get(key) + "_" + post;
+					}
 				} else if (post.isEmpty()) {
 					if (key.equalsIgnoreCase("duo") || key.equalsIgnoreCase("trio")) {
 						return "LatinGreek_" + word + "_" + prefixLatinGreek.get(key) + "_" + "o";
@@ -280,6 +284,17 @@ public class Transform {
 		}
 		
 		return StringUtils.join(wordList, " ");
+	}
+	
+	public String transformCountableQuantifiers(String sentence) {
+		String transformed = sentence;
+		transformed = transformed.replaceAll(" a few ", " few ");
+		transformed = transformed.replaceAll(" lots of ", "many");
+		transformed = transformed.replaceAll(" a lot of ", "many");
+		transformed = transformed.replaceAll(" plenty of ", "many");
+		transformed = transformed.replaceAll(" a number of ", "several");
+		transformed = transformed.replaceAll(" a couple of ", "several");		
+		return transformed;
 	}
 	
 	public String transformOthers(String sentence) throws IOException {

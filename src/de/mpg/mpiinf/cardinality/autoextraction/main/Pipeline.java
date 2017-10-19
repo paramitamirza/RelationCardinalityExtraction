@@ -72,11 +72,12 @@ public class Pipeline {
 		
 		boolean nummod = cmd.hasOption("d");
 		boolean compositional = cmd.hasOption("s");
-		boolean transform = cmd.hasOption("x");
-		boolean ordinal = cmd.hasOption("y");
-		boolean transformOne = cmd.hasOption("1");
-		boolean transformZero = cmd.hasOption("0");
-		boolean ignoreHigher = cmd.hasOption("h");
+		boolean numterms = cmd.hasOption("numterms");
+		boolean ordinals = cmd.hasOption("ordinals");
+		boolean articles = cmd.hasOption("articles");
+		boolean quantifiers = cmd.hasOption("quantifiers");
+		boolean pronouns = cmd.hasOption("pronouns");
+		boolean negation = cmd.hasOption("negation");	
 		
 		int ignoreFreq = -1;
 		if (cmd.hasOption("g")) ignoreFreq = Integer.parseInt(cmd.getOptionValue("ignorefreq"));
@@ -90,12 +91,17 @@ public class Pipeline {
 		int quarterPart = 0;
 		if (cmd.hasOption("q")) quarterPart = Integer.parseInt(cmd.getOptionValue("quarter"));
 		
+		boolean ignoreHigher = cmd.hasOption("h");
 		int ignoreHigherLess = -1;
 		if (cmd.hasOption("h")) ignoreHigherLess = Integer.parseInt(cmd.getOptionValue("ignorehigher"));
 		
-		featExtraction.run(wiki, ordinal, nummod, compositional, threshold, 
-				transform, transformZero, transformOne, 
-				ignoreHigher, ignoreHigherLess, ignoreFreq, topPopular, quarterPart);
+		featExtraction.run(wiki, ignoreHigher, ignoreHigherLess, 
+				threshold, ignoreFreq, topPopular, quarterPart,
+				nummod, ordinals, numterms,
+				articles, quantifiers, pronouns,
+				compositional, 
+				negation 
+				);
 		
 		//Classifier
 		String dirModels = "./models/";
@@ -136,7 +142,7 @@ public class Pipeline {
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
 		String crfOutPath = evalData.replace(".data", ".out");
-		eval.evaluate(relName, testCsvFile, delimiter, crfOutPath, labels, predictionFile, resultFile, compositional, false, minConfScore, zScore, trainSize, false);
+		eval.evaluate(relName, testCsvFile, delimiter, crfOutPath, labels, predictionFile, resultFile, compositional, false, ordinals, minConfScore, zScore, trainSize, false);
 		
 		long endTime   = System.currentTimeMillis();
 		float totalTime = (endTime - startTime)/(float)1000;
@@ -218,19 +224,27 @@ public class Pipeline {
 		threshold.setRequired(false);
 		options.addOption(threshold);
 		
-		Option transform = new Option("x", "transform", false, "Transform non-numeric concepts into numbers");
+		Option transform = new Option("numterms", "numterms", false, "Transform non-numeric concepts into numbers");
 		transform.setRequired(false);
 		options.addOption(transform);
 		
-		Option ordinal = new Option("y", "ordinal", false, "Consider ordinals as candidates");
+		Option ordinal = new Option("ordinals", "ordinals", false, "Consider ordinals as candidates");
 		ordinal.setRequired(false);
 		options.addOption(ordinal);
 		
-		Option transformOne = new Option("1", "transform1", false, "Transform articles into 1");
-		transformOne.setRequired(false);
-		options.addOption(transformOne);
+		Option transformArticles = new Option("articles", "articles", false, "Transform articles into 1");
+		transformArticles.setRequired(false);
+		options.addOption(transformArticles);
 		
-		Option transformZero = new Option("0", "transform0", false, "Transform negative sentences into (containing) 0");
+		Option transformQuantifiers = new Option("quantifiers", "quantifiers", false, "Transform imprecise quantifiers (many, several, etc.) into 2");
+		transformQuantifiers.setRequired(false);
+		options.addOption(transformQuantifiers);
+		
+		Option transformPronouns = new Option("pronouns", "pronouns", false, "Transform personal pronouns (many, several, etc.) into 1 or 2");
+		transformPronouns.setRequired(false);
+		options.addOption(transformPronouns);
+		
+		Option transformZero = new Option("0", "negation", false, "Transform negative sentences into (containing) 0");
 		transformZero.setRequired(false);
 		options.addOption(transformZero);
 		

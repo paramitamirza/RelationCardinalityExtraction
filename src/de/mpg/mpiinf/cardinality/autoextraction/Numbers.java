@@ -162,7 +162,7 @@ public class Numbers {
 		}
 	}
 	
-	public static boolean properNoun(String pos, String ner) {
+	public static boolean properNoun(String pos) {
 		if (pos.equals("NNP")) {
 			return true;
 		} else {
@@ -170,8 +170,132 @@ public class Numbers {
 		}
 	}
 	
+	public static boolean personalPronoun(String pos) {
+		if (pos.equals("PRP")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static boolean possessivePronoun(String pos) {
+		if (pos.equals("PRP$")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static boolean properArticle(String word, String pos, String deprel) {
+		if ((word.equals("a") || word.equals("an"))
+				&& pos.equals("DT")
+				&& deprel.equals("det")) {
+			return true;
+		} else {
+			return false;
+		}		
+	}
+	
+	public static boolean properCountableQuantifier(String word, String pos, String deprel) {
+		if ((word.equals("both") && pos.equals("DT") && deprel.equals("det"))
+				|| (word.equals("some") && pos.equals("DT") && deprel.equals("det"))
+				|| (word.equals("few") && pos.equals("JJ") && deprel.equals("amod"))
+				|| (word.equals("many") && pos.equals("JJ") && deprel.equals("amod"))
+				|| (word.equals("several") && pos.equals("JJ") && deprel.equals("amod"))
+				) {
+			return true;
+		} else {
+			return false;
+		}		
+	}
+	
+	public static boolean containsLatinGreek(String sentence) {
+		if (sentence.contains("LatinGreek_")) return true;
+		else return false;
+	}
+	
+	public static boolean containsNumerals(Sentence sent, boolean ordinal) {
+		String pos, ner;
+		
+		for (int i=0; i<sent.words().size(); i++) {
+//			System.err.println(sent.word(i) + "\t" + sent.posTag(i) + "\t" + sent.nerTag(i));
+			pos = sent.posTag(i);
+			ner = sent.nerTag(i);
+			
+			if (properNumber(pos, ner)) {
+				return true;				
+			} else if (ordinal && properOrdinal(pos, ner)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean containsArticles(Sentence sent) {
+		String word, pos, deprel;
+		
+		for (int i=0; i<sent.words().size(); i++) {
+//			System.err.println(sent.word(i) + "\t" + sent.posTag(i) + "\t" + sent.nerTag(i));
+			word = sent.word(i);
+			pos = sent.posTag(i);
+			deprel = "O"; 
+			if (sent.incomingDependencyLabel(i).isPresent()) {
+				deprel = sent.incomingDependencyLabel(i).get();
+			}
+			
+			if (properArticle(word, pos, deprel)) {
+				return true;
+				
+			}
+		}
+		return false;
+	}
+	
+	public static boolean containsNegatives(String sentence) {
+		if (sentence.contains(" no ")
+				|| ((sentence.contains(" not ") || sentence.contains(" n't ")) 
+						&& sentence.contains(" any "))
+				|| sentence.contains(" never ")
+				)
+			return true;
+		else 
+			return false;
+	}
+	
+	public static boolean containsCountableQuantifiers(String sentence) {
+		if (sentence.contains(" both ")
+				|| sentence.contains(" few ")
+				|| sentence.contains(" a few ")
+				|| sentence.contains(" lots of ")
+				|| sentence.contains(" a lot of ")
+				|| sentence.contains(" plenty of ")
+				|| sentence.contains(" many ")
+				|| sentence.contains(" several ")
+				|| sentence.contains(" some ")
+				|| sentence.contains(" a number of ")
+				)
+			return true;
+		else
+			return false;
+	}
+	
+	public static boolean containsPersonalPronouns(Sentence sent) {
+		String pos;
+		
+		for (int i=0; i<sent.words().size(); i++) {
+//			System.err.println(sent.word(i) + "\t" + sent.posTag(i) + "\t" + sent.nerTag(i));
+			pos = sent.posTag(i);
+			if (pos.equals("PRP$")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public static boolean containNumbers(String transformed, Sentence sent, 
 			boolean ordinal, boolean namedEntity) {
+		
+		String pos, ner;
 		
 		if (transformed.contains("LatinGreek_")) {
 			return true;
@@ -180,6 +304,8 @@ public class Numbers {
 			boolean entityFound = false, numberFound = false, ordinalFound = false;
 			for (int i=0; i<sent.words().size(); i++) {
 //				System.err.println(sent.word(i) + "\t" + sent.posTag(i) + "\t" + sent.nerTag(i));
+				pos = sent.posTag(i);
+				ner = sent.nerTag(i);
 				if (sent.posTag(i).equals("CD")
 						&& !sent.word(i).contains("=")
 						&& !sent.nerTag(i).equals("MONEY")
