@@ -830,7 +830,7 @@ public class Evaluation {
 				if (number.startsWith("LatinGreek_")) {
 					numTriple.put(i, number.split("_")[2] + "#" + prob);
 					
-				} else if (Numbers.getInteger(number) > 0 
+				} else if (Numbers.getInteger(number) >= 0 
 						&& Numbers.getInteger(number) <= maxNum
 						) {
 					numTriple.put(i, Numbers.getInteger(number) + "#" + prob);
