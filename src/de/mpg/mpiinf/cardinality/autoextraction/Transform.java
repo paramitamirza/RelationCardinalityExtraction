@@ -72,30 +72,30 @@ public class Transform {
 //		System.out.println(sentence + " --> " + transformed);
 		
 		///test!!!
-		sentence = "John has an ugly son and a beautiful daughter.";
-		transformed = transform.transform(sentence, true, true, true, true);
-		System.out.println(sentence + " --> " + transformed);
-		
-		sentence = "John has a child.";
-		transformed = transform.transform(sentence, true, true, true, true);
-		System.out.println(sentence + " --> " + transformed);
+//		sentence = "John has an ugly son and a beautiful daughter.";
+//		transformed = transform.transform(sentence, true, true, true, true);
+//		System.out.println(sentence + " --> " + transformed);
+//		
+//		sentence = "John has a child.";
+//		transformed = transform.transform(sentence, true, true, true, true);
+//		System.out.println(sentence + " --> " + transformed);
 		
 		sentence = "John doesn't have any ugly children.";
 		transformed = transform.transform(sentence, true, true, true, true);
 		System.out.println(sentence + " --> " + transformed);
 		
-		sentence = "John didn't bring crazy young friends yesterday.";
-		transformed = transform.transform(sentence, true, true, true, true);
-		System.out.println(sentence + " --> " + transformed);
-
-		sentence = "John hasn't had children.";
-		transformed = transform.transform(sentence, true, true, true, true);
-		System.out.println(sentence + " --> " + transformed);
-		
-		sentence = "John had no children surviving adulthood.";
-		transformed = transform.transform(sentence, true, true, true, true);
-		System.out.println(sentence + " --> " + transformed);
-		
+//		sentence = "John didn't bring crazy young friends yesterday.";
+//		transformed = transform.transform(sentence, true, true, true, true);
+//		System.out.println(sentence + " --> " + transformed);
+//
+//		sentence = "John hasn't had children.";
+//		transformed = transform.transform(sentence, true, true, true, true);
+//		System.out.println(sentence + " --> " + transformed);
+//		
+//		sentence = "John had no children surviving adulthood.";
+//		transformed = transform.transform(sentence, true, true, true, true);
+//		System.out.println(sentence + " --> " + transformed);
+//		
 		sentence = "John has never been married and never had any children.";
 		transformed = transform.transform(sentence, true, true, true, true);
 		System.out.println(sentence + " --> " + transformed);
@@ -120,22 +120,22 @@ public class Transform {
 		transformed = transform.transform(sentence, true, true, true, true);
 		System.out.println(sentence + " --> " + transformed);
 		
-		sentence = "Her marriage produced three children : one son , Axel and twin daughters Elin and Josefin.";
-		transformed = transform.transform(sentence, true, true, true, true);
-		System.out.println(sentence + " --> " + transformed);
-		
-		sentence = "She married twice.";
-		transformed = transform.transform(sentence, true, true, true, true);
-		System.out.println(sentence + " --> " + transformed);
-		
-		sentence = "A dozen eggs are enough.";
-		transformed = transform.transform(sentence, true, true, true, true);
-		System.out.println(sentence + " --> " + transformed);
-		
-		sentence = "The triplets play with a hexagon.";
-		transformed = transform.transform(sentence, true, true, true, true);
-		System.out.println(sentence + " --> " + transformed);
-		
+//		sentence = "Her marriage produced three children : one son , Axel and twin daughters Elin and Josefin.";
+//		transformed = transform.transform(sentence, true, true, true, true);
+//		System.out.println(sentence + " --> " + transformed);
+//		
+//		sentence = "She married twice.";
+//		transformed = transform.transform(sentence, true, true, true, true);
+//		System.out.println(sentence + " --> " + transformed);
+//		
+//		sentence = "A dozen eggs are enough.";
+//		transformed = transform.transform(sentence, true, true, true, true);
+//		System.out.println(sentence + " --> " + transformed);
+//		
+//		sentence = "The triplets play with a hexagon.";
+//		transformed = transform.transform(sentence, true, true, true, true);
+//		System.out.println(sentence + " --> " + transformed);
+//		
 	}
 	
 	private int getDetAny(Sentence sent, int objIdx) {
@@ -354,6 +354,62 @@ public class Transform {
 	}
 	
 	public String transformNegative(String sentence) {
+		sentence = sentence.replaceAll("without", "with no");
+		Sentence sent = new Sentence(sentence);
+		List<String> wordList = new ArrayList<String>();
+		wordList.addAll(sent.words());
+		
+		for (int i=0; i<sent.length(); i++) {
+			if (sent.lemma(i).equals("any")
+					&& sent.posTag(i).equals("DT")
+					&& sent.incomingDependencyLabel(i).isPresent()
+					) {
+				int noun = sent.governor(i).get();
+				int verb = sent.governor(noun).get();
+				for (int j=verb-1; j>=0; j--) {
+					if (sent.incomingDependencyLabel(j).isPresent()
+							&& sent.incomingDependencyLabel(j).get().equals("neg")
+							) {
+						wordList.set(i, "no");
+						if (sent.lemma(j).equals("not") || sent.lemma(j).equals("never")) {
+							wordList.set(j, "");
+						}
+						if (sent.lemma(j-1).equals("do")) {
+							wordList.set(j-1, "");
+						}
+						break;
+					}
+				}
+			}
+		}
+		
+		String transformed = "";
+		for (String word : wordList) {
+			if (!word.equals("")) transformed += " " + word;
+		}
+		wordList.clear();
+		sent = new Sentence(transformed);
+		wordList.addAll(sent.words());
+		
+		for (int i=0; i<sent.length(); i++) {
+			if (sent.lemma(i).equals("never")
+					&& sent.posTag(i).equals("RB")
+					&& sent.incomingDependencyLabel(i).isPresent()
+					) {
+				int verb = sent.governor(i).get();
+				wordList.set(i, "");
+				wordList.set(verb, sent.word(verb) + " 0 time");
+			}
+		}
+		
+		transformed = "";
+		for (String word : wordList) {
+			if (!word.equals("")) transformed += " " + word;
+		}
+		return transformed.substring(1);
+	}
+	
+	public String transformNegativeOld(String sentence) {
 		String transformed = "", original = "";
 		
 		//// e.g., Their marriage is without children --> Their marriage is with 0 children

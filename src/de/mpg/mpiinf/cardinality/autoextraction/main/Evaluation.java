@@ -856,6 +856,8 @@ public class Evaluation {
 					} else if (number.split("_")[1].equals("P")) {
 						numTriple.put(i, "2" + "#" + prob);
 					}
+				} else if (number.equals("no")) {
+					numTriple.put(i, "0" + "#" + prob);
 				}
 			}
 		}

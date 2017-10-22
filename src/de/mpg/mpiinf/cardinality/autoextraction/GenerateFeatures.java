@@ -209,6 +209,7 @@ public class GenerateFeatures implements Runnable {
 					|| (this.isArticles() && Numbers.containsArticles(sent))
 					|| (this.isQuantifiers() && Numbers.containsCountableQuantifiers(sentStr))
 					|| (this.isPronouns() && Numbers.containsPersonalPronouns(sent))
+					|| (this.isNegation() && Numbers.containsNo(sent))
 					)
 				return sent;
 			else
@@ -400,6 +401,16 @@ public class GenerateFeatures implements Runnable {
 				labels.add(label);
 				tokenIdx ++;
 				
+			} else if (!this.isTraining()
+					&& this.isNegation() 
+					&& Numbers.properNo(word, pos)
+					&& !dependent.equals("O")
+					) {
+				lemma = "_num_";
+				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
+				labels.add(label);
+				tokenIdx ++;
+			
 			} else if (sent.word(k).startsWith("LatinGreek_")) {
 				word = sent.word(k).split("_")[0] + "_" + sent.word(k).split("_")[1] + "_" + sent.word(k).split("_")[2];
 				lemma = "_" + sent.word(k).split("_")[3] + "_";
@@ -517,7 +528,8 @@ public class GenerateFeatures implements Runnable {
 				lemma = lemma.substring(0, lemma.length()-1);
 				
 				numInt = Numbers.getInteger(word.toLowerCase());
-				if (numInt > 0) {
+				
+				if (numInt >= 0) {
 					lemma = "_num_";
 					
 					if (compositional) {
@@ -632,7 +644,7 @@ public class GenerateFeatures implements Runnable {
 				
 				numInt = Numbers.getInteger(word.toLowerCase());
 				
-				if (numInt > 0) {
+				if (numInt >= 0) {
 					lemma = "_ord_";
 					
 //					if (compositional) {
@@ -750,7 +762,7 @@ public class GenerateFeatures implements Runnable {
 				
 				numInt = Numbers.getInteger(word.toLowerCase());
 				
-				if (numInt > 0) {
+				if (numInt >= 0) {
 					lemma = "_ord_";
 					
 //					if (compositional) {

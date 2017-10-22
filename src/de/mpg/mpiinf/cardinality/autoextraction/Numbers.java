@@ -196,6 +196,15 @@ public class Numbers {
 		}		
 	}
 	
+	public static boolean properNo(String word, String pos) {
+		if (word.equals("no")
+				&& pos.equals("DT")) {
+			return true;
+		} else {
+			return false;
+		}		
+	}
+	
 	public static boolean properCountableQuantifier(String word, String pos, String deprel) {
 		if ((word.equals("both") && pos.equals("DT") && deprel.equals("det"))
 				|| (word.equals("some") && pos.equals("DT") && deprel.equals("det"))
@@ -244,6 +253,22 @@ public class Numbers {
 			}
 			
 			if (properArticle(word, pos, deprel)) {
+				return true;
+				
+			}
+		}
+		return false;
+	}
+	
+	public static boolean containsNo(Sentence sent) {
+		String word, pos, deprel;
+		
+		for (int i=0; i<sent.words().size(); i++) {
+//			System.err.println(sent.word(i) + "\t" + sent.posTag(i) + "\t" + sent.nerTag(i));
+			word = sent.word(i);
+			pos = sent.posTag(i);
+			
+			if (properNo(word, pos)) {
 				return true;
 				
 			}
