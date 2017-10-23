@@ -674,15 +674,31 @@ public class Evaluation {
 					}
 				}
 				
-				if (prob > threshold 
-						&& !cols[4].equals("_ord_")) {
-					
-					nums.add(cols[3]);
-					probs.add(prob);
+				if (prob > threshold) {
+					if (addOrdinals) {
+						if (cols[4].equals("_ord_")) {
+							ords.add(cols[3]);
+							oprobs.add(prob);
+							nums.add("");
+							probs.add(prob);
+						} else {
+							ords.add("");
+							oprobs.add(prob);
+							nums.add(cols[3]);
+							probs.add(prob);
+						}
+					} else {
+						nums.add(cols[3]);
+						probs.add(prob);
+					}
 					
 				} else {
 					nums.add("");
 					probs.add(0.0);
+					if (addOrdinals) {
+						ords.add("");
+						oprobs.add(prob);
+					}
 				}
 				
 				if (addOrdinals) {
