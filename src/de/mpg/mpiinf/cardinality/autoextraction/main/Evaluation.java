@@ -55,6 +55,8 @@ public class Evaluation {
 		}
 		
 		String csvPath = cmd.getOptionValue("input");
+		String allPath = csvPath;
+		if (cmd.hasOption("all")) allPath = cmd.getOptionValue("all");
 		
 		String delimiter = ",";
 		if (cmd.hasOption("tab")) delimiter = "\t";
@@ -84,7 +86,7 @@ public class Evaluation {
 		boolean relaxed = false;
 		if (cmd.hasOption("x")) relaxed = true;
 		
-		eval.evaluate(relName, csvPath, delimiter, crfOutPath, labels, outputPath, resultPath, compositional, false, ordinals, minConfScore, zScore, 0, relaxed);
+		eval.evaluate(relName, csvPath, allPath, delimiter, crfOutPath, labels, outputPath, resultPath, compositional, false, ordinals, minConfScore, zScore, 0, relaxed);
 	}
 	
 	public static Options getEvalOptions() {
@@ -93,6 +95,10 @@ public class Evaluation {
 		Option input = new Option("i", "input", true, "Input evaluation file (.csv) path");
 		input.setRequired(true);
 		options.addOption(input);
+		
+		Option all = new Option("a", "all", true, "Input 'all entities' file (.csv) path");
+		all.setRequired(true);
+		options.addOption(all);
 		
 		Option tab = new Option("tab", "tab", false, "Tab separated input files");
 		tab.setRequired(false);
@@ -293,7 +299,8 @@ public class Evaluation {
 		return getMedian(st);
 	}
 	
-	public void evaluate(String relName, String csvPath, String delimiter, String crfOutPath, 
+	public void evaluate(String relName, String csvPath, String allPath,
+			String delimiter, String crfOutPath, 
 			String[] labels, String outPath, String resultPath,
 			boolean addSameSentence, boolean addDiffSentence,
 			boolean addOrdinals, 
@@ -320,6 +327,15 @@ public class Evaluation {
 			num = Integer.parseInt(line.split(delimiter)[1]);
 			instanceNum.put(line.split(delimiter)[0], num);
 			if (num > maxNum) maxNum = num;
+			instanceCurId.put(line.split(delimiter)[0], line.split(delimiter)[2]);
+			instanceLabel.put(line.split(delimiter)[0], line.split(delimiter)[3]);
+			line = br.readLine();
+		}
+		br.close();
+		
+		br = new BufferedReader(new FileReader(allPath));
+		line = br.readLine();
+		while (line != null) {
 			instanceCurId.put(line.split(delimiter)[0], line.split(delimiter)[2]);
 			instanceLabel.put(line.split(delimiter)[0], line.split(delimiter)[3]);
 			line = br.readLine();
@@ -544,7 +560,8 @@ public class Evaluation {
 				if (entityId != null && !cols[0].equals(entityId)
 						&& !entities.contains(entityId)
 						) {	//Entity ends
-					int numChild = instanceNum.get(entityId);
+					int numChild = 0;
+					if (instanceNum.containsKey(entityId)) numChild = instanceNum.get(entityId);
 					String wikiCurid = instanceCurId.get(entityId);
 					String wikiLabel = instanceLabel.get(entityId);
 					

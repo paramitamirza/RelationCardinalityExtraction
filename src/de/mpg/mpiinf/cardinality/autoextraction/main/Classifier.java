@@ -123,7 +123,8 @@ public class Classifier {
 		if (OSValidator.isWindows()) crfTest = "crf_test.exe";
 		
 //		BufferedWriter bw = new BufferedWriter(new FileWriter(testFile.replace(".data", ".out")));
-		BufferedWriter bw = new BufferedWriter(new FileWriter(this.getRelName() + "_cardinality.out"));
+		File file = new File(testFile);
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile().getParent() + "/" + this.getRelName() + "_cardinality.out"));
 		
 		try {
 	    	ProcessBuilder builder = new ProcessBuilder(this.getCrfDir() + "/" + crfTest, 

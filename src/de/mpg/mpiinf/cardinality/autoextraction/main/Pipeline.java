@@ -142,7 +142,7 @@ public class Pipeline {
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
 		String crfOutPath = evalData.replace(".data", ".out");
-		eval.evaluate(relName, testCsvFile, delimiter, crfOutPath, labels, predictionFile, resultFile, compositional, false, ordinals, minConfScore, zScore, trainSize, false);
+		eval.evaluate(relName, testCsvFile, testCsvFile, delimiter, crfOutPath, labels, predictionFile, resultFile, compositional, false, ordinals, minConfScore, zScore, trainSize, false);
 		
 		long endTime   = System.currentTimeMillis();
 		float totalTime = (endTime - startTime)/(float)1000;

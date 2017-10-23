@@ -7,7 +7,7 @@
     <property name="dir.workspace" value="/local/home/paramita/workspace"/>
     <property name="dir.jarfile" value="/local/home/paramita/D5data-8/RCE_pipeline"/>
     <target name="create_run_jar">
-        <jar destfile="${dir.jarfile}/RCEEvaluation.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="${dir.jarfile}/RCEEvaluation2.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="de.mpg.mpiinf.cardinality.autoextraction.main.Evaluation"/>
                 <attribute name="Class-Path" value="."/>
