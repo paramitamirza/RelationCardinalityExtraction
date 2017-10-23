@@ -706,7 +706,8 @@ public class Evaluation {
 		}
 		
 		//Last entity
-		int numChild = instanceNum.get(entityId);
+		int numChild = 0;
+		if (instanceNum.containsKey(entityId)) numChild = instanceNum.get(entityId);
 		String wikiCurid = instanceCurId.get(entityId);
 		String wikiLabel = instanceLabel.get(entityId);
 		
