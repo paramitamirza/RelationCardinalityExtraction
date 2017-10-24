@@ -625,7 +625,6 @@ public class Evaluation {
 					}
 					if (numChild > 0
 							|| (addZero && numChild == 0)) {
-						available += numChild;
 						
 						if (
 								(tConf < 0 && predictedProb > 0)
@@ -642,6 +641,19 @@ public class Evaluation {
 								if (numChild == predictedCardinal) tp ++;
 								else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
 							}
+						}
+						total ++;
+					}
+					if (numChild >= 0) {
+						available += numChild;
+						
+						if (
+								(tConf < 0 && predictedProb > 0)
+								||
+								(tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+								||
+								(tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+								){
 							if (predictedCardinal == numChild) {
 								complete ++;
 							} else if (predictedCardinal > numChild) {
@@ -651,7 +663,6 @@ public class Evaluation {
 								less ++;
 							}
 						}
-						total ++;
 					}
 					ctotal ++;
 					
@@ -775,7 +786,6 @@ public class Evaluation {
 		}
 		if (numChild > 0
 				|| (addZero && numChild == 0)) {
-			available += numChild;
 			
 			if (
 					(tConf < 0 && predictedProb > 0)
@@ -787,10 +797,24 @@ public class Evaluation {
 				if (relaxedMatch) {
 					if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
 					else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
+					
 				} else {
 					if (numChild == predictedCardinal) tp ++;
 					else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
 				}
+			}
+			total ++;
+		}
+		if (numChild >= 0) {
+			available += numChild;
+			
+			if (
+					(tConf < 0 && predictedProb > 0)
+					||
+					(tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+					||
+					(tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+					){
 				if (predictedCardinal == numChild) {
 					complete ++;
 				} else if (predictedCardinal > numChild) {
@@ -800,9 +824,7 @@ public class Evaluation {
 					less ++;
 				}
 			}
-			total ++;
 		}
-		
 		ctotal ++;
 
 		entities.add(entityId);
