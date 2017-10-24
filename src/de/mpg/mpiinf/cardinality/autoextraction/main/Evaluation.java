@@ -701,19 +701,6 @@ public class Evaluation {
 					}
 				}
 				
-				if (addOrdinals) {
-					if (prob > threshold 
-							&& cols[4].equals("_ord_")) {
-						
-						ords.add(cols[3]);
-						oprobs.add(prob);
-						
-					} else {
-						ords.add("");
-						oprobs.add(0.0);
-					}
-				}
-				
 				line = br.readLine();
 			}
 			
