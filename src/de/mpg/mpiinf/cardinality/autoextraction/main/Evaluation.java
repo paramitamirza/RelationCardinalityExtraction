@@ -86,7 +86,14 @@ public class Evaluation {
 		boolean relaxed = false;
 		if (cmd.hasOption("x")) relaxed = true;
 		
-		eval.evaluate(relName, csvPath, allPath, delimiter, crfOutPath, labels, outputPath, resultPath, compositional, false, ordinals, minConfScore, zScore, 0, relaxed);
+		boolean zero = false;
+		if (cmd.hasOption("zero")) zero = true;
+		
+		eval.evaluate(relName, csvPath, allPath, delimiter, 
+				crfOutPath, labels, 
+				outputPath, resultPath, 
+				compositional, false, ordinals, zero,
+				minConfScore, zScore, 0, relaxed);
 	}
 	
 	public static Options getEvalOptions() {
@@ -127,6 +134,10 @@ public class Evaluation {
 		Option ordinal = new Option("ordinals", "ordinals", false, "Consider ordinals as candidates");
 		ordinal.setRequired(false);
 		options.addOption(ordinal);
+		
+		Option transformZero = new Option("0", "zero", false, "Consider 0 count prediction");
+		transformZero.setRequired(false);
+		options.addOption(transformZero);
 		
 		Option minConfScore = new Option("v", "confidence", true, "Minimum confidence score");
 		minConfScore.setRequired(false);
@@ -303,7 +314,7 @@ public class Evaluation {
 			String delimiter, String crfOutPath, 
 			String[] labels, String outPath, String resultPath,
 			boolean addSameSentence, boolean addDiffSentence,
-			boolean addOrdinals, 
+			boolean addOrdinals, boolean addZero,
 			float tConf, float zRange, long trainSize, boolean relaxedMatch) throws IOException {
 		
 		long startTime = System.currentTimeMillis();
@@ -612,7 +623,8 @@ public class Evaluation {
 //									+ numChild + "\t" + 0 + "\t" + 0 + "\t" + "");
 						}
 					}
-					if (numChild >= 0) {
+					if (numChild > 0
+							|| (addZero && numChild == 0)) {
 						available += numChild;
 						
 						if (
@@ -761,7 +773,8 @@ public class Evaluation {
 //						+ numChild + "\t" + 0 + "\t" + 0 + "\t" + "");
 			}
 		}
-		if (numChild >= 0) {
+		if (numChild > 0
+				|| (addZero && numChild == 0)) {
 			available += numChild;
 			
 			if (
@@ -774,7 +787,6 @@ public class Evaluation {
 				if (relaxedMatch) {
 					if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
 					else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
-					
 				} else {
 					if (numChild == predictedCardinal) tp ++;
 					else if (numChild != predictedCardinal && predictedCardinal > 0) fp ++;
