@@ -97,7 +97,7 @@ public class Evaluation {
 		options.addOption(input);
 		
 		Option all = new Option("a", "all", true, "Input 'all entities' file (.csv) path");
-		all.setRequired(true);
+		all.setRequired(false);
 		options.addOption(all);
 		
 		Option tab = new Option("tab", "tab", false, "Tab separated input files");
