@@ -90,7 +90,7 @@ public class FeatureExtractionConcurrent {
 				true, false, false, 
 				false, false, false, 
 				false,
-				false);
+				false, false);
 	}
 	
 	public void run(WikipediaArticle wiki, boolean ignoreHigher, int ignoreHigherLess,
@@ -98,7 +98,7 @@ public class FeatureExtractionConcurrent {
 			boolean nummod, boolean ordinal, boolean numterms,
 			boolean articles, boolean quantifiers, boolean pronouns,
 			boolean compositional, 
-			boolean negation
+			boolean negation, boolean negTrain
 			) throws IOException, InterruptedException {
 		
 		long startTime = System.currentTimeMillis();
@@ -194,7 +194,7 @@ public class FeatureExtractionConcurrent {
 			        		nummod, ordinal, numterms, 
 			        		articles, quantifiers, pronouns,
 			        		compositional,
-			        		negation);
+			        		negation, negTrain);
 					ext.run();
 	        	}
         	}
@@ -208,7 +208,7 @@ public class FeatureExtractionConcurrent {
 	        		nummod, ordinal, numterms, 
 	        		articles, quantifiers, pronouns,
 	        		compositional,
-	        		negation);
+	        		negation, negTrain);
 			ext.run();
         }
 		//Done. Next WikidataIds...
@@ -258,7 +258,7 @@ public class FeatureExtractionConcurrent {
 				        		nummod, ordinal, numterms, 
 				        		articles, quantifiers, pronouns,
 				        		compositional,
-				        		negation);
+				        		negation, negTrain);
 				        executor.execute(worker);
 		        	}
 	        	}
@@ -272,7 +272,7 @@ public class FeatureExtractionConcurrent {
 		        		nummod, ordinal, numterms, 
 		        		articles, quantifiers, pronouns,
 		        		compositional,
-		        		negation);
+		        		negation, negTrain);
 		        executor.execute(worker);
 	        }
              

@@ -87,6 +87,15 @@ public class Numbers {
 		return transform.prefixLatinGreek.get(latinGreekPrefix);
 	}
 	
+	public static boolean properUnLessAdj(String lemma, String pos) {
+		if (pos.equals("JJ")
+				&& (lemma.startsWith("un") || lemma.endsWith("less"))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public static boolean properNumber(String pos, String ner) {
 		if (pos.equals("CD")
 				&& ner.equals("NUMBER")
@@ -205,6 +214,18 @@ public class Numbers {
 		}		
 	}
 	
+	public static boolean properNegation(String word, String pos) {
+		if ((word.equals("no") && pos.equals("DT"))
+				|| word.equals("any")
+				|| word.equals("without")
+				|| word.equals("never")
+				) {
+			return true;
+		} else {
+			return false;
+		}		
+	}
+	
 	public static boolean properCountableQuantifier(String word, String pos, String deprel) {
 		if ((word.equals("both") && pos.equals("DT") && deprel.equals("det"))
 				|| (word.equals("some") && pos.equals("DT") && deprel.equals("det"))
@@ -269,6 +290,22 @@ public class Numbers {
 			pos = sent.posTag(i);
 			
 			if (properNo(word, pos)) {
+				return true;
+				
+			}
+		}
+		return false;
+	}
+	
+	public static boolean containsNegation(Sentence sent) {
+		String word, pos, deprel;
+		
+		for (int i=0; i<sent.words().size(); i++) {
+//			System.err.println(sent.word(i) + "\t" + sent.posTag(i) + "\t" + sent.nerTag(i));
+			word = sent.word(i);
+			pos = sent.posTag(i);
+			
+			if (properNegation(word, pos)) {
 				return true;
 				
 			}

@@ -44,6 +44,7 @@ public class GenerateFeatures implements Runnable {
 	
 	private boolean compositional;
 	private boolean negation;
+	private boolean negTrain;
 	
 	private double countInfThreshold;
 	private double countDist;
@@ -64,7 +65,7 @@ public class GenerateFeatures implements Runnable {
 			boolean nummod, boolean ordinal, boolean numterms,
 			boolean articles, boolean quantifiers, boolean pronouns,
 			boolean compositional, 
-			boolean negation
+			boolean negation, boolean negTrain
 			) {
 		this.setDirFeature(dirFeature);
 		this.setRelName(relName);
@@ -88,6 +89,7 @@ public class GenerateFeatures implements Runnable {
 		this.setCompositional(compositional);
 		
 		this.setNegation(negation);
+		this.setNegTrain(negTrain);
 		
 		this.setCountInfThreshold(countInfThreshold);
 		this.setCountDist(Double.parseDouble(countDist));
@@ -147,7 +149,7 @@ public class GenerateFeatures implements Runnable {
 		    							this.isOrdinal(), this.isNummod(), this.isCompositional(), 
 		    							this.getCountInfThreshold(), this.getCountDist(),
 		    							this.isIgnoreHigher(), this.getIgnoreHigherLess(),
-		    							this.isIgnoreFreq(), this.getMaxTripleCount()).toString());
+		    							this.isIgnoreFreq(), this.getMaxTripleCount(), this.isNegTrain()).toString());
 		    				}
 		    				
 		    				j ++;
@@ -210,6 +212,8 @@ public class GenerateFeatures implements Runnable {
 					|| (this.isQuantifiers() && Numbers.containsCountableQuantifiers(sentStr))
 					|| (this.isPronouns() && Numbers.containsPersonalPronouns(sent))
 					|| (this.isNegation() && Numbers.containsNo(sent))
+					|| (this.isNegation() && Numbers.containsNo(sent))
+					|| (this.isNegTrain() && Numbers.containsNegation(sent))
 					)
 				return sent;
 			else
@@ -327,7 +331,8 @@ public class GenerateFeatures implements Runnable {
 			boolean ordinal, boolean nummod, boolean compositional, 
 			double countInfThreshold, double countDist,
 			boolean ignoreHigher, int ignoreHigherLess,
-			boolean ignoreFreq, int maxTripleCount) {
+			boolean ignoreFreq, int maxTripleCount,
+			boolean negTrain) {
 		String word = "", lemma = "", pos = "", ner = "", deprel = "", dependent = "", label = "";
 		StringBuilder sb = new StringBuilder();
 		int k, depIdx;
@@ -350,6 +355,7 @@ public class GenerateFeatures implements Runnable {
 			pos = sent.posTag(k);
 			ner = sent.nerTag(k);
 			word = sent.word(k);
+			lemma = sent.lemma(k);
 			deprel = "O"; 
 			if (sent.incomingDependencyLabel(k).isPresent()) {
 				deprel = sent.incomingDependencyLabel(k).get();
@@ -854,6 +860,20 @@ public class GenerateFeatures implements Runnable {
 				
 				word = ""; lemma = ""; deprel = "O"; dependent = "O";
 				
+			} else if (this.isNegation() && negTrain && (Numbers.properUnLessAdj(lemma, pos)
+							|| Numbers.properNegation(lemma, pos)
+						)
+					) {						
+				deprel = "O"; dependent = "O";
+				
+				if (numOfTriples == 0) {
+					label = "_YES_";
+				}
+				
+				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
+				labels.add(label);
+				tokenIdx ++;
+				
 			} else if (Numbers.properNoun(pos)) {
 				word = ""; lemma = ""; deprel = "O"; dependent = "O";
 				
@@ -1139,5 +1159,13 @@ public class GenerateFeatures implements Runnable {
 
 	public void setNegation(boolean negation) {
 		this.negation = negation;
+	}
+
+	public boolean isNegTrain() {
+		return negTrain;
+	}
+
+	public void setNegTrain(boolean negTrain) {
+		this.negTrain = negTrain;
 	}
 }

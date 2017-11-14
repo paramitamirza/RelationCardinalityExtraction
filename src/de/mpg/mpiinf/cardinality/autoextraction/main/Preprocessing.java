@@ -140,12 +140,14 @@ public class Preprocessing {
 			int ignoreHigherLess = -1;
 			if (cmd.hasOption("h")) ignoreHigherLess = Integer.parseInt(cmd.getOptionValue("ignorehigher"));
 			
+			boolean negTrain = false;
+			
 			featExtraction.run(wiki, ignoreHigher, ignoreHigherLess, 
 					threshold, ignoreFreq, topPopular, quarterPart,
 					nummod, ordinals, numterms,
 					articles, quantifiers, pronouns,
 					compositional, 
-					negation 
+					negation, negTrain 
 					);
 		}
 		

@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,8 +26,8 @@ import java.util.NavigableMap;
 public class WikipediaArticle {
 	
 	private String wikiDir = "/home/paramita/D5data-8/RCE_pipeline/enwiki_20170320_pages_articles/";
-	private String zindexDir = "/home/paramita/D5data-8/RCE_pipeline/enwiki_20170320_pages_articles/zindex/";
-	private String wikibaseMapFile = "/home/paramita/D5data-8/RCE_pipeline/enwiki_20170320_pages_articles/wikibase_item.txt.gz";
+	private String zindexDir = wikiDir + "zindex/";
+	private String wikibaseMapFile = wikiDir + "wikibase_item.txt.gz";
 	
 	private NavigableMap<Integer, String> wikiIndex;
 	private Map<String, String> wikibaseMap;
@@ -37,6 +39,17 @@ public class WikipediaArticle {
 	}
 	
 	public WikipediaArticle() throws IOException {
+		
+		wikiIndex = new TreeMap<Integer, String>();
+		loadWikiIndex();
+		
+		wikibaseMap = new HashMap<String, String>();
+	}
+	
+	public WikipediaArticle(String wikiDir) throws IOException {
+		this.setWikiDir(wikiDir);
+		this.setZindexDir(wikiDir + "zindex/");
+		this.setWikibaseMapFile(wikiDir + "wikibase_item.txt.gz");
 		
 		wikiIndex = new TreeMap<Integer, String>();
 		loadWikiIndex();
@@ -57,15 +70,28 @@ public class WikipediaArticle {
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
 		
-		WikipediaArticle wa = new WikipediaArticle();
+		boolean online = true;
 		
-//		System.out.println(wa.fetchArticle(7256246));
+		if (online) {	
+			// Using MediaWiki API to fetch Wikipedia articles -- must be online
+			
+			WikipediaArticle wa = new WikipediaArticle();
+//			System.out.println(wa.fetchArticleMediaWiki(43671127));					// using page ID
+			
+//			wa.mapWikidataWikipediaCurId("/home/paramita/D5data-8/RCE_pipeline/enwiki_20170320_pages_articles/wikibase_item.txt.gz");
+//			System.out.println(wa.fetchArticleFromWikidataIdMediaWiki("Q3052772"));	// using Wikidata ID
 		
-//		System.out.println("Load Wikidata Id to Wikipedia article mapping...");
-		wa.mapWikidataWikipediaCurId();
-//		System.out.println(wa.fetchArticleFromWikidataId("Q7721753"));
-
-		wa.appendCurId("./data/example/children2.csv", ",");
+		} else {
+		// Using saved and parsed Wikipedia dump to fetch Wikipedia articles -- can be offline
+			
+			WikipediaArticle wa = new WikipediaArticle("/home/paramita/D5data-8/RCE_pipeline/enwiki_20170320_pages_articles/");	// dump directory
+			System.out.println(wa.fetchArticle(43671127));							// using page ID
+		
+//			wa.mapWikidataWikipediaCurId();
+//			System.out.println(wa.fetchArticleFromWikidataId("Q3052772"));			// using Wikidata ID
+		}
+		
+//		wa.appendCurId("./data/example/children2.csv", ",");
 //		wa.appendCurIdWithoutMap("./data/example/children2.csv");
 	}
 	
@@ -168,12 +194,17 @@ public class WikipediaArticle {
 	
 	public void mapWikidataWikipediaCurId() throws IOException {
 		
+		mapWikidataWikipediaCurId(this.getWikibaseMapFile());
+	}
+	
+	public void mapWikidataWikipediaCurId(String wikibaseMapFile) throws IOException {
+		
 		long startTime = System.currentTimeMillis();
 		System.out.print("Load Wikidata Id to Wikipedia article mapping... ");
 		
 		BufferedReader br = new BufferedReader(
                 new InputStreamReader(
-                        new GZIPInputStream(new FileInputStream(this.getWikibaseMapFile()))
+                        new GZIPInputStream(new FileInputStream(wikibaseMapFile))
                     ));
 		String line = br.readLine();
 		while (line != null) {
@@ -192,6 +223,16 @@ public class WikipediaArticle {
 		String article = "";
 		for (String curId : curIds.split("\\|")) {
 			article = fetchArticle(Integer.parseInt(curId));
+			if (!article.equals("")) return article;
+		}
+		return "";
+	}
+	
+	public String fetchArticleFromWikidataIdMediaWiki(String wdId) throws NumberFormatException, MalformedURLException, IOException {
+		String curIds = wikibaseMap.get(wdId);
+		String article = "";
+		for (String curId : curIds.split("\\|")) {
+			article = fetchArticleMediaWiki(Integer.parseInt(curId));
 			if (!article.equals("")) return article;
 		}
 		return "";
@@ -260,6 +301,19 @@ public class WikipediaArticle {
 	    } else {
 	    	return "";
 	    }
+	}
+	
+	public String fetchArticleMediaWiki(Integer curId) throws MalformedURLException, IOException {
+		String wikiUrl = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&explaintext&pageids=" + curId;
+		
+		BufferedReader in = new BufferedReader(new InputStreamReader(new URL(wikiUrl).openStream()));
+        String input = "", inputLine;
+        while ((inputLine = in.readLine()) != null)
+            input += inputLine + "\n";
+        in.close();
+        
+        JSONObject content = new JSONObject(input).getJSONObject("query").getJSONObject("pages").getJSONObject(curId+"");
+        return content.getString("extract");
 	}
 	
 	private void loadWikiIndex() throws IOException {

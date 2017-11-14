@@ -1,6 +1,8 @@
 package de.mpg.mpiinf.cardinality.autoextraction.main;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -95,12 +97,14 @@ public class Pipeline {
 		int ignoreHigherLess = -1;
 		if (cmd.hasOption("h")) ignoreHigherLess = Integer.parseInt(cmd.getOptionValue("ignorehigher"));
 		
+		boolean negTrain = false;
+		
 		featExtraction.run(wiki, ignoreHigher, ignoreHigherLess, 
 				threshold, ignoreFreq, topPopular, quarterPart,
 				nummod, ordinals, numterms,
 				articles, quantifiers, pronouns,
 				compositional, 
-				negation 
+				negation, negTrain 
 				);
 		
 		//Classifier
@@ -139,14 +143,21 @@ public class Pipeline {
 		float zScore = (float)100.0;
 		if (cmd.hasOption("z")) zScore = Float.parseFloat(cmd.getOptionValue("zscore"));
 		
+		boolean label = false;
+		if (cmd.hasOption("label")) label = true;
+		
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
-		String crfOutPath = evalData.replace(".data", ".out");
+		
+		File file = new File(evalData);
+		String crfOutPath = file.getAbsoluteFile().getParent() + "/" + relName + "_cardinality.out";
+//		String crfOutPath = evalData.replace(".data", ".out");
+		
 		eval.evaluate(relName, testCsvFile, testCsvFile, delimiter, 
 				crfOutPath, labels, 
 				predictionFile, resultFile, 
 				compositional, false, ordinals, negation,
-				minConfScore, zScore, trainSize, false);
+				minConfScore, zScore, trainSize, false, label);
 		
 		long endTime   = System.currentTimeMillis();
 		float totalTime = (endTime - startTime)/(float)1000;
@@ -279,6 +290,10 @@ public class Pipeline {
 		Option zScoreRange = new Option("z", "zscore", true, "Maximum range of z-score");
 		zScoreRange.setRequired(false);
 		options.addOption(zScoreRange);
+		
+		Option label = new Option("label", "label", false, "Print property/relation and class labels");
+		label.setRequired(false);
+		options.addOption(label);
 		
 		return options;
 	}

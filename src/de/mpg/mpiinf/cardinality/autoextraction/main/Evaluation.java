@@ -17,6 +17,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.cli.CommandLine;
@@ -30,6 +32,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import de.mpg.mpiinf.cardinality.autoextraction.Numbers;
+import de.mpg.mpiinf.cardinality.autoextraction.WikidataLabel;
 import edu.stanford.nlp.util.Pair;
 import edu.stanford.nlp.util.StringUtils;
 
@@ -73,7 +76,8 @@ public class Evaluation {
 		}
 		
 		Evaluation eval = new Evaluation();
-		String[] labels = {"O", "_YES_"};
+//		String[] labels = {"O", "_YES_"};
+		String[] labels = {"_YES_", "O"};
 		boolean compositional = cmd.hasOption("compositional");
 		boolean ordinals = cmd.hasOption("ordinals");
 		
@@ -89,11 +93,15 @@ public class Evaluation {
 		boolean zero = false;
 		if (cmd.hasOption("zero")) zero = true;
 		
+		boolean label = false;
+		if (cmd.hasOption("label")) label = true;
+		
 		eval.evaluate(relName, csvPath, allPath, delimiter, 
 				crfOutPath, labels, 
 				outputPath, resultPath, 
 				compositional, false, ordinals, zero,
-				minConfScore, zScore, 0, relaxed);
+				minConfScore, zScore, 0, relaxed,
+				label);
 	}
 	
 	public static Options getEvalOptions() {
@@ -110,6 +118,10 @@ public class Evaluation {
 		Option tab = new Option("tab", "tab", false, "Tab separated input files");
 		tab.setRequired(false);
 		options.addOption(tab);
+		
+		Option label = new Option("label", "label", false, "Print property/relation and class labels");
+		label.setRequired(false);
+		options.addOption(label);
 		
 		Option relName = new Option("p", "relname", true, "Property/relation name");
 		relName.setRequired(true);
@@ -315,7 +327,8 @@ public class Evaluation {
 			String[] labels, String outPath, String resultPath,
 			boolean addSameSentence, boolean addDiffSentence,
 			boolean addOrdinals, boolean addZero,
-			float tConf, float zRange, long trainSize, boolean relaxedMatch) throws IOException {
+			float tConf, float zRange, long trainSize, boolean relaxedMatch,
+			boolean label) throws IOException {
 		
 		long startTime = System.currentTimeMillis();
 		
@@ -613,7 +626,7 @@ public class Evaluation {
 									+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
 									+ numChild + "\t" 
 									+ predictedCardinal + "\t" 
-									+ predictedProbS + "\t" 
+									+ predictedProb + "\t" 
 									+ evidence);
 							bw.newLine();
 //						} else {
@@ -774,7 +787,7 @@ public class Evaluation {
 						+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
 						+ numChild + "\t" 
 						+ predictedCardinal + "\t" 
-						+ predictedProbS + "\t" 
+						+ predictedProb + "\t" 
 						+ evidence);
 				bw.newLine();
 //			} else {
@@ -851,6 +864,24 @@ public class Evaluation {
 		double recall = (double)tp / (double)total;
 		double fscore = (2 * precision * recall) / (precision + recall);
 		
+		String propRegex = ".*(P\\d+).*";
+		Pattern propPattern = Pattern.compile(propRegex);
+		Matcher propMatcher = propPattern.matcher(relName);
+		
+		String classRegex = ".*(Q\\d+).*";
+		Pattern classPattern = Pattern.compile(classRegex);
+		Matcher classMatcher = classPattern.matcher(relName);
+		
+		WikidataLabel wl = new WikidataLabel();
+		if (label) {
+			if (propMatcher.find()) {
+				relName +=  "\t" + wl.getLabel(propMatcher.group(1));
+			}
+			if (classMatcher.find()) {
+				relName += "\t" + wl.getLabel(classMatcher.group(1));
+			}
+		}
+		
 		if (resultPath != null) {
 			bw = new BufferedWriter(new FileWriter(resultPath, true));
 			bw.write(relName + "\t" + trainSize + "\t" + tp + "\t" + fp + "\t" + total  
@@ -911,7 +942,15 @@ public class Evaluation {
 					} else if (number.split("_")[1].equals("P")) {
 						numTriple.put(i, "2" + "#" + prob);
 					}
-				} else if (number.equals("no")) {
+				} else if (number.equals("no")
+						|| number.equals("any")
+						|| number.equals("without")
+						|| number.equals("never")
+						) {
+					numTriple.put(i, "0" + "#" + prob);
+				
+				} else if (number.startsWith("un") 
+						|| number.endsWith("less")) {
 					numTriple.put(i, "0" + "#" + prob);
 				}
 			}
