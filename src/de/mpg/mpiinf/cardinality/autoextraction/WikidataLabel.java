@@ -31,7 +31,7 @@ public class WikidataLabel {
 	
 	public static void main(String[] args) throws MalformedURLException, IOException {
 		WikidataLabel wl = new WikidataLabel();
-		System.out.println(wl.getLabel("Q878367"));
+		System.out.println(wl.getLabel("Q3052772"));
 	}
 
 }
