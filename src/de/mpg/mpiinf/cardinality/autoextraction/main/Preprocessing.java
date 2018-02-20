@@ -103,7 +103,7 @@ public class Preprocessing {
 			
 			FeatureExtractionConcurrent featExtraction;
 			if (evalCsvFile != null)
-				featExtraction = new FeatureExtractionConcurrent(inputCsvFile, evalCsvFile, relName, dirFeature);
+				featExtraction = new FeatureExtractionConcurrent(inputCsvFile, evalCsvFile, delimiter, relName, dirFeature);
 			else {
 				if (cmd.hasOption("r")) {
 					int nRandom = Integer.parseInt(cmd.getOptionValue("randomize"));
@@ -240,13 +240,17 @@ public class Preprocessing {
 		ignoreHigher.setRequired(false);
 		options.addOption(ignoreHigher);
 		
-		Option ignoreFreq = new Option("q", "ignorefreq", false, "Ignore frequent numbers in the text (do not label as positive examples)");
+		Option ignoreFreq = new Option("g", "ignorefreq", true, "Ignore frequent numbers in the text (do not label as positive examples)");
 		ignoreFreq.setRequired(false);
 		options.addOption(ignoreFreq);
 		
 		Option topPopular = new Option("k", "popular", true, "Cutoff percentage of popular instances as training examples");
 		topPopular.setRequired(false);
 		options.addOption(topPopular);
+		
+		Option quarterPart = new Option("q", "quarter", true, "Quarter part of popular instances as training examples");
+		quarterPart.setRequired(false);
+		options.addOption(quarterPart);
 		
 		Option nThreads = new Option("n", "thread", true, "Number of threads");
 		nThreads.setRequired(false);

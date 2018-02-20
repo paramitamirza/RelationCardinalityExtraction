@@ -24,6 +24,18 @@ public class Pipeline {
 		// -i ./data/example/wikidata_sample_new.csv -p sample -w /local/home/paramita/D5data-8/RelationCardinalityExtraction_pipeline/enwiki_20170101_pages_articles/ -c /local/home/paramita/CRF++-0.58/ -l ./data/example/CRF/template_lemma.txt -d -t 1 -f ./data/example/ -m ./data/example/CRF/models/ -o ./data/example/predicted_children_count.csv -r ./data/example/performance.txt
 		// -Xms2g -Xmx4g
 		
+		// ACL
+		// -i /local/home/paramita/D5data-8/RCE_pipeline/example_dir/wikidata_children 
+		// -e /local/home/paramita/D5data-8/RCE_pipeline/example_dir/wikidata_children_random200
+		// -p wikidata_children 
+		// -d
+		// -w /local/home/paramita/D5data-8/RCE_pipeline/enwiki_20170320_pages_articles/
+		// -c /local/home/paramita/CRF++-0.58/
+		// -l /local/home/paramita/D5data-8/RCE_pipeline/data/template_lemma.txt
+		// -m ./data/example/CRF/models/ 
+		// -o ./data/example/predicted_wikidata_children.csv 
+		// -r ./data/example/acl_performance.txt
+		
 		long startTime = System.currentTimeMillis();
 		System.out.println("Start the Relation Cardinality Extraction pipeline... ");
 		
@@ -137,6 +149,9 @@ public class Pipeline {
 			resultFile = cmd.getOptionValue("result");
 		}
 		
+		float minProb = (float)0.1;
+		if (cmd.hasOption("prob")) minProb = Float.parseFloat(cmd.getOptionValue("prob"));
+		
 		float minConfScore = (float)0.0;
 		if (cmd.hasOption("v")) minConfScore = Float.parseFloat(cmd.getOptionValue("confidence"));
 		
@@ -145,6 +160,9 @@ public class Pipeline {
 		
 		boolean label = false;
 		if (cmd.hasOption("label")) label = true;
+		
+		boolean crf = false;
+		if (cmd.hasOption("crf")) crf = true;
 		
 		Evaluation eval = new Evaluation();
 		String[] labels = {"O", "_YES_"};
@@ -157,7 +175,8 @@ public class Pipeline {
 				crfOutPath, labels, 
 				predictionFile, resultFile, 
 				compositional, false, ordinals, negation,
-				minConfScore, zScore, trainSize, false, label);
+				minProb, minConfScore, zScore, trainSize, false, 
+				label, crf);
 		
 		long endTime   = System.currentTimeMillis();
 		float totalTime = (endTime - startTime)/(float)1000;
@@ -283,6 +302,10 @@ public class Pipeline {
 		nThreads.setRequired(false);
 		options.addOption(nThreads);
 		
+		Option minProb = new Option("prob", "prob", true, "Minimum marginal probability");
+		minProb.setRequired(false);
+		options.addOption(minProb);
+		
 		Option minConfScore = new Option("v", "confidence", true, "Minimum confidence score");
 		minConfScore.setRequired(false);
 		options.addOption(minConfScore);
@@ -294,6 +317,10 @@ public class Pipeline {
 		Option label = new Option("label", "label", false, "Print property/relation and class labels");
 		label.setRequired(false);
 		options.addOption(label);
+		
+		Option isCRF = new Option("crf", "crf", false, "CRF evaluation");
+		isCRF.setRequired(false);
+		options.addOption(isCRF);
 		
 		return options;
 	}

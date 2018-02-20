@@ -77,9 +77,13 @@ public class Evaluation {
 		
 		Evaluation eval = new Evaluation();
 //		String[] labels = {"O", "_YES_"};
-		String[] labels = {"_YES_", "O"};
+//		String[] labels = {"_YES_", "O"};
+		String[] labels = {"O", "_COMP_", "_YES_"};
 		boolean compositional = cmd.hasOption("compositional");
 		boolean ordinals = cmd.hasOption("ordinals");
+		
+		float minProb = (float)0.1;
+		if (cmd.hasOption("prob")) minProb = Float.parseFloat(cmd.getOptionValue("prob"));
 		
 		float minConfScore = (float)-1.0;
 		if (cmd.hasOption("v")) minConfScore = Float.parseFloat(cmd.getOptionValue("confidence"));
@@ -96,12 +100,15 @@ public class Evaluation {
 		boolean label = false;
 		if (cmd.hasOption("label")) label = true;
 		
+		boolean crf = false;
+		if (cmd.hasOption("crfeval")) crf = true;
+		
 		eval.evaluate(relName, csvPath, allPath, delimiter, 
 				crfOutPath, labels, 
 				outputPath, resultPath, 
 				compositional, false, ordinals, zero,
-				minConfScore, zScore, 0, relaxed,
-				label);
+				minProb, minConfScore, zScore, 0, relaxed,
+				label, crf);
 	}
 	
 	public static Options getEvalOptions() {
@@ -123,6 +130,10 @@ public class Evaluation {
 		label.setRequired(false);
 		options.addOption(label);
 		
+		Option isCRF = new Option("c", "crfeval", false, "CRF evaluation");
+		isCRF.setRequired(false);
+		options.addOption(isCRF);
+		
 		Option relName = new Option("p", "relname", true, "Property/relation name");
 		relName.setRequired(true);
 		options.addOption(relName);
@@ -131,7 +142,7 @@ public class Evaluation {
 		crfout.setRequired(true);
 		options.addOption(crfout);
         
-		Option output = new Option("o", "output", true, "Output file (.csv) path");
+		Option output = new Option("o", "output", true, "Output file (.tsv) path");
 		output.setRequired(false);
 		options.addOption(output);
 		
@@ -150,6 +161,10 @@ public class Evaluation {
 		Option transformZero = new Option("0", "zero", false, "Consider 0 count prediction");
 		transformZero.setRequired(false);
 		options.addOption(transformZero);
+		
+		Option minProb = new Option("prob", "prob", true, "Minimum marginal probability");
+		minProb.setRequired(false);
+		options.addOption(minProb);
 		
 		Option minConfScore = new Option("v", "confidence", true, "Minimum confidence score");
 		minConfScore.setRequired(false);
@@ -190,12 +205,15 @@ public class Evaluation {
 		return -999;
 	}
 	
-	private boolean conjExist(List<String> sentence, int startIdx, int endIdx) {
+	private boolean conjExist(List<String> sentence, List<String> tags, int startIdx, int endIdx) {
 		for (int i=startIdx; i<endIdx; i++) {
-			if (sentence.get(i).toLowerCase().equals(",")
-//					|| sentence.get(i).toLowerCase().equals(";")
-					|| sentence.get(i).toLowerCase().equals("and")
-					) {
+//			if (sentence.get(i).toLowerCase().equals(",")
+////					|| sentence.get(i).toLowerCase().equals(";")
+//					|| sentence.get(i).toLowerCase().equals("and")
+//					) {
+//				return true;
+//			}
+			if (tags.get(i).equals("_COMP_")) {
 				return true;
 			}
 		}
@@ -327,8 +345,8 @@ public class Evaluation {
 			String[] labels, String outPath, String resultPath,
 			boolean addSameSentence, boolean addDiffSentence,
 			boolean addOrdinals, boolean addZero,
-			float tConf, float zRange, long trainSize, boolean relaxedMatch,
-			boolean label) throws IOException {
+			float tProb, float tConf, float zRange, long trainSize, boolean relaxedMatch,
+			boolean label, boolean isCRF) throws IOException {
 		
 		long startTime = System.currentTimeMillis();
 		
@@ -393,7 +411,7 @@ public class Evaluation {
 			bw = new BufferedWriter(new FileWriter(outPath));
 		}
 		
-		Double prob = 0.0;
+		Double prob = 0.0, probComp = 0.0;
 		List<String> nums = new ArrayList<String>();
 		List<Double> probs = new ArrayList<Double>();
 		
@@ -405,12 +423,18 @@ public class Evaluation {
 		int complete = 0, incomplete = 0, less = 0;
 		int available = 0, missing = 0;
 		int total = 0, ctotal = 0;
-//		double threshold = minConfScore;
-		double threshold = 0.1;
+		double threshold = tProb;
+//		double threshold = 0.1;
+		
+		int menTp = 0;
+		int menFp = 0;
+		int menFn = 0;
 		
 		String[] cols;
 		List<String> sentence = new ArrayList<String>();
+		List<String> tags = new ArrayList<String>();
 		String entityId = null;
+		String goldLabel = null;
 		
 		long predictedCardinal = 0, predictedOrdinal = 0;
 		double predictedProb = 0.0, predictedProbZ = 0.0, predictedProbS = 0.0;
@@ -478,7 +502,7 @@ public class Evaluation {
 											p = pp;
 											
 										} else {
-											if (conjExist(sentence, mlist.get(mlist.size()-1), mm)
+											if (conjExist(sentence, tags, mlist.get(mlist.size()-1), mm)
 													&& (mm - mlist.get(mlist.size()-1)) <= 5 
 													&& !isQuantifier(sentence, mm)
 													&& !isPossPronouns(sentence, mm)
@@ -575,7 +599,9 @@ public class Evaluation {
 			oprobs = new ArrayList<Double>();
 			
 			sentence = new ArrayList<String>();
+			tags = new ArrayList<String>();
 			
+			int numChild = 0;
 			line = br.readLine();
 			
 			while (line != null && !line.trim().equals("")) {
@@ -584,8 +610,9 @@ public class Evaluation {
 				if (entityId != null && !cols[0].equals(entityId)
 						&& !entities.contains(entityId)
 						) {	//Entity ends
-					int numChild = 0;
+					
 					if (instanceNum.containsKey(entityId)) numChild = instanceNum.get(entityId);
+					
 					String wikiCurid = instanceCurId.get(entityId);
 					String wikiLabel = instanceLabel.get(entityId);
 					
@@ -693,6 +720,8 @@ public class Evaluation {
 				}
 				
 				entityId = cols[0];
+				if (instanceNum.containsKey(entityId)) numChild = instanceNum.get(entityId);
+				goldLabel = cols[8];
 				
 				if (cols[4].equals("_propernoun_")) {
 					sentence.add(cols[3].replaceAll("_", " "));
@@ -704,9 +733,25 @@ public class Evaluation {
 					sentence.add(cols[3]);
 				}
 				
-				for (int l=0; l<labels.length; l++) {
-					if (labels[l].equals("_YES_")) {
-						prob = Double.valueOf(cols[cols.length-labels.length+l].split("/")[1]);
+				if (isCRF) {
+					prob = -1.0; probComp = -1.0;
+					for (int l=0; l<labels.length; l++) {
+						if (labels[l].equals("_YES_")) {
+							prob = Double.valueOf(cols[cols.length-labels.length+l].split("/")[1]);
+						} else if (labels[l].equals("_COMP_")) {
+							probComp = Double.valueOf(cols[cols.length-labels.length+l].split("/")[1]);
+						}
+					}
+					if (prob > probComp && prob > threshold) tags.add("_YES_");
+					else if (probComp > prob && probComp > threshold) tags.add("_COMP_");
+					else tags.add("O");
+					
+				} else {
+					tags.add(cols[9].split("/")[0]);
+					if (cols[9].startsWith("_YES_")) {
+						prob = Double.valueOf(cols[9].split("/")[1]);
+					} else {
+						prob = -1.0;
 					}
 				}
 				
@@ -728,12 +773,24 @@ public class Evaluation {
 						probs.add(prob);
 					}
 					
+					if (goldLabel.equals("_YES_")) {
+						menTp ++;
+						System.out.println("tp\t" + numChild + "\t" + line.trim());
+					} else {
+						menFp ++;
+						System.out.println("fp\t" + numChild + "\t" + line.trim());
+					}
+					
 				} else {
 					nums.add("");
 					probs.add(0.0);
 					if (addOrdinals) {
 						ords.add("");
 						oprobs.add(prob);
+					}
+					
+					if (goldLabel.equals("_YES_")) {
+						menFn ++;
 					}
 				}
 				
@@ -864,6 +921,10 @@ public class Evaluation {
 		double recall = (double)tp / (double)total;
 		double fscore = (2 * precision * recall) / (precision + recall);
 		
+		double menPrecision = (double)menTp / (double)(menTp + menFp);
+		double menRecall = (double)menTp / (double)(menTp + menFn);
+		double menFscore = (2 * menPrecision * menRecall) / (menPrecision + menRecall);
+		
 		String propRegex = ".*(P\\d+).*";
 		Pattern propPattern = Pattern.compile(propRegex);
 		Matcher propMatcher = propPattern.matcher(relName);
@@ -888,6 +949,10 @@ public class Evaluation {
 					+ "\t" + String.format("%.4f", precision)
 					+ "\t" + String.format("%.4f", recall)
 					+ "\t" + String.format("%.4f", fscore)
+					+ "\t" + menTp + "\t" + menFp + "\t" + (menTp + menFn)  
+					+ "\t" + String.format("%.4f", menPrecision)
+					+ "\t" + String.format("%.4f", menRecall)
+					+ "\t" + String.format("%.4f", menFscore)
 					+ "\t" + complete + "\t" + incomplete + "\t" + less
 					+ "\t" + available + "\t" + missing + "\t" + String.format("%.2f", ((float)missing / (float)available * 100)) + "%");
 			bw.newLine();
@@ -898,6 +963,10 @@ public class Evaluation {
 					+ "\t" + String.format("%.4f", precision)
 					+ "\t" + String.format("%.4f", recall)
 					+ "\t" + String.format("%.4f", fscore)
+					+ "\t" + menTp + "\t" + menFp + "\t" + (menTp + menFn)  
+					+ "\t" + String.format("%.4f", menPrecision)
+					+ "\t" + String.format("%.4f", menRecall)
+					+ "\t" + String.format("%.4f", menFscore)
 					+ "\t" + complete + "\t" + incomplete + "\t" + less
 					+ "\t" + available + "\t" + missing + "\t" + String.format("%.2f", ((float)missing / (float)available * 100)) + "%");
 		}

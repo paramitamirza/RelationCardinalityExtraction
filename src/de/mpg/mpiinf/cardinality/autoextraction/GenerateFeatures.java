@@ -339,6 +339,7 @@ public class GenerateFeatures implements Runnable {
 		boolean lrb = false;
 		
 		List<Integer> idxToAdd = new ArrayList<Integer>();
+		List<Integer> idxComp = new ArrayList<Integer>();
 		long numToAdd = 0;
 		
 		List<String> labels = new ArrayList<String>();
@@ -434,6 +435,7 @@ public class GenerateFeatures implements Runnable {
 							numToAdd = 0;
 							idxToAdd.clear();
 							conjExist = false;
+							idxComp.clear();
 							
 						} else {
 							if ((numToAdd+numInt) == numOfTriples
@@ -442,11 +444,21 @@ public class GenerateFeatures implements Runnable {
 									) {
 								if (conjExist && (tokenIdx-lastCompIdx) <= 5) {
 									label = "_YES_";
-									for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
+									int lastNumIdx = tokenIdx;
+									for (Integer nnn : idxToAdd) {
+										labels.set(nnn, "_YES_");
+										for (Integer ooo : idxComp) {
+											if (ooo > nnn && ooo < lastNumIdx) {
+												labels.set(ooo, "_COMP_");
+											}
+										}
+										lastNumIdx = nnn;
+									}
 								}
 								numToAdd = 0;
 								idxToAdd.clear();
 								conjExist = false;
+								idxComp.clear();
 								
 							} else if ((numToAdd+numInt) < numOfTriples
 //									&& ((nummod && deprel.startsWith("nummod"))
@@ -462,12 +474,14 @@ public class GenerateFeatures implements Runnable {
 									idxToAdd.clear();
 								}								
 								conjExist = false;
+								idxComp.clear();
 								
 							} else {	//(numToAdd+numInt) > numOfTriples
 								label = decideOnLabelHigher(numOfTriples, (numToAdd+numInt), ignoreHigherLess, maxTripleCount);
 								numToAdd = 0;
 								idxToAdd.clear();
 								conjExist = false;
+								idxComp.clear();
 							}
 						}
 						
@@ -487,6 +501,7 @@ public class GenerateFeatures implements Runnable {
 							idxToAdd.add(tokenIdx);
 							lastCompIdx = tokenIdx;
 							conjExist = false;
+							idxComp.clear();
 							
 						} else if (numInt > numOfTriples
 //								&& ((nummod && deprel.startsWith("nummod"))
@@ -495,6 +510,7 @@ public class GenerateFeatures implements Runnable {
 							
 							label = decideOnLabelHigher(numOfTriples, numInt, ignoreHigherLess, maxTripleCount);
 							conjExist = false;
+							idxComp.clear();
 							
 						} else {
 							label = "_NO_";
@@ -548,6 +564,7 @@ public class GenerateFeatures implements Runnable {
 								numToAdd = 0;
 								idxToAdd.clear();
 								conjExist = false;
+								idxComp.clear();
 								
 							} else {
 								if ((numToAdd+numInt) == numOfTriples
@@ -556,11 +573,21 @@ public class GenerateFeatures implements Runnable {
 										) {
 									if (conjExist && (tokenIdx-lastCompIdx) <= 5) {
 										label = "_YES_";
-										for (Integer nnn : idxToAdd) labels.set(nnn, "_YES_");
+										int lastNumIdx = tokenIdx;
+										for (Integer nnn : idxToAdd) {
+											labels.set(nnn, "_YES_");
+											for (Integer ooo : idxComp) {
+												if (ooo > nnn && ooo < lastNumIdx) {
+													labels.set(ooo, "_COMP_");
+												}
+											}
+											lastNumIdx = nnn;
+										}
 									}
 									numToAdd = 0;
 									idxToAdd.clear();
 									conjExist = false;
+									idxComp.clear();
 									
 								} else if ((numToAdd+numInt) < numOfTriples
 										&& ((nummod && deprel.startsWith("nummod") && depIdx >= k)
@@ -576,12 +603,14 @@ public class GenerateFeatures implements Runnable {
 										idxToAdd.clear();
 									}								
 									conjExist = false;
+									idxComp.clear();
 									
 								} else {	//(numToAdd+numInt) > numOfTriples
 									label = decideOnLabelHigher(numOfTriples, (numToAdd+numInt), ignoreHigherLess, maxTripleCount);
 									numToAdd = 0;
 									idxToAdd.clear();
 									conjExist = false;
+									idxComp.clear();
 								}
 							}
 							
@@ -601,6 +630,7 @@ public class GenerateFeatures implements Runnable {
 								idxToAdd.add(tokenIdx);
 								lastCompIdx = tokenIdx;
 								conjExist = false;
+								idxComp.clear();
 								
 							} else if (numInt > numOfTriples
 									&& ((nummod && deprel.startsWith("nummod") && depIdx >= k)
@@ -608,6 +638,7 @@ public class GenerateFeatures implements Runnable {
 									){
 								label = decideOnLabelHigher(numOfTriples, numInt, ignoreHigherLess, maxTripleCount);
 								conjExist = false;
+								idxComp.clear();
 								
 							} else {
 								label = "_NO_";
@@ -929,6 +960,7 @@ public class GenerateFeatures implements Runnable {
 				if (lemma.equals("and")
 						|| lemma.equals(",")) {	//comma or 'and'
 					conjExist = true;
+					idxComp.add(tokenIdx);
 				}
 				
 				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, "O"));

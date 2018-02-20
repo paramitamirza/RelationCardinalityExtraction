@@ -39,11 +39,6 @@ public class WikipediaArticle {
 	}
 	
 	public WikipediaArticle() throws IOException {
-		
-		wikiIndex = new TreeMap<Integer, String>();
-		loadWikiIndex();
-		
-		wikibaseMap = new HashMap<String, String>();
 	}
 	
 	public WikipediaArticle(String wikiDir) throws IOException {
@@ -76,16 +71,67 @@ public class WikipediaArticle {
 			// Using MediaWiki API to fetch Wikipedia articles -- must be online
 			
 			WikipediaArticle wa = new WikipediaArticle();
-//			System.out.println(wa.fetchArticleMediaWiki(43671127));					// using page ID
 			
-//			wa.mapWikidataWikipediaCurId("/home/paramita/D5data-8/RCE_pipeline/enwiki_20170320_pages_articles/wikibase_item.txt.gz");
-//			System.out.println(wa.fetchArticleFromWikidataIdMediaWiki("Q3052772"));	// using Wikidata ID
+//			System.out.println(wa.fetchArticleMediaWiki(32817));					// using page ID
+			
+//			System.out.println(wa.fetchArticleMediaWiki("Arno%20Kompatscher"));		// using page title (in URL format)
+//			System.out.println(wa.fetchArticleMediaWikiFirstLine("Arno%20Kompatscher"));
+			
+			///////// Deep Learning group project prepare data /////////
+//			String humanPath = "/home/paramita/D5data-8/RCE_pipeline/www_broader/classes_all/Q5-all.tsv";
+			String humanPath = "/home/paramita/Q5-all.tsv";
+			BufferedReader br = new BufferedReader(new FileReader(humanPath));
+			String line = br.readLine();
+			int limit = 10000;
+			int i = 0;
+			int start = 80000;
+			BufferedWriter bw = new BufferedWriter(new FileWriter("/home/paramita/humans_Wikipedia_first_line_8.tsv"));
+			while (line != null) {
+				if (i > (start + limit)) {
+					break;
+				}
+				if (i > start) {
+					String[] cols = line.split(",");
+					String pageTitle = cols[3];
+					String article = wa.fetchArticleMediaWikiFirstLine(pageTitle);
+					System.out.println(cols[0] + "\t" + cols[2] + "\t" + cols[3] + "\t" + article.replaceAll("\\s", " "));
+					bw.write(cols[0] + "\t" + cols[2] + "\t" + cols[3] + "\t" + article.replaceAll("\\s", " ") + "\n");
+					
+				}
+				line = br.readLine();
+				i ++;
+			}
+			br.close();
+			bw.close();
+			////////////////////////////////////////////////////////////
+			
 		
 		} else {
-		// Using saved and parsed Wikipedia dump to fetch Wikipedia articles -- can be offline
+			// Using saved and parsed Wikipedia dump to fetch Wikipedia articles -- can be offline
 			
 			WikipediaArticle wa = new WikipediaArticle("/home/paramita/D5data-8/RCE_pipeline/enwiki_20170320_pages_articles/");	// dump directory
-			System.out.println(wa.fetchArticle(43671127));							// using page ID
+//			System.out.println(wa.fetchArticle(12153597));							// using page ID
+			
+			///////// Deep Learning group project prepare data /////////
+			String humanPath = "/home/paramita/D5data-8/RCE_pipeline/www_broader/classes_all/Q5-all.tsv";
+			BufferedReader br = new BufferedReader(new FileReader(humanPath));
+			String line = br.readLine();
+			int limit = 10;
+			int i = 0;
+			BufferedWriter bw = new BufferedWriter(new FileWriter("/home/paramita/humans_Wikipedia_first_line.tsv"));
+			while (line != null) {
+//				if (i > limit) break;
+				if ((i % 1000) == 0) System.out.println(i);
+				String[] cols = line.split(",");
+				String pageId = cols[2];
+				String[] article = wa.fetchArticle(Integer.parseInt(pageId)).split("\n");
+				bw.write(cols[0] + "\t" + cols[2] + "\t" + cols[3] + "\t" + article[2].replaceAll("\\s", " ") + "\n");
+				line = br.readLine();
+				i ++;
+			}
+			br.close();
+			bw.close();
+			////////////////////////////////////////////////////////////
 		
 //			wa.mapWikidataWikipediaCurId();
 //			System.out.println(wa.fetchArticleFromWikidataId("Q3052772"));			// using Wikidata ID
@@ -314,6 +360,45 @@ public class WikipediaArticle {
         
         JSONObject content = new JSONObject(input).getJSONObject("query").getJSONObject("pages").getJSONObject(curId+"");
         return content.getString("extract");
+	}
+	
+	public String fetchArticleMediaWiki(String pageTitle) throws MalformedURLException, IOException {
+		String wikiUrl = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&explaintext&titles=" + pageTitle;
+		
+		BufferedReader in = new BufferedReader(new InputStreamReader(new URL(wikiUrl).openStream()));
+        String input = "", inputLine;
+        while ((inputLine = in.readLine()) != null)
+            input += inputLine + "\n";
+        in.close();
+        
+        JSONObject pages = new JSONObject(input).getJSONObject("query").getJSONObject("pages");
+        for (String key : pages.keySet()) {
+        	JSONObject content = pages.getJSONObject(key);
+        	if (content.has("extract")) return content.getString("extract");
+        }
+        return "";
+	}
+	
+	public String fetchArticleMediaWikiFirstLine(String pageTitle) throws MalformedURLException, IOException {
+		String wikiUrl = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&explaintext&titles=" + pageTitle;
+		
+		BufferedReader in = new BufferedReader(new InputStreamReader(new URL(wikiUrl).openStream()));
+        String input = "", inputLine;
+        while ((inputLine = in.readLine()) != null)
+            input += inputLine + "\n";
+        in.close();
+        
+        JSONObject pages = new JSONObject(input).getJSONObject("query").getJSONObject("pages");
+        for (String key : pages.keySet()) {
+        	JSONObject content = pages.getJSONObject(key);
+        	if (content.has("extract")) {
+        		String[] lines = content.getString("extract").split("\n");
+        		return lines[0];
+        	} else {
+        		return "";
+        	}
+        }
+        return null;
 	}
 	
 	private void loadWikiIndex() throws IOException {

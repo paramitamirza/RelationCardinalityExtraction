@@ -123,14 +123,19 @@ public class FeatureExtractionConcurrent {
 		
 		int maxCount = 0, tripleCount = 0;;
 		BufferedReader brpre = new BufferedReader(new FileReader(getInputCsvFile()));
+		List<Integer> tripleCounts = new ArrayList<Integer>(); 
 		line = brpre.readLine();
 		while (line != null) {
 			tripleCount = Integer.parseInt(line.split(delimiter)[1]);
-			if (tripleCount >= maxCount) maxCount = tripleCount;
-			
+			tripleCounts.add(tripleCount);
+//			if (tripleCount >= maxCount) maxCount = tripleCount;
 			line = brpre.readLine();
 		}
 		brpre.close();
+		
+		Collections.sort(tripleCounts);
+		maxCount = tripleCounts.get(tripleCounts.size()*99/100);
+		System.out.println("99%%tile = " + maxCount);
 		
 		BufferedReader br = new BufferedReader(new FileReader(getInputCsvFile()));
 		
@@ -158,8 +163,13 @@ public class FeatureExtractionConcurrent {
         count = line.split(delimiter)[1];
         curId = Integer.parseInt(line.split(delimiter)[2]);
         
-        countDist = line.split(delimiter)[5];
-        quarter = line.split(delimiter)[6];
+        if (line.split(delimiter).length > 5) {
+	        countDist = line.split(delimiter)[5];
+	        quarter = line.split(delimiter)[6];
+        } else {
+        	countDist = "0.0";
+	        quarter = "0";
+        }
         
         isIgnoreFreq = false;
         if (ignoreFreq >= 0) {
@@ -227,8 +237,13 @@ public class FeatureExtractionConcurrent {
 	        count = line.split(delimiter)[1];
 	        curId = Integer.parseInt(line.split(delimiter)[2]);
 	        
-	        countDist = line.split(delimiter)[5];
-	        quarter = line.split(delimiter)[6];
+	        if (line.split(delimiter).length > 5) {
+		        countDist = line.split(delimiter)[5];
+		        quarter = line.split(delimiter)[6];
+	        } else {
+	        	countDist = "0.0";
+		        quarter = "0";
+	        }
 	        
 	        isIgnoreFreq = false;
 	        if (ignoreFreq >= 0) {
