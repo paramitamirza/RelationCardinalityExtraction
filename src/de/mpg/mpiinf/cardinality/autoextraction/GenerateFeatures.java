@@ -301,6 +301,32 @@ public class GenerateFeatures implements Runnable {
 		return label;
 	}
 	
+	private String decideOnLabelNonCompositionalLatinGreek(boolean nummod, int numOfTriples, long numInt, int k, 
+			String deprel, int depIdx, 
+			double countInfThreshold, double countDist,
+			boolean ignoreHigher, int ignoreHigherLess,
+			int maxTripleCount) {
+		String label = "O";
+		
+		if (numInt == numOfTriples
+				&& ((nummod && deprel.startsWith("nummod") && depIdx >= k)
+						|| !nummod)
+				) {
+			label = "_YES_";
+			
+		} else if (numInt > numOfTriples
+				&& ((nummod && deprel.startsWith("nummod") && depIdx >= k)
+						|| !nummod)
+				) {	
+			label = decideOnLabelHigher(numOfTriples, numInt, ignoreHigherLess, maxTripleCount);
+
+		} else {	//numInt < numOfTriples
+			label = "_NO_";
+		}
+		
+		return label;
+	}
+	
 	private String decideOnLabelNonCompositionalOrdinal(boolean nummod, int numOfTriples, long numInt, int k, 
 			String deprel, int depIdx, 
 			double countInfThreshold, double countDist,
@@ -431,7 +457,8 @@ public class GenerateFeatures implements Runnable {
 //								&& ((nummod && deprel.startsWith("nummod"))
 //										|| !nummod)
 								) {
-							label = decideOnLabelEqual(numInt, countInfThreshold, countDist);
+//							label = decideOnLabelEqual(numInt, countInfThreshold, countDist);
+							label = "_YES_";
 							numToAdd = 0;
 							idxToAdd.clear();
 							conjExist = false;
@@ -518,7 +545,7 @@ public class GenerateFeatures implements Runnable {
 					}
 					
 				} else {
-					label = decideOnLabelNonCompositional(false, numOfTriples, numInt, k, deprel, depIdx, countInfThreshold, countDist,
+					label = decideOnLabelNonCompositionalLatinGreek(false, numOfTriples, numInt, k, deprel, depIdx, countInfThreshold, countDist,
 							ignoreHigher, ignoreHigherLess, maxTripleCount);
 				}
 				
