@@ -544,7 +544,7 @@ public class GenerateFeatures implements Runnable {
 						}
 					}
 					
-				} else {
+				} else {  
 					label = decideOnLabelNonCompositionalLatinGreek(false, numOfTriples, numInt, k, deprel, depIdx, countInfThreshold, countDist,
 							ignoreHigher, ignoreHigherLess, maxTripleCount);
 				}
