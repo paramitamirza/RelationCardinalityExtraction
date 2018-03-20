@@ -347,7 +347,8 @@ public class GenerateFeatures implements Runnable {
 			label = decideOnLabelHigher(numOfTriples, numInt, ignoreHigherLess, maxTripleCount);
 
 		} else {	//numInt < numOfTriples
-			label = "_NO_";
+//			label = "_NO_";
+			label = "_YES_";
 		}
 		
 		return label;
@@ -403,6 +404,8 @@ public class GenerateFeatures implements Runnable {
 					&& !dependent.equals("O")
 					) {
 				lemma = "_num_";
+//				lemma += "one_";
+				
 				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
 				labels.add(label);
 				tokenIdx ++;
@@ -413,6 +416,8 @@ public class GenerateFeatures implements Runnable {
 					&& !dependent.equals("O")
 					) {
 				lemma = "_num_";
+//				lemma += "5_";
+				
 				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
 				labels.add(label);
 				tokenIdx ++;
@@ -427,8 +432,11 @@ public class GenerateFeatures implements Runnable {
 				lemma = "_num_";
 				if (sent.posTag(depIdx).equals("NN")) {
 					word = "PRP$_S_" + word;
+//					lemma += "one_";
+					
 				} else if (sent.posTag(depIdx).equals("NNS")) {
 					word = "PRP$_P_" + word;
+//					lemma += "5_";
 				}
 				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
 				labels.add(label);
@@ -440,6 +448,7 @@ public class GenerateFeatures implements Runnable {
 					&& !dependent.equals("O")
 					) {
 				lemma = "_num_";
+				
 				tokenFeatures.add(generateLine(wikidataId, j+"", k+"", word, lemma, pos, ner, dependent));
 				labels.add(label);
 				tokenIdx ++;
@@ -450,6 +459,15 @@ public class GenerateFeatures implements Runnable {
 				dependent = "O";
 				
 				numInt = Long.parseLong(sent.word(k).split("_")[2]);
+				
+//				if (numInt == 1) lemma += "one_";
+//				if (numInt >= 2 && numInt <= 5) lemma += "5_";
+//				if (numInt >= 6 && numInt <= 10) lemma += "10_";
+//				if (numInt >= 11 && numInt <= 20) lemma += "20_";
+//				if (numInt >= 21 && numInt <= 30) lemma += "30_";
+//				if (numInt >= 31 && numInt <= 40) lemma += "40_";
+//				if (numInt >= 41 && numInt <= 50) lemma += "50_";
+//				if (numInt >= 51) lemma += "big_";
 				
 				if (compositional) {
 					if (numToAdd > 0) {
@@ -517,7 +535,8 @@ public class GenerateFeatures implements Runnable {
 //								&& ((nummod && deprel.startsWith("nummod"))
 //										|| !nummod)
 								) {
-							label = decideOnLabelEqual(numInt, countInfThreshold, countDist);
+//							label = decideOnLabelEqual(numInt, countInfThreshold, countDist);
+							label = "_YES_";
 							
 						} else if (numInt < numOfTriples
 //								&& ((nummod && deprel.startsWith("nummod"))
@@ -580,6 +599,14 @@ public class GenerateFeatures implements Runnable {
 				
 				if (numInt >= 0) {
 					lemma = "_num_";
+//					if (numInt == 1) lemma += "one_";
+//					if (numInt >= 2 && numInt <= 5) lemma += "5_";
+//					if (numInt >= 6 && numInt <= 10) lemma += "10_";
+//					if (numInt >= 11 && numInt <= 20) lemma += "20_";
+//					if (numInt >= 21 && numInt <= 30) lemma += "30_";
+//					if (numInt >= 31 && numInt <= 40) lemma += "40_";
+//					if (numInt >= 41 && numInt <= 50) lemma += "50_";
+//					if (numInt >= 51) lemma += "big_";
 					
 					if (compositional) {
 						if (numToAdd > 0) {
@@ -710,6 +737,14 @@ public class GenerateFeatures implements Runnable {
 				
 				if (numInt >= 0) {
 					lemma = "_ord_";
+//					if (numInt == 1) lemma += "one_";
+//					if (numInt >= 2 && numInt <= 5) lemma += "5_";
+//					if (numInt >= 6 && numInt <= 10) lemma += "10_";
+//					if (numInt >= 11 && numInt <= 20) lemma += "20_";
+//					if (numInt >= 21 && numInt <= 30) lemma += "30_";
+//					if (numInt >= 31 && numInt <= 40) lemma += "40_";
+//					if (numInt >= 41 && numInt <= 50) lemma += "50_";
+//					if (numInt >= 51) lemma += "big_";
 					
 //					if (compositional) {
 //						if (numToAdd > 0) {

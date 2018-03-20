@@ -420,6 +420,7 @@ public class Evaluation {
 		
 		int tp = 0;
 		int fp = 0;
+		int diff = 0;
 		int complete = 0, incomplete = 0, less = 0;
 		int available = 0, missing = 0;
 		int total = 0, ctotal = 0;
@@ -436,11 +437,13 @@ public class Evaluation {
 		String entityId = null;
 		String goldLabel = null;
 		
-		long predictedCardinal = 0, predictedOrdinal = 0;
-		double predictedProb = 0.0, predictedProbZ = 0.0, predictedProbS = 0.0;
+		long predictedCardinal = 0, predictedOrdinal = 0, predictedNumterm = 0, predictedArticle = 0;
+		double predictedCProb = 0.0, predictedCProbZ = 0.0, predictedCProbS = 0.0;
 		double predictedOProb = 0.0, predictedOProbZ = 0.0, predictedOProbS = 0.0;
+		double predictedNProb = 0.0, predictedNProbZ = 0.0, predictedNProbS = 0.0;
+		double predictedAProb = 0.0, predictedAProbZ = 0.0, predictedAProbS = 0.0;
 		int numPredicted = 0;
-		String evidence = "", evidenceo = "";
+		String evidencec = "", evidenceo = "", evidencea = "", evidencen = "";
 		
 		Set<String> entities = new HashSet<String>();
 		
@@ -460,27 +463,17 @@ public class Evaluation {
 				int m = 0, mm;
 				int mo = 0, mmo;
 				List<Integer> mlist = new ArrayList<Integer>();
+				List<Integer> mlista = new ArrayList<Integer>();
 				List<Integer> mlisto = new ArrayList<Integer>();
+				
+				boolean compTag = addSameSentence;
 				
 				if (!numbers.isEmpty()) {
 				
 					if (addSameSentence) {	
 						//When there are more than one in a sentence:
 						
-						//if a number is a total of its following sequence of numbers, choose the total
-						int totalIdx = findTotalNumberOfComposition(numbers);
-						
-						if (totalIdx > 0) {
-							pp = Double.parseDouble(numbers.get(totalIdx).split("#")[1]);
-							if (pp > threshold) {
-								p = pp;
-								n = Integer.parseInt(numbers.get(totalIdx).split("#")[0]);
-								mlist.add(totalIdx);
-							}
-						
-						} else {
-							//else, add them up if there exists conjunction (comma, semicolon or 'and') in between
-							
+						if (compTag) {
 							Object[] keys = numbers.keySet().toArray();
 							pp = Double.parseDouble(numbers.get(keys[0]).split("#")[1]);
 							mm = (Integer)keys[0];
@@ -503,9 +496,9 @@ public class Evaluation {
 											
 										} else {
 											if (conjExist(sentence, tags, mlist.get(mlist.size()-1), mm)
-													&& (mm - mlist.get(mlist.size()-1)) <= 5 
-													&& !isQuantifier(sentence, mm)
-													&& !isPossPronouns(sentence, mm)
+//													&& (mm - mlist.get(mlist.size()-1)) <= 5 
+//													&& !isQuantifier(sentence, mm)
+//													&& !isPossPronouns(sentence, mm)
 													) {
 												if (pp > p) p = pp;
 	//											p += pp;
@@ -522,9 +515,69 @@ public class Evaluation {
 											}
 										}									
 									}
-								}							
-							} 
-	//						p = p/numbers.size();
+								}
+							}
+						} else {
+						
+							//if a number is a total of its following sequence of numbers, choose the total
+							int totalIdx = findTotalNumberOfComposition(numbers);
+							
+							if (totalIdx > 0) {
+								pp = Double.parseDouble(numbers.get(totalIdx).split("#")[1]);
+								if (pp > threshold) {
+									p = pp;
+									n = Integer.parseInt(numbers.get(totalIdx).split("#")[0]);
+									mlist.add(totalIdx);
+								}
+							
+							} else {
+								//else, add them up if there exists conjunction (comma, semicolon or 'and') in between
+								
+								Object[] keys = numbers.keySet().toArray();
+								pp = Double.parseDouble(numbers.get(keys[0]).split("#")[1]);
+								mm = (Integer)keys[0];
+								if (pp > threshold) {	
+									n = Long.parseLong(numbers.get(keys[0]).split("#")[0]);
+									mlist.add(mm);
+									p = pp;
+								}
+								
+								if (keys.length > 1) {						
+									for (int k = 1; k < keys.length; k++) {
+										pp = Double.parseDouble(numbers.get(keys[k]).split("#")[1]);
+										mm = (Integer)keys[k];	
+										
+										if (pp > threshold) {
+											if (mlist.isEmpty()) {
+												n = Long.parseLong(numbers.get(keys[k]).split("#")[0]);
+												mlist.add(mm);
+												p = pp;
+												
+											} else {
+												if (conjExist(sentence, tags, mlist.get(mlist.size()-1), mm)
+														&& (mm - mlist.get(mlist.size()-1)) <= 5 
+														&& !isQuantifier(sentence, mm)
+														&& !isPossPronouns(sentence, mm)
+														) {
+													if (pp > p) p = pp;
+		//											p += pp;
+													n += Long.parseLong(numbers.get(keys[k]).split("#")[0]);
+													mlist.add(mm);
+												
+												} else {
+													if (pp > p) {
+														mlist.clear();
+														n = Long.parseLong(numbers.get(keys[k]).split("#")[0]);
+														mlist.add(mm);
+														p = pp;
+													}
+												}
+											}									
+										}
+									}							
+								} 
+		//						p = p/numbers.size();
+							}
 						}
 						
 					} else {	
@@ -576,13 +629,37 @@ public class Evaluation {
 //					
 //				} else {
 					//When there are more than one sentences, choose the most probable
-					if (p > predictedProb) {
+				
+					if (mlist.size() == 1) {
+						if (sentence.get(mlist.get(0)).equals("a") || sentence.get(mlist.get(0)).equals("a")) {
+							if (p > predictedCProb && p > predictedOProb && p > predictedNProb) {
+								predictedArticle = n;
+								predictedAProb = p;
+								evidencea = wordsToSentence(sentence, mlist);
+							}
+						} else if (sentence.get(mlist.get(0)).startsWith("LatinGreek_")) {
+							if (p > predictedCProb) {
+								predictedNumterm = n;
+								predictedNProb = p;
+								evidencen = wordsToSentence(sentence, mlist);
+							}
+						} else {
+							predictedCardinal = n;
+							predictedCProb = p;
+							evidencec = wordsToSentence(sentence, mlist);
+						}
+						
+					} else {
 						predictedCardinal = n;
-						predictedProb = p;
-						evidence = wordsToSentence(sentence, mlist);
+						predictedCProb = p;
+						evidencec = wordsToSentence(sentence, mlist);
 					}
 					
-					if (addOrdinals && po > predictedOProb) {
+					//When there are more than one sentences, choose the highest ordinal
+					if (addOrdinals 
+//							&& po > predictedOProb
+							&& no > predictedOrdinal
+							) {
 						predictedOrdinal = no;
 						predictedOProb = po;
 						evidenceo = wordsToSentence(sentence, mlisto);
@@ -616,36 +693,44 @@ public class Evaluation {
 					String wikiCurid = instanceCurId.get(entityId);
 					String wikiLabel = instanceLabel.get(entityId);
 					
-					predictedProbZ = 0.0; predictedProbS = 0.0;
-					if (predictedProb > 0 && mad > 0.0) predictedProbZ = 0.6745 * (predictedProb - median) / mad;	//modified z-score: normalize the probability score!						
-					if (predictedProb > 0) predictedProbS = (predictedProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
-						
-					predictedOProbZ = 0.0; predictedOProbS = 0.0;
+					if (predictedNProb > predictedCProb) {
+						predictedCardinal = predictedNumterm;
+						predictedCProb = predictedNProb;
+						evidencec = evidencen;
+					}
+					
 					if (addOrdinals) {
-						if (predictedOProb > 0 && madO > 0.0) predictedOProbZ = 0.6745 * (predictedOProb - medianO) / madO;	//modified z-score: normalize the probability score!						
-						if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstatsO.getMin()) / (dstatsO.getMax() - dstatsO.getMin());	//rescaling: normalize the probability score!
 						
 //						System.out.println("cardinal::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
 //						System.out.println("ordinal::: " + predictedOrdinal + ":" + predictedOProbS + ":" + evidenceo);
 						
-						if (predictedOProbS > predictedProbS
+						if (predictedOProb > predictedCProb
+//								&& predictedOProbS > predictedProbS
 //								&& predictedOrdinal > predictedCardinal
 								) {
 							predictedCardinal = predictedOrdinal;
-							predictedProb = predictedOProb;
-							predictedProbS = predictedOProbS;
-							predictedProbZ = predictedOProbZ;
-							evidence = evidenceo;
+							predictedCProb = predictedOProb;
+							evidencec = evidenceo;
 						}
 					}
 					
+//					if (predictedAProb > predictedCProb && predictedCProb == 0.0) {
+//						predictedCardinal = predictedArticle;
+//						predictedCProb = predictedAProb;
+//						evidencec = evidencea;
+//					}
+					
+					predictedCProbZ = 0.0; predictedCProbS = 0.0;
+					if (predictedCProb > 0 && mad > 0.0) predictedCProbZ = 0.6745 * (predictedCProb - median) / mad;	//modified z-score: normalize the probability score!						
+					if (predictedCProb > 0) predictedCProbS = (predictedCProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
+					
 					if (bw != null) {
 						if (
-								(tConf < 0 && predictedProb > 0)
+								(tConf < 0 && predictedCProb > 0)
 								||
-								(tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+								(tConf >= 0 && zRange >= 100.0 && predictedCProbS > tConf)
 								||
-								(tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+								(tConf >= 0 && zRange < 100.0 && predictedCProbS > tConf && predictedCProbZ <= zRange && predictedCProbZ >= -zRange)
 								){
 //							System.out.println("final::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
 							bw.write(entityId + "\t"
@@ -653,8 +738,8 @@ public class Evaluation {
 									+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
 									+ numChild + "\t" 
 									+ predictedCardinal + "\t" 
-									+ predictedProb + "\t" 
-									+ evidence);
+									+ predictedCProb + "\t" 
+									+ evidencec);
 							bw.newLine();
 //						} else {
 //							bw.write(entityId + "\t" 
@@ -667,12 +752,15 @@ public class Evaluation {
 							|| (addZero && numChild == 0)) {
 						
 						if (
-								(tConf < 0 && predictedProb > 0)
+								(tConf < 0 && predictedCProb > 0)
 								||
-								(tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+								(tConf >= 0 && zRange >= 100.0 && predictedCProbS > tConf)
 								||
-								(tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+								(tConf >= 0 && zRange < 100.0 && predictedCProbS > tConf && predictedCProbZ <= zRange && predictedCProbZ >= -zRange)
 								){
+							
+							if (predictedCardinal > 0) diff += Math.pow((numChild - predictedCardinal), 2);
+							
 							if (relaxedMatch) {
 								if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
 								else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
@@ -688,11 +776,11 @@ public class Evaluation {
 						available += numChild;
 						
 						if (
-								(tConf < 0 && predictedProb > 0)
+								(tConf < 0 && predictedCProb > 0)
 								||
-								(tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+								(tConf >= 0 && zRange >= 100.0 && predictedCProbS > tConf)
 								||
-								(tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+								(tConf >= 0 && zRange < 100.0 && predictedCProbS > tConf && predictedCProbZ <= zRange && predictedCProbZ >= -zRange)
 								){
 							if (predictedCardinal == numChild) {
 								complete ++;
@@ -709,12 +797,20 @@ public class Evaluation {
 					entities.add(entityId);
 					
 					predictedCardinal = 0;
-					predictedProb = 0.0;
-					evidence = "";
+					predictedCProb = 0.0;
+					evidencec = "";
 					
 					predictedOrdinal = 0;
 					predictedOProb = 0.0;
 					evidenceo = "";
+					
+					predictedNumterm = 0;
+					predictedNProb = 0.0;
+					evidencen = "";
+					
+					predictedArticle = 0;
+					predictedAProb = 0.0;
+					evidencea = "";
 					
 					numPredicted = 0;
 				}
@@ -807,36 +903,45 @@ public class Evaluation {
 		String wikiCurid = instanceCurId.get(entityId);
 		String wikiLabel = instanceLabel.get(entityId);
 		
-		predictedProbZ = 0.0; predictedProbS = 0.0;
-		if (predictedProb > 0) predictedProbZ = 0.6745 * (predictedProb - median) / mad;	//modified z-score: normalize the probability score!						
-		if (predictedProb > 0) predictedProbS = (predictedProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
-			
-		predictedOProbZ = 0.0; predictedOProbS = 0.0;
+		if (predictedNProb > predictedCProb) {
+			predictedCardinal = predictedNumterm;
+			predictedCProb = predictedNProb;
+			evidencec = evidencen;
+		}
+		
 		if (addOrdinals) {
-			if (predictedOProb > 0 && madO > 0.0) predictedOProbZ = 0.6745 * (predictedOProb - medianO) / madO;	//modified z-score: normalize the probability score!						
-			if (predictedOProb > 0) predictedOProbS = (predictedOProb - dstatsO.getMin()) / (dstatsO.getMax() - dstatsO.getMin());	//rescaling: normalize the probability score!
 			
 //			System.out.println("cardinal::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
 //			System.out.println("ordinal::: " + predictedOrdinal + ":" + predictedOProbS + ":" + evidenceo);
 			
-			if (predictedOProbS > predictedProbS
+			if (predictedOProb > predictedCProb
+//					&& predictedOProbS > predictedProbS
 //					&& predictedOrdinal > predictedCardinal
 					) {
 				predictedCardinal = predictedOrdinal;
-				predictedProb = predictedOProb;
-				predictedProbS = predictedOProbS;
-				predictedProbZ = predictedOProbZ;
-				evidence = evidenceo;
+				predictedCProb = predictedOProb;
+				evidencec = evidenceo;
 			}
 		}
 		
+//		if (predictedAProb > predictedCProb && predictedCProb > 0.0) {
+//			predictedCardinal = predictedArticle;
+//			predictedCProb = predictedAProb;
+//			evidencec = evidencea;
+//		}
+		
+		predictedCProbZ = 0.0; predictedCProbS = 0.0;
+		if (predictedCProb > 0 && mad > 0.0) predictedCProbZ = 0.6745 * (predictedCProb - median) / mad;	//modified z-score: normalize the probability score!						
+		if (predictedCProb > 0) predictedCProbS = (predictedCProb - dstats.getMin()) / (dstats.getMax() - dstats.getMin());	//rescaling: normalize the probability score!
+		
+		
 		if (bw != null) {
 			if (
-					(tConf < 0 && predictedProb > 0)
+					(tConf < 0 && predictedCProb > 0)
 					||
-					(tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+					(tConf >= 0 && zRange >= 100.0 && predictedCProbS > tConf)
 					||
-					(tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+					(tConf >= 0 && zRange < 100.0 && predictedCProbS > tConf && predictedCProbZ <= zRange && predictedCProbZ >= -zRange)
 					){
 //				System.out.println("final::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
 				bw.write(entityId + "\t"
@@ -844,8 +949,8 @@ public class Evaluation {
 						+ java.net.URLDecoder.decode(wikiLabel, "UTF-8") + "\t" 
 						+ numChild + "\t" 
 						+ predictedCardinal + "\t" 
-						+ predictedProb + "\t" 
-						+ evidence);
+						+ predictedCProb + "\t" 
+						+ evidencec);
 				bw.newLine();
 //			} else {
 //				bw.write(entityId + "\t" 
@@ -858,12 +963,15 @@ public class Evaluation {
 				|| (addZero && numChild == 0)) {
 			
 			if (
-					(tConf < 0 && predictedProb > 0)
+					(tConf < 0 && predictedCProb > 0)
 					||
-					(tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+					(tConf >= 0 && zRange >= 100.0 && predictedCProbS > tConf)
 					||
-					(tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+					(tConf >= 0 && zRange < 100.0 && predictedCProbS > tConf && predictedCProbZ <= zRange && predictedCProbZ >= -zRange)
 					){
+				
+				if (predictedCardinal > 0) diff += Math.pow((numChild - predictedCardinal), 2);
+				
 				if (relaxedMatch) {
 					if (numChild >= predictedCardinal && predictedCardinal > 0) tp ++;
 					else if (numChild < predictedCardinal && predictedCardinal > 0) fp ++;
@@ -879,11 +987,11 @@ public class Evaluation {
 			available += numChild;
 			
 			if (
-					(tConf < 0 && predictedProb > 0)
+					(tConf < 0 && predictedCProb > 0)
 					||
-					(tConf >= 0 && zRange >= 100.0 && predictedProbS > tConf)
+					(tConf >= 0 && zRange >= 100.0 && predictedCProbS > tConf)
 					||
-					(tConf >= 0 && zRange < 100.0 && predictedProbS > tConf && predictedProbZ <= zRange && predictedProbZ >= -zRange)
+					(tConf >= 0 && zRange < 100.0 && predictedCProbS > tConf && predictedCProbZ <= zRange && predictedCProbZ >= -zRange)
 					){
 				if (predictedCardinal == numChild) {
 					complete ++;
@@ -900,12 +1008,20 @@ public class Evaluation {
 		entities.add(entityId);
 		
 		predictedCardinal = 0;
-		predictedProb = 0.0;
-		evidence = "";
+		predictedCProb = 0.0;
+		evidencec = "";
 		
 		predictedOrdinal = 0;
 		predictedOProb = 0.0;
 		evidenceo = "";
+		
+		predictedNumterm = 0;
+		predictedNProb = 0.0;
+		evidencen = "";
+		
+		predictedArticle = 0;
+		predictedAProb = 0.0;
+		evidencea = "";
 		
 		numPredicted = 0;
 		
@@ -920,6 +1036,8 @@ public class Evaluation {
 //		double recall = (double)tp / instanceNum.size();
 		double recall = (double)tp / (double)total;
 		double fscore = (2 * precision * recall) / (precision + recall);
+		
+		double rmse = Math.sqrt((diff / (double)(tp + fp)));
 		
 		double menPrecision = (double)menTp / (double)(menTp + menFp);
 		double menRecall = (double)menTp / (double)(menTp + menFn);
@@ -949,6 +1067,7 @@ public class Evaluation {
 					+ "\t" + String.format("%.4f", precision)
 					+ "\t" + String.format("%.4f", recall)
 					+ "\t" + String.format("%.4f", fscore)
+					+ "\t" + String.format("%.4f", rmse)
 					+ "\t" + menTp + "\t" + menFp + "\t" + (menTp + menFn)  
 					+ "\t" + String.format("%.4f", menPrecision)
 					+ "\t" + String.format("%.4f", menRecall)
@@ -963,6 +1082,7 @@ public class Evaluation {
 					+ "\t" + String.format("%.4f", precision)
 					+ "\t" + String.format("%.4f", recall)
 					+ "\t" + String.format("%.4f", fscore)
+					+ "\t" + String.format("%.4f", rmse)
 					+ "\t" + menTp + "\t" + menFp + "\t" + (menTp + menFn)  
 					+ "\t" + String.format("%.4f", menPrecision)
 					+ "\t" + String.format("%.4f", menRecall)
@@ -977,6 +1097,7 @@ public class Evaluation {
 		Map<Integer, String> numTriple = new LinkedHashMap<Integer, String>();
 		String number = "";
 		Double prob = 0.0;
+		
 		for (int i=0; i<nums.size(); i++) {
 			if (!nums.get(i).equals("")) {
 				number = nums.get(i);
@@ -991,8 +1112,9 @@ public class Evaluation {
 					numTriple.put(i, Numbers.getInteger(number) + "#" + prob);
 				
 				} else if ((number.equals("a") || number.equals("an"))
-						&& Numbers.getInteger(nums.get(i+1)) < 0	//not followed by a cardinal or ordinal, e.g., a second daughter
-						) {
+						&& (Numbers.getInteger(nums.get(i+1)) < 0	//not followed by a cardinal or ordinal, e.g., a second daughter
+								|| nums.get(i+1).equals(""))
+								) {
 					numTriple.put(i, "1" + "#" + prob);
 				
 				} else if (number.equals("both") 
