@@ -438,12 +438,11 @@ public class Evaluation {
 		String goldLabel = null;
 		
 		long predictedCardinal = 0, predictedOrdinal = 0, predictedNumterm = 0, predictedArticle = 0;
-		double predictedCProb = 0.0, predictedCProbZ = 0.0, predictedCProbS = 0.0;
-		double predictedOProb = 0.0, predictedOProbZ = 0.0, predictedOProbS = 0.0;
-		double predictedNProb = 0.0, predictedNProbZ = 0.0, predictedNProbS = 0.0;
-		double predictedAProb = 0.0, predictedAProbZ = 0.0, predictedAProbS = 0.0;
+		double predictedCProb = 0.0, predictedOProb = 0.0, predictedNProb = 0.0, predictedAProb = 0.0;
+		double predictedCProbS = 0.0, predictedCProbZ = 0.0;
 		int numPredicted = 0;
-		String evidencec = "", evidenceo = "", evidencea = "", evidencen = "";
+		String evidencec = "", evidenceo = "", evidencen = "", evidencea = "";
+		String evidenceType = "";
 		
 		Set<String> entities = new HashSet<String>();
 		
@@ -632,13 +631,13 @@ public class Evaluation {
 				
 					if (mlist.size() == 1) {
 						if (sentence.get(mlist.get(0)).equals("a") || sentence.get(mlist.get(0)).equals("a")) {
-							if (p > predictedCProb && p > predictedOProb && p > predictedNProb) {
+							if (p > predictedAProb) {
 								predictedArticle = n;
 								predictedAProb = p;
 								evidencea = wordsToSentence(sentence, mlist);
 							}
 						} else if (sentence.get(mlist.get(0)).startsWith("LatinGreek_")) {
-							if (p > predictedCProb) {
+							if (p > predictedNProb) {
 								predictedNumterm = n;
 								predictedNProb = p;
 								evidencen = wordsToSentence(sentence, mlist);
@@ -693,32 +692,50 @@ public class Evaluation {
 					String wikiCurid = instanceCurId.get(entityId);
 					String wikiLabel = instanceLabel.get(entityId);
 					
-					if (predictedNProb > predictedCProb) {
-						predictedCardinal = predictedNumterm;
-						predictedCProb = predictedNProb;
-						evidencec = evidencen;
-					}
-					
-					if (addOrdinals) {
+					evidenceType = "cardinal";
+					if (predictedCProb == 0.0) {	//no cardinal found
 						
-//						System.out.println("cardinal::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
-//						System.out.println("ordinal::: " + predictedOrdinal + ":" + predictedOProbS + ":" + evidenceo);
+						if (predictedNProb == 0.0) {
+							
+							if (addOrdinals) {
+								if (predictedOProb == 0.0) {
+									
+									if (predictedAProb == 0.0) {
+										
+									} else {
+										predictedCardinal = predictedArticle;
+										predictedCProb = predictedAProb;
+										evidencec = evidencea;
+										evidenceType = "article";
+									}
+									
+								} else {
+									predictedCardinal = predictedOrdinal;
+									predictedCProb = predictedOProb;
+									evidencec = evidenceo;
+									evidenceType = "ordinal";
+								}
+							
+							} else {
+								if (predictedAProb == 0.0) {
+									
+								} else {
+									predictedCardinal = predictedArticle;
+									predictedCProb = predictedAProb;
+									evidencec = evidencea;
+									evidenceType = "article";
+								}
+								
+							}
+							
+						} else {
+							predictedCardinal = predictedNumterm;
+							predictedCProb = predictedNProb;
+							evidencec = evidencen;
+							evidenceType = "numterm";
+						}	
 						
-						if (predictedOProb > predictedCProb
-//								&& predictedOProbS > predictedProbS
-//								&& predictedOrdinal > predictedCardinal
-								) {
-							predictedCardinal = predictedOrdinal;
-							predictedCProb = predictedOProb;
-							evidencec = evidenceo;
-						}
 					}
-					
-//					if (predictedAProb > predictedCProb && predictedCProb == 0.0) {
-//						predictedCardinal = predictedArticle;
-//						predictedCProb = predictedAProb;
-//						evidencec = evidencea;
-//					}
 					
 					predictedCProbZ = 0.0; predictedCProbS = 0.0;
 					if (predictedCProb > 0 && mad > 0.0) predictedCProbZ = 0.6745 * (predictedCProb - median) / mad;	//modified z-score: normalize the probability score!						
@@ -739,6 +756,7 @@ public class Evaluation {
 									+ numChild + "\t" 
 									+ predictedCardinal + "\t" 
 									+ predictedCProb + "\t" 
+									+ evidenceType + "\t"
 									+ evidencec);
 							bw.newLine();
 //						} else {
@@ -807,10 +825,6 @@ public class Evaluation {
 					predictedNumterm = 0;
 					predictedNProb = 0.0;
 					evidencen = "";
-					
-					predictedArticle = 0;
-					predictedAProb = 0.0;
-					evidencea = "";
 					
 					numPredicted = 0;
 				}
@@ -887,6 +901,7 @@ public class Evaluation {
 					
 					if (goldLabel.equals("_YES_")) {
 						menFn ++;
+						System.out.println("fn\t" + numChild + "\t" + line.trim());
 					}
 				}
 				
@@ -903,32 +918,50 @@ public class Evaluation {
 		String wikiCurid = instanceCurId.get(entityId);
 		String wikiLabel = instanceLabel.get(entityId);
 		
-		if (predictedNProb > predictedCProb) {
-			predictedCardinal = predictedNumterm;
-			predictedCProb = predictedNProb;
-			evidencec = evidencen;
-		}
-		
-		if (addOrdinals) {
+		evidenceType = "cardinal";
+		if (predictedCProb == 0.0) {	//no cardinal found
 			
-//			System.out.println("cardinal::: " + predictedCardinal + ":" + predictedProbS + ":" + evidence);
-//			System.out.println("ordinal::: " + predictedOrdinal + ":" + predictedOProbS + ":" + evidenceo);
+			if (predictedNProb == 0.0) {
+				
+				if (addOrdinals) {
+					if (predictedOProb == 0.0) {
+						
+						if (predictedAProb == 0.0) {
+							
+						} else {
+							predictedCardinal = predictedArticle;
+							predictedCProb = predictedAProb;
+							evidencec = evidencea;
+							evidenceType = "article";
+						}
+						
+					} else {
+						predictedCardinal = predictedOrdinal;
+						predictedCProb = predictedOProb;
+						evidencec = evidenceo;
+						evidenceType = "ordinal";
+					}
+				
+				} else {
+					if (predictedAProb == 0.0) {
+						
+					} else {
+						predictedCardinal = predictedArticle;
+						predictedCProb = predictedAProb;
+						evidencec = evidencea;
+						evidenceType = "article";
+					}
+					
+				}
+				
+			} else {
+				predictedCardinal = predictedNumterm;
+				predictedCProb = predictedNProb;
+				evidencec = evidencen;
+				evidenceType = "numterm";
+			}	
 			
-			if (predictedOProb > predictedCProb
-//					&& predictedOProbS > predictedProbS
-//					&& predictedOrdinal > predictedCardinal
-					) {
-				predictedCardinal = predictedOrdinal;
-				predictedCProb = predictedOProb;
-				evidencec = evidenceo;
-			}
 		}
-		
-//		if (predictedAProb > predictedCProb && predictedCProb > 0.0) {
-//			predictedCardinal = predictedArticle;
-//			predictedCProb = predictedAProb;
-//			evidencec = evidencea;
-//		}
 		
 		predictedCProbZ = 0.0; predictedCProbS = 0.0;
 		if (predictedCProb > 0 && mad > 0.0) predictedCProbZ = 0.6745 * (predictedCProb - median) / mad;	//modified z-score: normalize the probability score!						
@@ -950,6 +983,7 @@ public class Evaluation {
 						+ numChild + "\t" 
 						+ predictedCardinal + "\t" 
 						+ predictedCProb + "\t" 
+						+ evidenceType + "\t"
 						+ evidencec);
 				bw.newLine();
 //			} else {
@@ -1018,10 +1052,6 @@ public class Evaluation {
 		predictedNumterm = 0;
 		predictedNProb = 0.0;
 		evidencen = "";
-		
-		predictedArticle = 0;
-		predictedAProb = 0.0;
-		evidencea = "";
 		
 		numPredicted = 0;
 		
